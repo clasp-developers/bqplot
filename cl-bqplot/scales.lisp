@@ -1,6 +1,6 @@
-(in-package :cljw)
+(in-package :bqplot)
 
-(defclass scale (widget)
+(defclass scale (cljw:widget)
   ((scale-types :accessor scale-types
                 :initform nil ;;;TODO: Fill in class names
                 )
@@ -18,10 +18,10 @@
    (%ipython-display :accessor ipython-display
                      :initform nil))
   (:default-initargs
-   :view-name (unicode "Scale")
-    :model-name (unicode "ScaleModel")
-    :view-module (unicode "bqplot")
-    :model-module (unicode "bqplot")
+   :view-name (cljw:unicode "Scale")
+    :model-name (cljw:unicode "ScaleModel")
+    :view-module (cljw:unicode "bqplot")
+    :model-module (cljw:unicode "bqplot")
     ;;TODO: Fix view-module-version and model-module-version
     )
   (:metaclass traitlets:traitlet-class))
@@ -29,8 +29,8 @@
 (defclass geo-scale (scale)
   ()
   (:default-initargs
-   :view-name (unicode "GeoScale")
-    :model-name (unicode "GeoScaleModel"))
+   :view-name (cljw:unicode "GeoScale")
+    :model-name (cljw:unicode "GeoScaleModel"))
   (:metaclass traitlets:traitlet-class))
                                   
     

@@ -1,35 +1,36 @@
-(in-package :cljw)
+(in-package :bqplot)
 
-(defclass mark (widget)
+(defclass mark (cljw:widget)
   ((mark-types :initarg :mark-types :accessor mark-types
                :initform nil)
    (scales :initarg :scales :accessor scales
            :initform nil
            :validator %validate-scales
            :metadata (:sync t
-                            :json-name "scales"
-                            *widget-serialization*))
+                      :json-name "scales"
+                      *widget-serialization*))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
                     :initform nil
                     :metadata (:sync t
-                                     :json-name "scales_metadata"))
+                               :json-name "scales_metadata"))
    (preserve-domain :initarg :preserve-domain :accessor preserve-domain
                     :initform nil
                     :metadata (:sync t
-                                     :json-name "preserve_domain"))
+                               :json-name "preserve_domain"))
    (display-legend :initarg :display-legend :accessor display-legend
                    :type bool
                    :initform :false
                    :metadata (:sync t
-                                    :json-name "preserve_domain"))
+                              :json-name "preserve_domain"))
    (%labels :initarg :labels :accessor %labels
             :type list
             :initform nil
             :metadata (:sync t
-                             :json-name "labels"
-                             :display-name "Display legend"))
-   ;;;ADD REMAINING SLOTS
-   ))
+                       :json-name "labels"
+                       :display-name "Display legend"))
+;;;ADD REMAINING SLOTS
+   )
+  (:metaclass traitlets:traitlet-class))
 
 (defmethod %get-dimension-scales ((self mark) dimension &key (preserve-domain nil))
   (let ((ret nil))

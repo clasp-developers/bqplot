@@ -1,9 +1,9 @@
 ;;;Needs a package to go into
-(in-package :cljw)
+(in-package :bqplot)
 
-(defclass figure (domwidget)
+(defclass figure (cljw:domwidget)
   ((title :initarg :title :accessor title
-          :type unicode
+          :type cljw:unicode
           :initform nil
           :metadata (:sync t
                            :json-name "title"))
@@ -95,23 +95,23 @@
                     :metadata (:sync t
                                      :json-name "legend_location"))
                                      ;;;display-name "Legend Position"
-   (animation-duration :initarg :animation-duration :accessor animation duration
-                       :type int
+   (animation-duration :initarg :animation-duration :accessor animation-duration
+                       :type integer
                        :initform 0
                        :metadata (:sync t
-                                        :json-name "animation_duration"))
+                                  :json-name "animation_duration"))
                                         ;;;display-name "Animation duration"
    ;;;pyplot.py creates a pyplot slot on the fly... Adding it statically here.
    (pyplot :initarg :pyplot :accessor pyplot
 	   :initform nil)
    )
   (:default-initargs
-   :view-name (unicode "Figure")
-    :model-name (unicode "FigureModel")
-    :view-module (unicode "bqplot")
-    :model-module (unicode "bqplot")
-    :view-module-version (unicode *frontend-version*)
-    :model-module-version (unicode *frontend-version*))
+   :view-name (cljw:unicode "Figure")
+    :model-name (cljw:unicode "FigureModel")
+    :view-module (cljw:unicode "bqplot")
+    :model-module (cljw:unicode "bqplot")
+    :view-module-version (cljw:unicode *frontend-version*)
+    :model-module-version (cljw:unicode *frontend-version*))
   (:metaclass traitlets:traitlet-class))
 
 
