@@ -99,7 +99,7 @@
                        :type integer
                        :initform 0
                        :metadata (:sync t
-                                  :json-name "animation_duration"))
+                                        :json-name "animation_duration"))
                                         ;;;display-name "Animation duration"
    ;;;pyplot.py creates a pyplot slot on the fly... Adding it statically here.
    (pyplot :initarg :pyplot :accessor pyplot
