@@ -35,12 +35,12 @@
     (if key
 	(setf figure (nth key (cdr (assoc "figure_registry" %context :test #'string=))))
       (setf figure (current-figure)))
-    (if display-toolbar
-	(unless (pyplot figure)
-	  (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
-	(display (make-instance 'vbox :children (vector figure (pyplot figure))))
+    ;if display-toolbar
+	;((unless (pyplot figure)
+	  ;(setf (pyplot figure) (make-instance 'toolbar :figure figure)))
+	;(display (make-instance 'vbox :children (vector figure (pyplot figure)))))
       (display figure)))
-  (values))
+  ;(values)))
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
   ;;;We don't want key and fig to actually be in the kwargs plist
@@ -458,11 +458,6 @@
   (remf kwargs :func)
   (remf kwargs :trait)
   (%create-selector (find-class 'lasso-selector) func trait kwargs))
-
-(defun clear
-    (let ))
-
-
 
 
 (defun %apply-properties (widget  &key (properties nil) &allow-other-keys)
