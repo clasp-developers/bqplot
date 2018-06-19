@@ -1,7 +1,7 @@
 
 (in-package :bqplot)
 
-(setf 'CATEGORY10 (list "#1f77b4" "#ff7f0e" "#2ca02c" "#d62728" "#9467bd" "#8c564b"
+(defparameter *CATEGORY10* (list "#1f77b4" "#ff7f0e" "#2ca02c" "#d62728" "#9467bd" "#8c564b"
 			 "#e377c2" "#7f7f7f" "#bcbd22" "#17becf"))
 (setf 'CATEGORY20 (list "#1f77b4" "#aec7e8" "#ff7f0e" "#ffbb78" "#2ca02c" "#98df8a"
               "#d62728" "#ff9896" "#9467bd" "#c5b0d5" "#8c564b" "#c49c94"

@@ -70,19 +70,19 @@
 	   :initform nil
 	   :metadta #.`(:sync t
 			   :json-name "scales"
-			   ,@*widget-serialization*))
+			   ,@cljw:*widget-serialization*))
    (axes :initarg :axes :accessor axes
 	 :type list
 	 :initform nil
 	 :metadata #.`(:sync t
 			  :json-name "axes"
-			  ,@*widget-serialization*))
+			  ,@cljw:*widget-serialization*))
    (color :initarg :color :accessor color
 	  :type list
 	  :initform nil
 	  :metadata #.`(:sync t
 			   :json-name "color"
-			   ,@*widget-serialization*))
+			   ,@cljw:*widget-serialization*))
    (map-margin :initarg :map-margin :accessor map-margin
 	       :type list
 	       :initform (list (cons top 50)
@@ -96,7 +96,7 @@
 	   :initform (list (cons min_width "125px"))
 	   :metadata #.`(:sync t
 			    :json-name "layout"
-			    ,@*widget-serialization*))
+			    ,@cljw:*widget-serialization*))
    (min-aspect-ratio :initarg :min-aspect-ratio :accessor min-aspect-ratio
 		     :type float
 		     :initform 1.0
@@ -156,7 +156,7 @@
 		   :initform (make-instance 'domwidget)
 		   :metadata #.`(:sync t
 				    :json-name "tooltip_widget"
-				    ,@*widget-serialization*))
+				    ,@cljw:*widget-serialization*))
    (:initargs
     :view-name (cljw:unicode "MarketMap")
     :model-name (cljw:unicode "MarketMapModel")

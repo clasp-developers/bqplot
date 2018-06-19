@@ -1,4 +1,4 @@
-(in-package :cljw)
+(in-package :cl-bqplot)
 
 (defparameter %context (list (cons "figure" nil)
 			     (cons "figure_registry" nil)
@@ -44,10 +44,10 @@
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
   ;;;We don't want key and fig to actually be in the kwargs plist
-  (setf kwargs (remove key kwargs)
-        kwargs (remove :key kwargs)
-        kwargs (remove :fig kwargs)
-        kwargs (remove fig kwargs))
+  (remove key kwargs)
+  (remove :key kwargs)
+  (remove :fig kwargs)
+  (remove fig kwargs)
   ;;;Now begins the translation of python code.pa
   (let ((scales-arg (getf kwargs ':scales)))
     ;;Make getf an effective pop of the (:scales value)
@@ -58,7 +58,7 @@
 	(progn
 	  (setf (cdr assoc "figure" %context :test #'string=) fig)
 	  (when key
-	    (setf (cdr (assoc key (cdr (assoc "figure_registry" %context :test #'string=)))) fig))
+	    (setf (nth key (cdr (assoc "figure_registry" %context :test #'string=)))) fig))
 	  (loop for arg in kwargs));;;Python wants to add slots to the figure class...
       ;;;setattr(%context['figure'], arg, kwargs[arg])
 	;;Else clause of the if fig
@@ -80,7 +80,7 @@
          setattr(%context['figure'], 'axis_registry', {})
     |#
     ;;;Return the figure in context.
-    (cdr (assoc "figure" %context :test #'string=))))
+    (cdr (assoc "figure" %context :test #'string=)))
         
 (defun close (key)
   (let ((figure-registry (cdr (assoc "figure_registry" %context)))
@@ -241,7 +241,7 @@ defun hline (level &rest kwargs &key &allow-other-keys)
 	 (setf (k scale) v) ;; is this right
 	 )
     scale))
-
+#|
 (defun %draw-mark (mark-type &rest kwargs &key (options nil) (axes-options nil) &allow-other-keys)
   (remf kwargs :options)
   (remf kwargs :axes-options)
@@ -262,7 +262,7 @@ defun hline (level &rest kwargs &key &allow-other-keys)
       ;;;(setf (cdr (assoc "color" options :test #'string=)) dict(options.get('color', {}, **_process_cmap(cmap))))
 	(append (cons "color" nil) options)));;;FIXME
 ;;;finish draw mark process c map 
-
+|#
 
   ;;;checked 
 (defun %infer-x-for-line (y)
@@ -274,7 +274,7 @@ defun hline (level &rest kwargs &key &allow-other-keys)
   (when ( > (len array-shape) 1)
     (return-from %infer-x-for-line (loop for i upto (1- (second array-shape)) collect i))))
 
-(defun plot (args kwargs) ;;;need to fix this
+(defun plot (x y marker-str &rest kwargs &allow-other-keys) ;;;need to fix this. What to put in just args and parse the args from keyword args 
   (let ( marker-str nil)
   (cond ((= (length args) 1)
 	 (setf kwargs (appends kwargs (list :y (cdr (assoc 0 args :test #'equalp=)))))

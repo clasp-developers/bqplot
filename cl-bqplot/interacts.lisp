@@ -22,7 +22,7 @@
 	  :initform (make-instance 'lines)
 	  :metadata #.`(:sync t
 			   :json-name "lines"
-			   ,@*widget-serialization*))
+			   ,@cljw:*widget-serialization*))
    (line-index :accessor line-index
 	       :type integer
 	       :initform nil
@@ -60,7 +60,7 @@
 	   :initform (list (cons 'trait (cons 'trait (make-instance 'scale))))
 	   :metadata #.`(:sync t
 			    :json-name "scales"
-			    ,@*widget-serialization*)))
+			    ,@cljw:*widget-serialization*)))
    (:default-initargs
     :view-name (cljw:unicode "PanZoom")
     :model-name (cljw:unicode "PanZoomModel"))
@@ -74,7 +74,7 @@
 	  :initform nil
 	  :metadata #.`(:sync t
 			   :json-name "marks"
-			   ,@*widget-serialization*)))
+			   ,@cljw:*widget-serialization*)))
    (:default-initargs
     :view-name (cljw:unicode "Selector"))
    
@@ -88,7 +88,7 @@
 	  :metadata #.`(:sync t
 			   :json-name "one-d-selector"
 			   :dimension "x"
-			   ,@*widget-serialization*)))
+			   ,@cljw:*widget-serialization*)))
    (:default-initargs
     :model-name (cljw:unicode "OneDSelectorModel"))
 
@@ -100,13 +100,13 @@
 	    :metadata #.`(:sync t
 			     :json-name "x_scale"
 			     :dimension "x"
-			     ,@*widget-serialization*))
+			     ,@cljw:*widget-serialization*))
    (y-scale :accessor y-scale
 	    :initform (make-instance 'scale)
 	    :metadata #.`(:sync t
 			     :json-name "y_scale"
 			     :dimension "y"
-			     ,@*widget-serialization*)))
+			     ,@cljw:*widget-serialization*)))
    (:default-initargs
     :model-name (cljw:unicode "TwoDSelectorModel"))
    

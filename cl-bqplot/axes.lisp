@@ -45,7 +45,7 @@
 	  :initform (make-instance 'scale)
 	  :metadata #.`(:sync t
 			   :json-name "scale"
-			   ,@*widget-serialization*))
+			   ,@cljw:*widget-serialization*))
    (num-ticks :accessor num-ticks
 	      :type integer
 	      :initform nil
@@ -125,7 +125,7 @@
 	  :initform (make-instance 'scale)
 	  :metadata #.`(:sync t
 			   :json-name "scale"
-			   ,@*widget-serialization*)))
+			   ,@cljw:*widget-serialization*)))
    (:default-initargs
        :view-name (cljw:unicode "ColorAxis")
      :model-name (cljw:unicode "ColorAxisModel"))

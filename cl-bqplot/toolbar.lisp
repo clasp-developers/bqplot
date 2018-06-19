@@ -5,7 +5,7 @@
 	   :initform (make-instance 'figure)
 	   :metadata #.`(:sync t
 			    :json-name "figure"
-			    ,@*widget-serialization*))
+			    ,@cljw:*widget-serialization*))
    (%panning :accessor panning
 	     :type bool
 	     :initform :true
