@@ -51,7 +51,7 @@
 	      :initform nil
 	      :metadata (:sync t
 			       :json-name "num_ticks"))
-   (tick-values :accesor tick-values
+   (tick-values :accessor tick-values
 		:type list
 		:initform nil
 		:metadata (:sync t

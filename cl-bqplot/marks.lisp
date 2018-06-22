@@ -27,9 +27,9 @@
 		   :metadata (:sync t
 				    :json-name "display_legend"
 				    :display-name "Display legend"))
-   (labels :initarg :labels :accessor labels
+   (labels-mark :initarg :labels :accessor labels-mark
 	   :type list
-	   :initform (list (cons ('trait (cljw:unicode ""))))
+	   :initform (list (cons 'trait (cljw:unicode "")))
 	   :metadata (:sync t
 			    :json-name "labels"
 			    :display-name "Labels"))
@@ -127,21 +127,21 @@
 					;def on-background-click  Callback
 					;def handle-custom-msgs
 (defclass lines (mark)
-  (icon :accessor icon
+  ((icon :accessor icon
 	:type string
 	:initform "fa-line-chart")
-  (icon :accessor name
+  (name :accessor name
 	:type string
 	:initform "Lines")
-   (x :accessor x
-      :type list
-      :initform nil
-      :metadata (:sync t
-		       :json-name "x"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       *array-serialization*))
+  (x :accessor x
+     :type list
+     :initform nil
+     :metadata (:sync t
+		      :json-name "x"
+		      :scaled t
+		      :rtype "Number"
+		      :atype "bqplot.Axis"
+		      *array-serialization*))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :accessor y
       :type list
@@ -154,9 +154,9 @@
 		       *array-serialization*))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :accessor color
-      :type list
-      :initform nil
-      :metadata (:sync t
+          :type list
+          :initform nil
+          :metadata (:sync t
 		       :json-name "color"
 		       :scaled t
 		       :rtype "Color"
@@ -164,94 +164,94 @@
 		       *array-serialization*))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
   (scales-metadata :accessor scales-metadata
-      :type list
-      :initform (list (cons "x" (list (cons "orientation" "horizontal")
+                   :type list
+                   :initform (list (cons "x" (list (cons "orientation" "horizontal")
 				      (cons "dimension" "x")))
 		      (cons "y" (list (cons "orientation" "vertical")
 				      (cons "dimension" "y"))))
-      :metadata (:sync t
-		       :json-name "scales_metadata"))
-   (colors :accessor colors
-	   :type list
-	   :initform (list (cons 'trait (cljw:unicode "")(cons 'default-value CATEGORY10)))
-	   :metadata (:sync t
-			    :json-name "colors"
-			    :display-name "colors"))
-   (fill-colors :accessor fill-colors
-		:type list
-		:initform (list (cons 'trait (cljw:unicode "")))
+                   :metadata (:sync t
+		                    :json-name "scales_metadata"))
+  (colors :accessor colors
+          :type list
+          :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value *CATEGORY10*)))
+          :metadata (:sync t
+		           :json-name "colors"
+			   :display-name "colors"))
+  (fill-colors :accessor fill-colors
+	       :type list
+	       :initform (list (cons 'trait (cljw:unicode "")))
+	       :metadata (:sync t
+				:json-name "fill_colors"
+				:display-name "Fill colors"))
+  (stroke-width :accessor stroke-width
+	        :type float
+		:initform 2.0
 		:metadata (:sync t
-				 :json-name "fill_colors"
-				 :display-name "Fill colors"))
-   (stroke-width :accessor stroke-width
-		 :type float
-		 :initform 2.0
+				 :json-name "stroke_width"
+				 :display-name "Stroke width"))
+  (labels-visibility :accessor labels-visibility
+		     :type unicode
+		     :initform (cljw:unicode "none")
+		     :metadata (:sync t
+				      :json-name "labels_visibility"
+				      :display-name "Labels visibility"))
+  (curves-subset :accessor curves-subset
+		 :type list
+		 :initform nil
 		 :metadata (:sync t
-				  :json-name "stroke_width"
-				  :display-name "Stroke width"))
-   (labels-visibility :accessor labels-visibility
-		      :type unicode
-		      :initform (cljw:unicode "none")
-		      :metadata (:sync t
-				       :json-name "labels_visibility"
-				       :display-name "Labels visibility"))
-   (curves-subset :accessor curves-subset
+				  :json-name "curves_subset"))
+  (line-style :accessor line-style
+	      :type unicode
+	      :initform (cljw:unicode "solid")
+	      :metadata (:sync t
+			       :json-name "line_style"
+			       :display-name "Line style"))
+  (interpolation :accessor interpolation
+		 :type unicode 
+		 :initform (cljw:unicode "linear")
+		 :metadata (:sync t
+				  :json-name "interpolation"
+				  :display-name "Interpolation"))
+  (close-path :accessor close-path
+	      :type bool
+	      :initform :false
+	      :metadata (:sync t
+			       :json-name "close_path"
+			       :display-name "Close path"))
+  (fill-lines :accessor fill-lines
+	:type unicode
+	:initform (cljw:unicode "none")
+	:metadata (:sync t
+			 :json-name "fill"
+			 :display-name "Fill"))
+  (marker :accessor marker
+	  :type unicode
+	  :initform nil
+	  :metadata (:sync t
+			   :json-name "marker"
+			   :display-name "Marker"))
+  (marker-size :accessor marker-size
+	       :type int
+	       :initform 64
+	       :metadata (:sync t
+				:json-name "marker_size"
+				:display-name "Default size"))
+  (opacities :accessor opacities
+	     :type list
+	     :initform nil
+	     :metadata (:sync t
+			      :json-name "opacities"
+			      :display-name "Opacity"))
+  (fill-opacities :accessor fill-opacities
 		  :type list
 		  :initform nil
 		  :metadata (:sync t
-				   :json-name "curves_subset"))
-   (line-style :accessor line-style
-	       :type unicode
-	       :initform (cljw:unicode "solid")
-	       :metadata (:sync t
-				:json-name "line_style"
-				:display-name "Line style"))
-   (interpolation :accessor interpolation
-		  :type unicode 
-		  :initform (cljw:unicode "linear")
-		  :metadata (:sync t
-				   :json-name "interpolation"
-				   :display-name "Interpolation"))
-   (close-path :accessor close-path
-	       :type bool
-	       :initform :false
-	       :metadata (:sync t
-				:json-name "close_path"
-				:display-name "Close path"))
-   (fill :accessor fill
-	 :type unicode
-	 :initform (cljw:unicode "none")
-	 :metadata (:sync t
-			  :json-name "fill"
-			  :display-name "Fill"))
-   (marker :accessor marker
-	   :type unicode
-	   :initform nil
-	   :metadata (:sync t
-			    :json-name "marker"
-			    :display-name "Marker"))
-   (marker-size :accessor marker-size
-		:type int
-		:initform 64
-		:metadata (:sync t
-				 :json-name "marker_size"
-				 :display-name "Default size"))
-   (opacities :accessor opacities
-	      :type list
-	      :initform nil
-	      :metadata (:sync t
-			       :json-name "opacities"
-			       :display-name "Opacity"))
-   (fill-opacities :accessor fill-opacities
-		   :type list
-		   :initform nil
-		   :metadata (:sync t
-				    :json-name "fill_opacities"
-				    :display-name "Fill Opacity"))
+				   :json-name "fill_opacities"
+				   :display-name "Fill Opacity")))
    (:default-initargs
-       :view-name (cljw:unicode "Lines")
+    :view-name (cljw:unicode "Lines")
      :model-name (cljw:unicode "LinesModel"))
-    (:metaclass traitlets:traitlet-class))
+   (:metaclass traitlets:traitlet-class))
 
 (defclass flex-line (mark)
   ((x :accessor x
@@ -311,7 +311,7 @@
    (colors :accessor colors
 	   :type list
 	   :initform (list (cons 'trait (cljw:unicode ""))
-                           (cons 'default-value CATEGORY10))
+                           (cons 'default-value *CATEGORY10*))
            :metadata (:sync t
 			    :json-name "colors")))
    (:default-initargs
@@ -519,11 +519,11 @@
 	   :metadata (:sync t
 			    :json-name "display_names"
 			    :display-name "Display names"))
-   (fill :accessor fill
-	 :type bool
-	 :initform :true
-	 :metadata (:sync t
-			  :json-name "fill"))
+   (fill-scatter :accessor fill-scatter
+	         :type bool
+	         :initform :true
+	         :metadata (:sync t
+			          :json-name "fill"))
    (drag-color :accessor drag-color
 	   :type unicode
 	   :initform (cljw:unicode "")
@@ -564,7 +564,7 @@
 			      :json-name "y_offset"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons (trait (cljw:unicode "")))(cons 'default-value CATEGORY10))
+	   :initform (list (cons (trait (cljw:unicode "")))(cons 'default-value *CATEGORY10*))
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
@@ -629,7 +629,7 @@
 			    :atype "bqplot.Axis"
 			    *array-serialization*))
 					;TODO: .valid stuff
-   (count :accessor count
+   (count-hist :accessor count-hist
 	  :type list
 	  :initform nil
 	  :metadata (:sync t
@@ -666,7 +666,7 @@
 			  :display-name "Mid points"))
    (colors :accessor colors
 	 :type list
-	 :initform (list (cons 'trait (cljw:unicode "")(cons 'default-value CATEGORY10)))
+	 :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value *CATEGORY10*))
 	 :metadata (:sync t
 			  :json-name "colors"
 			  :display-name "Colors"))
@@ -784,20 +784,21 @@
 		       *array-serialization*))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
   (scales-metadata :accessor scales-metadata
-      :type list
-      :initform (list (cons "x" (list (cons "orientation" "horizontal")
-				      (cons "dimension" "x")))
-		      (cons "y" (list (cons "orientation" "vertical")
-				      (cons "dimension" "y"))))
-      :validator 
-      :metadata (:sync t
-		       :json-name "scales_metadata"))
-   (color-mode :accessor color-mode
-	 :type unicode
-	 :initform (cljw:unicode "auto")
-	 :metadata (:sync t
-			  :json-name "color_mode"))
-   (type :accessor type
+                   :type list
+                   :initform (list (cons "x" (list (cons "orientation" "horizontal")
+				                   (cons "dimension" "x")))
+		                   (cons "y" (list (cons "orientation" "vertical")
+				                   (cons "dimension" "y"))))
+                   ;validator?
+                   :metadata (:sync t
+		                    :json-name "scales_metadata"))
+   (color-mode
+    :accessor color-mode
+    :type unicode
+    :initform (cljw:unicode "auto")
+    :metadata (:sync t
+		     :json-name "color_mode"))
+   (type-bars :accessor type-bars
 	 :type unicode
 	 :initform (cljw:unicode "stacked")
 	 :metadata (:sync t
@@ -826,7 +827,7 @@
 			  :json-name "base"))
    (opacities :accessor opacities
 	 :type list
-	 :initform (list (cons trait 1.0))
+	 :initform (list (cons 'trait 1.0))
 	 :metadata (:sync t
 			  :json-name "opacities"
 			  :display-name "Opacities"))
@@ -860,30 +861,30 @@
 
 
 (defclass bins(bars)
-  ((icons :icons :initargs :accessor icons
+  ((icons :initarg :icons :accessor icons
 	  :type unicode
 	  :initform (cljw:unicode "fa-signal"))
-   (name :name :initarg :accessor name
+   (name  :initarg :icons :accessor name
 	 :type unicode
 	 :initform (cljw:unicode "Backend Histogram"))
 
    ;;TODO IS SAMPLES RIGHT 
-   (sample :sample :initarg :accessor sample
+   (sample  :initarg :sample :accessor sample
 	   :type list
 	   :initform nil 
-	   :meatdata (:sync f
+	   :metadata (:sync f
 			    :json-name "sample"
 			    :display-name "Sample"
 			    :rtype "Number"
 			    :atype "bqplot.Axis"
 			    *array-serializaion*))
 
-   (min :initarg :min :accessor min
+   (min-bins :initarg :min :accessor min-bins
 	:type float
 	:initform nil                       ;;can floats initform be nil??
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :initarg :max :accessor max
+   (max-bins :initarg :max-bins :accessor max-bins
 	:type float
 	:initform nil
 	:metadata (:sync t
@@ -896,7 +897,7 @@
 
 
    ;; TODO FINISH BINS 
-   (bins :bins :initarg :accessor bins
+   (bins :initarg :bins :accessor bins
 	    :type 
 	    :initform 
 	    :metadata (:sync t
@@ -973,9 +974,9 @@
 	      :metadata (:sync t
 			       :json-name "opacities"
 			       :display-name "Opacities"))
-   (format :accessor format
+   (format-ohlc :accessor format-ohlc
 	   :type unicode
-	   :initform (cljw:unicode "ohcl")
+	   :initform (cljw:unicode "ohlc")
 	   :metadata (:sync t
 			    :json-name "format"
 			    :display-name "Format")))
@@ -1018,14 +1019,14 @@
 		     :initform (list (cons "colors" (list (cons "dimension" "color"))))
 		     :metadata (:sync t
 				      :json-name "scales_metadata"))
-    (sort :accessor sort
+    (sort-pie :accessor sort-pie
 	  :type :bool
 	  :initform :false
 	  :metadata (:sync t
 			   :json-name "sort"))
     (colors :accessor colors
 	    :type list
-	    :initform (list (cons 'trait (cljw:unicode "")(cons 'default-value CATEGORY10)))
+	    :initform (list (cons 'trait (cljw:unicode "")(cons 'default-value *CATEGORY10*)))
 	    :metadata (:sync t
 			     :json-name "Colors"))
     (stroke :accessor stroke
@@ -1132,7 +1133,7 @@
 				     :json-name "scales_metadata"))
    (hover-highlight :accessor hover-highlight
 		    :type :bool
-		    :initform :true
+		    :initform :truec
 		    :metadata (:sync t
 				     :json-name "hover_highlight"))
    (hover-styles :accessor hover-styles
@@ -1308,7 +1309,7 @@
    (link-distance :accessor link-distance
 		  :type float
 		  :initform 100.0
-		  :metadta(:sync t
+		  :metadata(:sync t
 				 :json-name "link_distance"))
    (node-data :accessor node-data
 	      :type list
@@ -1328,7 +1329,7 @@
 				 :rtype "Number"
 				 *array-serialization*))
    (link-type :accessor link-type
-	      :tyoe unicode
+	      :type unicode
 	      :initform (cljw:unicode "arc")
 	      :metadata(:sync t
 			      :json-name "link_type"))
@@ -1341,7 +1342,7 @@
    (colors :accessor colors
 	   :type list
 	   :initform (list (cons 'trait (cljw:unicode ""))
-			   (cons 'default-value CATEGORY10))
+			   (cons 'default-value *CATEGORY10*))
 	   :metadata (:sync t
 			    :json-name "colors"))
    (interactions :accessor interactions

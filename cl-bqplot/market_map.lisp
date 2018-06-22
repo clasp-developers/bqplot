@@ -62,13 +62,13 @@
 				:json-name "row_groups"))
    (colors :initarg :colors :accessor colors
 	   :type list
-	   :initform CATEGORY10
+	   :initform *CATEGORY10*
 	   :metadata (:sync t
 			    :json-name "colors"))
    (scales :initarg :scales :accessor scales
 	   :type list
 	   :initform nil
-	   :metadta #.`(:sync t
+	   :metadata #.`(:sync t
 			   :json-name "scales"
 			   ,@cljw:*widget-serialization*))
    (axes :initarg :axes :accessor axes
@@ -83,17 +83,19 @@
 	  :metadata #.`(:sync t
 			   :json-name "color"
 			   ,@cljw:*widget-serialization*))
+
+   ;;;;checked if cons "top" 50 is the same as top = 50 
    (map-margin :initarg :map-margin :accessor map-margin
 	       :type list
-	       :initform (list (cons top 50)
-			       (cons right 50)
-			       (cons left 50)
-			       (cons bottom 50))
+	       :initform (list (cons "top" 50)
+			       (cons "right" 50)
+			       (cons "left" 50)
+			       (cons "bottom" 50))
 	       :metadata (:sync t
 				:json-name "map_margin"))
    (layout :initarg :layout :accessor layout
 	   :type list
-	   :initform (list (cons min_width "125px"))
+	   :initform (list (cons "min_width" "125px"))
 	   :metadata #.`(:sync t
 			    :json-name "layout"
 			    ,@cljw:*widget-serialization*))
@@ -147,35 +149,38 @@
 		 :initform :true
 		 :metadata (:sync t
 				  :json-name "enable_hover"))
-    (enable-select :initarg :enable-select :accessor enable-select
-		 :type bool
-		 :initform :true
-		 :metadata (:sync t
+   (enable-select :initarg :enable-select :accessor enable-select
+		  :type bool
+		  :initform :true
+		  :metadata (:sync t
 				  :json-name "enable_select"))
    (tooltip-widget :initarg :tooltip-widget :accessor tooltip-widget
 		   :initform (make-instance 'domwidget)
 		   :metadata #.`(:sync t
 				    :json-name "tooltip_widget"
-				    ,@cljw:*widget-serialization*))
-   (:initargs
+				    ,@cljw:*widget-serialization*)))
+   (:default-initargs
     :view-name (cljw:unicode "MarketMap")
     :model-name (cljw:unicode "MarketMapModel")
     :view-module (cljw:unicode "bqplot")
     :model-module (cljw:unicode "bqplot")
     :view-module-version *frontend-version*
-    :model-module-version *frontend-version*))
+    :model-module-version *frontend-version*)
 
   (:metaclass traitlets:traitlet-class))
 
 ;TODO def on_hover def _handle_custom_msgs def _compare
 
-(defclass square-marekt-map (market-map)
+
+
+;;;is this (cons "top" 50) to same as top = 50 
+(defclass square-market-map (market-map)
   ((margin :accessor margin
 	   :type list
-	   :initform (list (cons top 50)
-			       (cons right 50)
-			       (cons left 50)
-			       (cons bottom 50))
+	   :initform (list (cons "top" 50)
+			   (cons "right" 50)
+			   (cons "left" 50)
+			   (cons "bottom" 50))
 	   :metadata (:sync t
 			    :json-name "margin"))
    (data :accessor data
@@ -187,11 +192,11 @@
 	 :type unicode
 	 :initform (cljw:unicode "squarify")
 	 :metadata (:sync t
-			  :json-name "mode"))
-   (:initargs
-    :view-name (cljw:unicode "SquareMarketMap")))
+			  :json-name "mode")))
+   (:default-initargs
+    :view-name (cljw:unicode "SquareMarketMap"))
   
-  (:metaclass traitlets:trailet-class))
+  (:metaclass traitlets:traitlet-class))
 
 		   
 		   

@@ -1,9 +1,9 @@
-(in-package :cl-bqplot)
+(in-package :bqplot)
 
 (defparameter %context (list (cons "figure" nil)
 			     (cons "figure_registry" nil)
 			     (cons "scales" nil)
-			     (cons "scale_registry" nil)
+			     (Cons "Scale_registry" nil)
 			     (cons "last_mark" nil)
 			     (cons "current_key" nil)))
 
@@ -30,7 +30,7 @@
 (defun hashtable (data v)
   (warn "How to try data[v]"))
 
-(defun show (&key (key nil) (display-toolbar t))
+#|(defun show (&key (key nil) (display-toolbar t))
   (let ((figure nil))
     (if key
 	(setf figure (nth key (cdr (assoc "figure_registry" %context :test #'string=))))
@@ -40,7 +40,7 @@
 	  (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
 	(display (make-instance 'vbox :children (vector figure (pyplot figure))))
       (display figure)))
-  (values))
+  (values))|#
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
   ;;;We don't want key and fig to actually be in the kwargs plist
@@ -56,9 +56,9 @@
     (setf (cdr (assoc "current_key" %context :test #'string=)) key)
     (if fig
 	(progn
-	  (setf (cdr assoc "figure" %context :test #'string=) fig)
+	  (setf (cdr (assoc "figure" %context :test #'string=)) fig)
 	  (when key
-	    (setf (nth key (cdr (assoc "figure_registry" %context :test #'string=)))) fig))
+	    (setf (nth key (cdr (assoc "figure_registry" %context :test #'string=))) fig)))
 	  (loop for arg in kwargs));;;Python wants to add slots to the figure class...
       ;;;setattr(%context['figure'], arg, kwargs[arg])
 	;;Else clause of the if fig
@@ -72,7 +72,7 @@
                     (push :title kwargs))
                   (setf (cdr (assoc key (cdr (assoc "figure_registry" %context :test #'string=)))) fig)
                 (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure_registry" %context :test #'string=)))))
-                (warn "How to Add a slot for each argument in kwargs"))))))
+                (warn "How to Add a slot for each argument in kwargs")))))
     (scales key :scales scales-arg)
         (loop for arg in kwargs)
     #|
@@ -80,7 +80,7 @@
          setattr(%context['figure'], 'axis_registry', {})
     |#
     ;;;Return the figure in context.
-    (cdr (assoc "figure" %context :test #'string=)))
+    (cdr (assoc "figure" %context :test #'string=))))
         
 (defun close (key)
   (let ((figure-registry (cdr (assoc "figure_registry" %context)))
@@ -109,9 +109,10 @@
   (set-lim low high "y"))
 
 (defun set-lim (low high name)
-  (let ((scale (cdr (assoc (%get-attribute-dimension name) (cdr (assoc "scales" %context :test #'string=))))))
-    (setf (min scale) low) (max scale) high)
-  scale)
+  (let (scale (cdr (assoc (%get-attribute-dimension name) (cdr (assoc "scales" %context :test #'string=)))))
+    (setf ((min scale) low)
+          ((max scale) high))
+  scale))
 
 (defun axes (&rest kwargs &key (mark nil) (options nil) &allow-other-keys)
   ;;;Remove mark and options from kwargs
@@ -173,9 +174,9 @@
   (unless mark
     (return-from %set-label nil))
   (let* ((fig (getf kwargs :figure))
-	(scales (scales mark))
-	(scales-metadata (getf (scales-metadata mark) dim))
-	 (scale (getf scales dim)))
+	 (scales (scales mark))
+	 (scales-metadata (getf (scales-metadata mark) dim))
+         (scale (getf scales dim)))
     (unless scale
       (return-from %set-label nil))
     (let ((dimension (getf scale-metadata "dimension"))
@@ -198,39 +199,39 @@
      do
        (setf (grid-lines a) value)))
 
-(defun title (label (style nil))
-  (let fig current-figure)
+(defun title (label &key (style nil))
+  (let (fig current-figure)
    (setf (title fig) label)
   (when style
-    (setf (title-style fig) style)))
+    (setf (title-style fig) style))))
 
 (defun legend ()
   (loop for m in (marks current-figure)
      do
-       (setf (display-legend m) true)))
+       (setf (display-legend m) t)))
 
-defun hline (level &rest kwargs &key &allow-other-keys)
- (unless (getf kwargs :colors)
-   (setf kwargs (append kwargs (list :colors "dodgerblue")))
+(defun hline (level &rest kwargs &key &allow-other-keys)
+  (unless (getf kwargs :colors)
+    (setf kwargs (append kwargs (list :colors "dodgerblue"))))
   (unless (getf kwargs ':stroke-width)
     (setf kwargs (append kwargs (cons ':stroke-width 1))))
   (let ((scales (getf kwargs ':scales))
-      (fig (getf kwargs ':figure))
-      (x nil)
-     (y nil)
-     (scales-x (assoc "x" scales :test #'string=)))
+        (fig (getf kwargs ':figure))
+        (x nil)
+        (y nil)
+        (scales-x (assoc "x" scales :test #'string=)))
     (unless fig
       (setf fig (current-figure)))
     (if scales-x
-     (setf (cdr scales-x) (scale-x fig))
-     (setf scales (append scales (cons "x" (scale-x fig))))
-  (remf kwargs :scales)
-  (setf level (vector level))
-  (if (= (length (shape level)) 0)
-      (setf x (list 0 1)
-         y (list level level))
-      (setf x (list 0 1)
-         y (column-stack (list level level)))))
+        (setf (cdr scales-x) (Scale-X fig))
+        (setf scales (append scales (cons "x" (scale-x fig)))))
+    (remf kwargs :scales)
+    (setf level (vector level))
+    (if (= (length (shape level)) 0)
+        (setf x (list 0 1)
+              y (list level level))
+        (setf x (list 0 1)
+              y (column-stack (list level level))))
   (plot x y :scales scales :preserve-domain (list (cons "x" t)(cons "y" (getf kwargs ':preserve-domain))) :axes nil :update-context nil kwargs)))
 
 
@@ -264,38 +265,38 @@ defun hline (level &rest kwargs &key &allow-other-keys)
 ;;;finish draw mark process c map 
 |#
 
-  ;;;checked 
+  ;;;checked gth
 (defun %infer-x-for-line (y)
-  (let array-shape (shape y))
-  (when ( = (len array-shape) 0 )
-    (return-from %infer-x-for-line nil))
-  (when ( = (len array-shape) 1 )
-    (return-from %infer-x-for-line (loop for i upto (1- (first array-shape)) collect i))) 
-  (when ( > (len array-shape) 1)
-    (return-from %infer-x-for-line (loop for i upto (1- (second array-shape)) collect i))))
+  (let (array-shape (shape y))
+    (when ( = (length array-shape) 0 )
+      (return-from %infer-x-for-line nil))
+    (when ( = (length array-shape) 1 )
+      (return-from %infer-x-for-line (loop for i upto (1- (first array-shape)) collect i))) 
+    (when ( > (length array-shape) 1)
+      (return-from %infer-x-for-line (loop for i upto (1- (second array-shape)) collect i)))))
 
-(defun plot (x y marker-str &rest kwargs &allow-other-keys) ;;;need to fix this. What to put in just args and parse the args from keyword args 
-  (let ( marker-str nil)
-  (cond ((= (length args) 1)
-	 (setf kwargs (appends kwargs (list :y (cdr (assoc 0 args :test #'equalp=)))))
-	 (if (getf kwargs :index-data)
-	     (setf kwargs (appends kwargs (list :x (cdr (assoc "index-data" args :test #'string=)))))
-	     (setf kwargs (appends kwargs (list :x (%infer-x-for-line (cdr (assoc 0 args :test #'equalp=))))))))
-	(( = (length args) 2 )
-	 (if (getf kwargs ;;how to check if the passed in arg[0] is a string
-		   (progn 
-		     (setf (kwargs (append kwargs (list :y (cdr (assoc 0 args :test #'equalp=)))))
-			   (kwargs (append kwargs (list :x (%infer-x-for-line (cdr (assoc 0 args :test #'equalp=))))))
-			   (marker-str ((strip) ((cdr (assoc 1 args :test #'equalp=)))))))
-		   (progn
-		     ((setf (kwargs (append kwargs (list :x (cdr (assoc 0 args :test #'equalp=)))))
-			    (kwargs (append kwargs (list :y (cdr (assoc 1 args :test #'equalp=)))))))))))
+(defun plot (x y marker-str &rest kwargs &key &allow-other-keys) ;;;need to fix this. What to put in just args and parse the args from keyword args 
+  (let (( marker-str nil))
+    (cond ((= (length args) 1)
+	   (setf kwargs (appends kwargs (list :y (cdr (assoc 0 args :test #'equalp=)))))
+	   (if (getf kwargs :index-data)
+	       (setf kwargs (appends kwargs (list :x (cdr (assoc "index-data" args :test #'string=)))))
+	       (setf kwargs (appends kwargs (list :x (%infer-x-for-line (cdr (assoc 0 args :test #'equalp=))))))))
+	  (( = (length args) 2 )
+	   (if (getf kwargs ;;how to check if the passed in arg[0] is a string
+		     (progn 
+		       (setf (kwargs (append kwargs (list :y (cdr (assoc 0 args :test #'equalp=)))))
+			     (kwargs (append kwargs (list :x (%infer-x-for-line (cdr (assoc 0 args :test #'equalp=))))))
+			     (marker-str ((strip) ((cdr (assoc 1 args :test #'equalp=)))))))
+		     (progn
+		       ((setf (kwargs (append kwargs (list :x (cdr (assoc 0 args :test #'equalp=)))))
+			      (kwargs (append kwargs (list :y (cdr (assoc 1 args :test #'equalp=)))))))))))
 	)))
 			   
 		        
 				     
 
-(defun imshow (image format kwargs &allow-others-keys)
+(defun imshow (image format kwargs &key &allow-other-keys)
   (let (ipyimage nil)
   (cond ((= format "widget")
 	 (setf ipyimage image))
@@ -315,12 +316,12 @@ defun hline (level &rest kwargs &key &allow-other-keys)
 
 
 (defun OHLC ();; kwarg and args 
-  (when (= (lens args) 2)
+  (when (= (length args) 2)
     (setf kwargs (append kwargs (list :x (cdr (assoc 0 args :test #'equalp))))
 	  kwargs (append kwargs (list :y (cdr (assoc 1 args :test #'equalp))))))
-  (when (= (len args) 1)
+  (when (= (length args) 1)
     (setf kwargs (append kwargs (list :y (cdr (assoc 0 args :test #'equalp))))
-          length (len (cdr (assoc 0 args :test #'equalp=))) 
+          length (length (cdr (assoc 0 args :test #'equalp=))) 
 	  kwargs (appends kwargs (list :x (arange length))))) ;;need to change arange 
   (%draw-mark (OHLC kwargs)))
    

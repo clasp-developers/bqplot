@@ -2,18 +2,19 @@
 (in-package :bqplot)
 
 (defclass figure (cljw:domwidget)
-  ((title :initarg :title :accessor title
+  ((figure :initarg :figure :accessor figure
           :type cljw:unicode
           :initform nil
           :metadata (:sync t
                            :json-name "title"))
                            ;;does display_name "Title" Matter??))
-   (axes :initarg :axes :accessor axes
+   (fig-axes :initarg :fig-axes :accessor fig-axes
          :type list
          :initform (list (make-instance 'Axis))
-         :metadata #.`(:sync t
-                          :json-name "axes"
-                          ,@cljw:*widget-serialization*))
+         :metadata  #.`(:sync t
+                           :json-name "axes"
+                           ,@cljw:*widget-serialization*))
+                          
    (marks :initarg :marks :accessor marks
           :type list
           :initform (list (make-instance 'Mark))
@@ -56,7 +57,7 @@
                 :metadata (:sync t
                                  :json-name "legend_text"))
    (layout :initarg :layout :accessor layout
-           :initform (make-instance 'LayoutTraitType :kw (list (cons min-width "125px")))
+           :initform (make-instance 'LayoutTraitType :kw (list (cons "min-width" "125px")))
            :metadata #.`(:sync t
                             :json-name "layout"
                             ,@cljw:*widget-serialization*))
@@ -110,8 +111,8 @@
     :model-name (cljw:unicode "FigureModel")
     :view-module (cljw:unicode "bqplot")
     :model-module (cljw:unicode "bqplot")
-    :view-module-version (cljw:unicode *frontend-version*)
-    :model-module-version (cljw:unicode *frontend-version*))
+    :view-module-version *frontend-version*
+    :model-module-version *frontend-version*)
   (:metaclass traitlets:traitlet-class))
 
 
@@ -126,9 +127,10 @@
 (defmethod save-png ((self figure) &key (filename nil))
   (let ((msg (list (cons "type" "save_png"))))
     (when filename
-      (push (cons "filename" filename) msg)))
-  (send self msg)
-  (values))
+      (push (cons "filename" filename) msg))
+    (send self msg)
+  (values)))
+
 
 ;;;@validate('min-aspect-ratio')
 (defmethod %validate-min-aspect-ratio (object val)

@@ -12,23 +12,22 @@
 	    :metadata (:sync t
 			     :json-name "formats"))
    (show-labels :accessor show-labels
-		:type bool
+		:type :bool
 		:initform :true
 		:metadata (:sync t
 				 :json-name "show_labels"))
-   (labels :accessor labels
+   (labels-tooltip :accessor labels-tooltip
 	   :type list
 	   :initform nil
 	   :metadata (:sync t
 			    :json-name "labels")))
    (:default-initargs
     :view-name (cljw:unicode "Tooltip")
-    :model-name (cljw:unicode "TooltipModel")
-    :view-module (cljw:unicode "bqplot")
-    :model-module (cljw:unicode "bqplot")
-    :view-module-version *frontend-version*
-    :model-module-version *frontend-version*)
-
-  (:metaclass traitlets:trailet-class))
+     :model-name (cljw:unicode "TooltipModel")
+     :view-module (cljw:unicode "bqplot")
+     :model-module (cljw:unicode "bqplot")
+     :view-module-version *frontend-version*
+     :model-module-version *frontend-version*)
+   (:metaclass traitlets:traitlet-class))
 
 		
