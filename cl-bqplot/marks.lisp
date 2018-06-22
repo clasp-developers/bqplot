@@ -10,7 +10,7 @@
 	   :validator %validate-scales
 	   :metadata #.`(:sync t
                       :json-name "scales"
-                      ,@*widget-serialization*))
+                      ,@cljw:*widget-serialization*))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		    :type list
 		    :initform nil
@@ -27,7 +27,7 @@
 		   :metadata (:sync t
 				    :json-name "display_legend"
 				    :display-name "Display legend"))
-   (labels :initarg :labels :accessor labels
+   (labels-mark :initarg :labels :accessor labels-mark
 	   :type list
 	   :initform (list (cons 'trait (cljw:unicode "")))
 	   :metadata (:sync t
@@ -68,7 +68,7 @@
 	    :initform (make-instance 'domwidget)
 	    :metadata #.`(:sync t
 			     :json-name "tooltip"
-			     ,@*widget-serialization*))
+			     ,@cljw:*widget-serialization*))
    (tooltip-style :initarg :tooltip-style :accessor tooltip-style
 		  :type list
 		  :initform (list (cons "opacity" 0.9))
@@ -113,7 +113,7 @@
                (push k ret))))
     ret))
 
-(defmethod %validate_scales (object val)
+(defmethod %validate_scales (object val))
   
 
 					;TODO:
@@ -127,10 +127,10 @@
 					;def on-background-click  Callback
 					;def handle-custom-msgs
 (defclass lines (mark)
-  (icon :accessor icon
+  ((icon :accessor icon
 	:type string
 	:initform "fa-line-chart")
-  (icon :accessor name
+  (name :accessor name
 	:type string
 	:initform "Lines")
   (x :accessor x
@@ -218,7 +218,7 @@
 	       :metadata (:sync t
 				:json-name "close_path"
 				:display-name "Close path"))
-   (fill :accessor fill
+   (fill-marks :accessor fill-marks
 	 :type unicode
 	 :initform (cljw:unicode "none")
 	 :metadata (:sync t
@@ -247,12 +247,11 @@
 		   :initform nil
 		   :metadata (:sync t
 				    :json-name "fill_opacities"
-				    :display-name "Fill Opacity"))
+				    :display-name "Fill Opacity")))
    (:default-initargs
        :view-name (cljw:unicode "Lines")
      :model-name (cljw:unicode "LinesModel"))
-
-   (:metaclass traitlets:traitlet-class))
+    (:metaclass traitlets:traitlet-class))
 
 (defclass flex-line (mark)
   ((x :accessor x
@@ -311,14 +310,15 @@
 				  :display-name "Stroke width"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode "")(cons 'default-value CATEGORY10)))
-	   :metadata (:sync t
+	   :initform (list (cons 'trait (cljw:unicode ""))
+                           (cons 'default-value CATEGORY10))
+           :metadata (:sync t
 			    :json-name "colors")))
-  (:default-initargs
-   :view-name (cljw:unicode "FlexLine")
-    :model-name (cljw:unicode "FlexLineModel"))
+   (:default-initargs
+    :view-name (cljw:unicode "FlexLine")
+     :model-name (cljw:unicode "FlexLineModel"))
 
-   (:metaclass traitlets:traitlet-class))
+    (:metaclass traitlets:traitlet-class))
 
 (defclass %scatter-base (mark)
   ((x :initarg :x :accessor x
@@ -519,7 +519,7 @@
 	   :metadata (:sync t
 			    :json-name "display_names"
 			    :display-name "Display names"))
-   (fill :accessor fill
+   (fill-marks :accessor fill-marks
 	 :type bool
 	 :initform :true
 	 :metadata (:sync t
@@ -629,7 +629,7 @@
 			    :atype "bqplot.Axis"
 			    *array-serialization*))
 					;TODO: .valid stuff
-   (count :accessor count
+   (count-marks :accessor count-marks
 	  :type list
 	  :initform nil
 	  :metadata (:sync t
@@ -790,7 +790,7 @@
 				      (cons "dimension" "x")))
 		      (cons "y" (list (cons "orientation" "vertical")
 				      (cons "dimension" "y"))))
-      :validator 
+      ;:validator 
       :metadata (:sync t
 		       :json-name "scales_metadata"))
    (color-mode :accessor color-mode
@@ -849,42 +849,43 @@
     (:metaclass traitlets:traitlet-class))
 
 (defmethod %validate-orientation (object val)
-  ((if (equal val (cljw:unicode "vertical"))
-       ((setf x-orient "horizontal")
-	(setf y-orient "vertical"))
-       ((setf x-orient "vertical")
-	(setf y-orient "horizontal")))
+  (if (equal val (cljw:unicode "vertical"))
+      (setf x-orient "horizontal"
+            y-orient "vertical")
+      (setf x-orient "vertical"
+	    y-orient "horizontal"))
   (setf scales-metadata (list (cons "x" (list (cons "orientation" x-orient )
-				      (cons "dimension" "x")))
+				              (cons "dimension" "x")))
 			      (cons "y" (list (cons "orientation" y-orient)
-				      (cons "dimension" "y")))))))
-
+				              (cons "dimension" "y"))))))
 
 (defclass bins(bars)
-  ((icons :icons :initargs :accessor icons
-	  :type unicode
-	  :initform (cljw:unicode "fa-signal"))
-   (name :name :initarg :accessor name
+  ((name :initarg  :name :accessor name
 	 :type unicode
 	 :initform (cljw:unicode "Backend Histogram"))
+   (icons :initarg :icons :accessor icons
+	  :type unicode
+	  :initform (cljw:unicode "fa-signal"))
 
+					;for some reason icons creates a glitch of type invalid initialization argument so we're just commenting it out for now
+   
    ;;TODO IS SAMPLES RIGHT 
-   (sample :sample :initarg :accessor sample
+   (sample :initarg :sample :accessor sample
 	   :type list
 	   :initform nil 
-	   :meatdata (:sync f
+	   :metadata (:sync f
 			    :json-name "sample"
 			    :display-name "Sample"
 			    :rtype "Number"
 			    :atype "bqplot.Axis"
 			    *array-serializaion*))
 
-   (min :initarg :min :accessor min
+   (min-marks :initarg :min-marks :accessor min-marks
 	:type float
 	:initform nil                       ;;can floats initform be nil??
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :initarg :max :accessor max
+   (max-marks :initarg :max-marks :accessor max-marks
 	:type float
 	:initform nil
 	:metadata (:sync t
@@ -897,7 +898,7 @@
 
 
    ;; TODO FINISH BINS 
-   (bins :bins :initarg :accessor bins
+   (bins :initarg :bins :accessor bins
 	    :type 
 	    :initform 
 	    :metadata (:sync t
@@ -910,14 +911,14 @@
 
 
 (defclass OHLC (mark)
-   ((icon :accessor icon
-	   :type unicode
-	   :initform (cljw:unicode "fa-birthday-cake"))
+  ((icon :accessor icon
+	 :type unicode
+	 :initform (cljw:unicode "fa-birthday-cake"))
    (name :accessor name
 	 :type unicode
 	 :initform (cljw:unicode "OHLC Chart"))
 
-    (x :accessor x
+   (x :accessor x
       :type list
       :initform nil
       :metadata (:sync t
@@ -926,7 +927,7 @@
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
 		       *array-serialization*))
-     (y :accessor y
+   (y :accessor y
       :type list
       :initform nil
       :metadata (:sync t
@@ -936,56 +937,55 @@
 		       :atype "bqplot.Axis"
 		       *array-serialization*))
    
-    (scales-metadata :accessor scales-metadata
-		     :type list
-		     :initform (list (cons "x" (list (cons "orientation" "horizontal")
-						     (cons "dimension" "x")))
-				     (cons "y" (list (cons "orientation" "vertical")
-						     (cons "dimension" "y"))))
-		     :metadata (:sync t
-				      :json-name "scales_metadata"))
-    (marker :accessor marker
-	     :type unicode
-	     :initform (cljw:unicode "candle")
-	     :metadata (:sync t
-			      :json-name "marker"
-			      :display-name "Marker"))
-    (stroke :accessor stroke
-	    :type unicode
-	    :initform (cljw:unicode "")
-	    :metadata (:sync t
-			     :json-name "stroke"
-			     :display-name "Stroke"))
-    (stroke-width :accessor stroke-width
-	    :type float
-	    :initform 1.0
-	    :metadata (:sync t
-			     :json-name "stroke_width"
-			     :display-name "Stroke Width"))
-    (colors :accessor colors
-	    :type unicode
-	    :initform (cljw:unicode "")
-	    :metadata (:sync t
-			     :json-name "colors"
-			     :display-name "Colors"))
-    (opacities :accessor opacities
-	       :type list
-	       :initform (list (cons 'trait 1.0))
-	       :metadata (:sync t
-				:json-name "opacities"
-				:display-name "Opacities")
-    (format :accessor format
-	    :type unicode
-	    :initform (cljw:unicode "ohcl")
-	    :metadata (:sync t
-			     :json-name "format"
-			     :display-name "Format")))
+   (scales-metadata :accessor scales-metadata
+		    :type list
+		    :initform (list (cons "x" (list (cons "orientation" "horizontal")
+						    (cons "dimension" "x")))
+				    (cons "y" (list (cons "orientation" "vertical")
+						    (cons "dimension" "y"))))
+		    :metadata (:sync t
+				     :json-name "scales_metadata"))
+   (marker :accessor marker
+	   :type unicode
+	   :initform (cljw:unicode "candle")
+	   :metadata (:sync t
+			    :json-name "marker"
+			    :display-name "Marker"))
+   (stroke :accessor stroke
+	   :type unicode
+	   :initform (cljw:unicode "")
+	   :metadata (:sync t
+			    :json-name "stroke"
+			    :display-name "Stroke"))
+   (stroke-width :accessor stroke-width
+	         :type float
+	         :initform 1.0
+	         :metadata (:sync t
+			          :json-name "stroke_width"
+			          :display-name "Stroke Width"))
+   (colors :accessor colors
+	   :type unicode
+	   :initform (cljw:unicode "")
+	   :metadata (:sync t
+			    :json-name "colors"
+			    :display-name "Colors"))
+   (opacities :accessor opacities
+	      :type list
+	      :initform (list (cons 'trait 1.0))
+	      :metadata (:sync t
+			       :json-name "opacities"
+			       :display-name "Opacities"))
+   (format-marks :accessor format-marks
+	   :type unicode
+	   :initform (cljw:unicode "ohcl")
+	   :metadata (:sync t
+			    :json-name "format"
+			    :display-name "Format")))
   
-    (:default-initargs
+  (:default-initargs
    :view-name (cljw:unicode "OHLC")
-      :model-name (cljw:unicode "OHLCModel"))
-    
-    (:metaclass traitlets:traitlet-class))
+    :model-name (cljw:unicode "OHLCModel"))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass pie (mark)
    ((icon :accessor icon
@@ -1020,7 +1020,7 @@
 		     :initform (list (cons "colors" (list (cons "dimension" "color"))))
 		     :metadata (:sync t
 				      :json-name "scales_metadata"))
-    (sort :accessor sort
+    (sort-marks :accessor sort-marks
 	  :type :bool
 	  :initform :false
 	  :metadata (:sync t
@@ -1111,8 +1111,8 @@
 
 (defclass map (mark)
   ((icon :accessor icon
-	   :type unicode
-	   :initform (cljw:unicode "fa-globe"))
+	 :type unicode
+	 :initform (cljw:unicode "fa-globe"))
    (name :accessor name
 	 :type unicode
 	 :initform (cljw:unicode "Map"))
@@ -1126,11 +1126,12 @@
 			   :scaled t
 			   :rtype "Color"
 			   :atype = "bqplot.ColorAxis"))
-    (scales-metadata :accessor scales-metadata
-		     :type list
-		     :initform (list (cons "color" (list (cons "dimension" "color"))))
-		     :metadata (:sync t
-				      :json-name "scales_metadata"))
+   (scales-metadata :accessor scales-metadata
+		    :type list
+		    :initform (list (cons "colors" (list (cons "dimension" "color")))
+				    (cons "projection" (list (cons "dimension" "geo"))))
+		    :metadata (:sync t
+				     :json-name "scales_metadata"))
    (hover-highlight :accessor hover-highlight
 		    :type :bool
 		    :initform :true
@@ -1154,12 +1155,6 @@
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :displa-name "Colors"))
-   (scales-metadata :accessor scales-metadata
-		    :type list
-		    :initform (list (cons "colors" (list (cons "dimension" "color")))
-				    (cons "projection" (list (cons "dimension" "geo"))))
-		    :metadata (:sync t
-				     :json-name "scales_metadata"))
    (selected :accessor selected
 	     :type list
 	     :initform nil
@@ -1174,10 +1169,10 @@
 				     :json-name "selected_styles")))
    ;; TODO MAP DATA
 
-     (:default-initargs
+  (:default-initargs
    :view-name (cljw:unicode "Map")
     :model-name (cljw:unicode "MapModel"))
-     (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass grid-heat-map (mark)
 
@@ -1315,7 +1310,7 @@
    (link-distance :accessor link-distance
 		  :type float
 		  :initform 100.0
-		  :metadta(:sync t
+		  :metadata(:sync t
 				 :json-name "link_distance"))
    (node-data :accessor node-data
 	      :type list
@@ -1335,7 +1330,7 @@
 				 :rtype "Number"
 				 *array-serialization*))
    (link-type :accessor link-type
-	      :tyoe unicode
+	      :type unicode
 	      :initform (cljw:unicode "arc")
 	      :metadata(:sync t
 			      :json-name "link_type"))
@@ -1452,16 +1447,15 @@
 		   :initform (list (cons "x" (list (cons "orientation" "horizontal")
 						     (cons "dimension" "x")))
 				   (cons "y" (list (cons "orientation" "vertical")
-						     (cons "dimension" "y")))))
+						     (cons "dimension" "y"))))
 		   :metadata (:sync t
-				    :json-name "scales_metadata")) 
+				    :json-name "scales_metadata"))) 
    ;;need to add the image slot 
   
   (:default-initargs
    :view-name (cljw:unicode "Image")
     :model-name (cljw:unicode "ImageModel"))
     (:metaclass traitlets:traitlet-class))
-
 
 
 
