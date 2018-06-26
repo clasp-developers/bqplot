@@ -105,6 +105,10 @@
    ;;;pyplot.py creates a pyplot slot on the fly... Adding it statically here.
    (pyplot :initarg :pyplot :accessor pyplot
 	   :initform nil)
+   ;;;pyplot.py creates an axis-registry slot on the fly... adding it statically here.
+   (axis-registry :initarg :axis-registry :accessor axis-registry
+                  :type cljw:dict
+                  :initform nil)
    )
   (:default-initargs
    :view-name (cljw:unicode "Figure")

@@ -8,7 +8,7 @@
 				(cons "bqplot.albers-usa" albers-usa)
 				(cons "bqplot.equi-rectangular" equi-rectangular)
 				(cons "bqplot.orthographic" orthographic)
-				(cons "bqplot.gnomonic" gnomonic)
+				(cons "bqplot.gnomonic" gnomonic)))
    (domain-class :accessor domain-class
                  :type float
                  :initform nil)
@@ -279,7 +279,7 @@
 (defclass linear-scale (scale)
   ((precedence :accessor precedence
                :type int
-	       :iniform 2)   
+	       :initform 2)   
    (r-type :accessor r-type
 	   :type unicode
 	   :initform (cljw:unicode "Number"))

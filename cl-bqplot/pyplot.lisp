@@ -110,22 +110,22 @@
 
 (defun set-lim (low high name)
   (let (scale (cdr (assoc (%get-attribute-dimension name) (cdr (assoc "scales" %context :test #'string=)))))
-    (setf ((min scale) low)
-          ((max scale) high))
+    (setf (min scale) low
+          (max scale) high)
   scale))
 
-(defun axes (&rest kwargs &key (mark nil) (options nil) &allow-other-keys)
+#|(defun axes (&rest kwargs &key (mark nil) (options nil) &allow-other-keys)
   ;;;Remove mark and options from kwargs
   (setf kwargs (remove mark kwargs)
         kwargs (remove ':mark kwargs)
         kwargs (remove options kwargs)
         kwargs (remove ':options kwargs))
   (unless mark
-    (let ((new_mark (cdr (assoc "last_mark" %context :test #'string=))))
-      (if new_mark
-          (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
-          (return-from axes nil))))
-  (let ((fig (getf :figure kwargs)))
+    (let ((new-mark (cdr (assoc "last-mark" %context :test #'string=)))
+      (if new-mark
+          (setf Mark (cdr (assoc "last-mark" %context :test #'string=)))
+          (return-from axes nil)))))
+  (let ((fig (cdr (assoc "figure" current-figure :test #'string=)))
     (unless fig
       (setf fig (current-figure)))
     (let ((scales (scales mark))
@@ -135,7 +135,7 @@
             do
                (unless (member name ((getf scales-metadata name nil) mark)
                                
-      ))))))
+      )))))))|#
 ;;;FINISH AXES
 #|    
 (defun %set-label (label mark dim &rest kwargs &key &allow-other-keys)
@@ -179,7 +179,7 @@
          (scale (getf scales dim)))
     (unless scale
       (return-from %set-label nil))
-    (let ((dimension (getf scale-metadata "dimension"))
+    (let* ((dimension (getf scales-metadata "dimension"))
 	  (axis (%fetch-axis fig dimension (cdr (assoc dim scales)))))
       (unless dimension  
 	(setf dimension (cdr (assoc dim scales))))
@@ -206,7 +206,7 @@
     (setf (title-style fig) style))))
 
 (defun legend ()
-  (loop for m in (marks current-figure)
+  (loop for m in (marks (current-figure))
      do
        (setf (display-legend m) t)))
 
@@ -215,7 +215,7 @@
     (setf kwargs (append kwargs (list :colors "dodgerblue"))))
   (unless (getf kwargs ':stroke-width)
     (setf kwargs (append kwargs (cons ':stroke-width 1))))
-  (let ((scales (getf kwargs ':scales))
+  (let* ((scales (getf kwargs ':scales))
         (fig (getf kwargs ':figure))
         (x nil)
         (y nil)
@@ -275,7 +275,7 @@
     (when ( > (length array-shape) 1)
       (return-from %infer-x-for-line (loop for i upto (1- (second array-shape)) collect i)))))
 
-(defun plot (x y marker-str &rest kwargs &key &allow-other-keys) ;;;need to fix this. What to put in just args and parse the args from keyword args 
+#|(defun plot (x y marker-str &rest kwargs &key &allow-other-keys) ;;;need to fix this. What to put in just args and parse the args from keyword args 
   (let (( marker-str nil))
     (cond ((= (length args) 1)
 	   (setf kwargs (appends kwargs (list :y (cdr (assoc 0 args :test #'equalp=)))))
@@ -291,13 +291,13 @@
 		     (progn
 		       ((setf (kwargs (append kwargs (list :x (cdr (assoc 0 args :test #'equalp=)))))
 			      (kwargs (append kwargs (list :y (cdr (assoc 1 args :test #'equalp=)))))))))))
-	)))
+	)))|#
 			   
 		        
 				     
 
-(defun imshow (image format kwargs &key &allow-other-keys)
-  (let (ipyimage nil)
+#|(defun imshow (image format kwargs &key &allow-other-keys)
+  (let (ipyimage)
   (cond ((= format "widget")
 	 (setf ipyimage image))
 	((= format "filename")
@@ -308,22 +308,22 @@
 	   ))))
   
 	
-	
+	|#
       
   ;;need help
-  )
+  
 
 
 
-(defun OHLC ();; kwarg and args 
-  (when (= (length args) 2)
-    (setf kwargs (append kwargs (list :x (cdr (assoc 0 args :test #'equalp))))
-	  kwargs (append kwargs (list :y (cdr (assoc 1 args :test #'equalp))))))
-  (when (= (length args) 1)
-    (setf kwargs (append kwargs (list :y (cdr (assoc 0 args :test #'equalp))))
-          length (length (cdr (assoc 0 args :test #'equalp=))) 
-	  kwargs (appends kwargs (list :x (arange length))))) ;;need to change arange 
-  (%draw-mark (OHLC kwargs)))
+;(defun OHLC ();; kwarg and args 
+  ;(when (= (length args) 2)
+    ;(setf kwargs (append kwargs (list :x (cdr (assoc 0 args :test #'equalp))))
+	  ;kwargs (append kwargs (list :y (cdr (assoc 1 args :test #'equalp))))))
+  ;(when (= (length args) 1)
+    ;(setf kwargs (append kwargs (list :y (cdr (assoc 0 args :test #'equalp))))
+          ;length (length (cdr (assoc 0 args :test #'equalp=))) 
+	  ;kwargs (appends kwargs (list :x (arange length))))) ;;need to change arange 
+  ;(%draw-mark (OHLC kwargs)))
    
 
 ;;uses a plist so you need to apend. Assoc used for alist and cons 
@@ -333,19 +333,19 @@
 	kwargs (append kwargs (list :y y)))
   (%draw-mark (find-class 'scatter) kwargs))
 
-(defun hist (sample &rest kwargs &key (option nil)  &allow-other-key)
+#|(defun hist (sample &rest kwargs &key (option nil)  &allow-other-key)
  (remf kwargs :option)
  (setf kwargs (append kwargs (list :sample sample)))
  (let ((scales (getf kwargs ':scales))(dimension))
    (remf kwargs ':scales)
    (unless (member "count" scales)
      (setf dimension (%get-attribute-dimension ("count" (find-class 'Hist)))
-          (if (member dimension (cdr (assoc "scales" %context :test #'string=)))
-          (setf scales (append scales (list :count (nth dimension (cdr (assoc "scales" %context :test #'string=))))))
+           (if (member dimension (cdr (assoc "scales" %context :test #'string=)))
+               (setf scales (append scales (list :count (nth dimension (cdr (assoc "scales" %context :test #'string=))))))
           (progn (setf (cdr (assoc "count" scales :test #'string=)) (linear-scale (getf options "count")))
              (setf (nth dimension (cdr (assoc "scales" %context :test #'string=))) (cdr (assoc "count" scales :test #'string=)))))))
           (setf (cdr (assoc "scales" kwargs :test #'string=)) scales)
-          (%draw-mark (find-class 'Hist) :options options kwargs)))
+          (%draw-mark (find-class 'Hist) :options options kwargs)))|#
 
 (defun bin (sample &rest kwargs &key (options nil) &allow-other-keys)
  (let ((scales)(dimension))
@@ -353,23 +353,24 @@
       scales (cdr (assoc "scales" kwargs :test #'string=)))
    (remf kwargs :scales)
    (loop for xy in (list "x" "y")
-     (unless (member xy scales)
-       (progn (setf dimension (%get-attribute-dimension xy (find-class 'bars)))
+      do
+        (unless (member xy scales)
+          (setf dimension (%get-attribute-dimension xy (find-class 'bars)))
           (if (member dimension (cdr (assoc "scales" %context :test #'string=)))
               (setf (cdr (assoc xy scales :test #'string=)) (nth dimension (cdr (assoc "scales" %context :test #'string=))))
-              (progn (setf (cdr (assoc xy scales :test #'string=)) (linear-scale (getf options xy)))
-                 (setf (nth dimension (cdr (assoc "scales" %context :test #'string=))) (cdr (assoc xy scales :test #'string=))))))))
+              (setf (cdr (assoc xy scales :test #'string=)) (linear-scale (getf options xy))
+                    (nth dimension (cdr (assoc "scales" %context :test #'string=))) (cdr (assoc xy scales :test #'string=))))))
    (setf kwargs (append kwargs (list (:scales scales))))
    (%draw-mark (find-class 'bins) :options options kwargs)))
 
-(defun bin (sample (options nil) &rest kwargs &key &allow-other-key)
+#|(defun bin (sample (options nil) &rest kwargs &key &allow-other-key)
   (setf kwargs (appends kwargs (list :sample sample)))
   (let ((scales (getf kwargs :scales)))
-  (remf kwargs :scales)))
+  (remf kwargs :scales)))|#
 ;;finish this
 
 ;;checked
-(defun bar (x y &rest kwargs &key &allow-other-key kwargs)
+(defun bar (x y &rest kwargs &key &allow-other-key)
   (setf kwargs (append kwargs (list :x x))
 	kwargs (append kwargs (list :y y)))
   (%draw-mark (find-class 'bars) kwargs)) 
@@ -397,8 +398,8 @@
   (%draw-mark (find-class 'label) kwargs))
   
 (defun geo (map-data &rest kwargs &key &allow-other-key)
-  (let ((scales  (getf :scales kwargs (cdr (assoc "scales" %context :test #'string=)))
-	  (options (getf :options kwargs nil)))))
+  (let ((scales  (getf :scales kwargs (cdr (assoc "scales" %context :test #'string=))))
+	  (options (getf :options kwargs nil))))
   (unless (assoc "projection" scales :test #'string=)
     (warn "How do we **options")
  ;;;(setf scales (append scales (cons "projection" (make-instance 'mercator )
@@ -417,88 +418,103 @@
    (%draw-mark (find-class 'grid-heat-map) kwargs))
 
 (defun %add-interaction (int-type &rest kwargs &key &allow-other-key)
-  (let (fig (getf :figure kwargs (current-figure)))
-    (marks (getf :marks kwargs))) ;;need help with context last mark 
-  (remf :figure kwargs)
-  (remf :marks kwargs)
+  (let ((fig (getf kwargs :fig (current-figure)))
+        (marks (getf :marks kwargs))) ;;need help with context last mark 
+    (remf kwargs :figure)
+    (remf kwargs :marks)
   ;;ned help with for loop
-  (setf (getf :marks kwargs) marks)
+    (setf (getf kwargs :marks) marks)))
   ;;don know the rest 
-  )
+  
 
 ;;checked 
 (defun %get-context-scale (dimension)
-  ((cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=))))))
+  (nth dimension (cdr (assoc "scales" %context :test #'string=))))
 
+  ;(cdr (assoc dimension (assoc "scales" %context :test #'string=)))
 
-;;checked 
-(defun %create-selector (int-tpe func trait &rest kwargs &key &allow-other-key)
+  ;; (setf (nth key (cdr (assoc "figure_registry" %context :test #'string=))) fig)))
+;;; _context['figure_registry'][key] = fig
+  ;;checked
+  
+(defun %create-selector (int-type func trait &rest kwargs &key &allow-other-key)
   (let ((interaction (%add-interaction (int-type kwargs))))
   (when func
     (on-trait-change interaction func trait))
   interaction))
 
 ;;need the seven below checked 
-(defun brush-int-selector ((func nil) (trait "selected") &rest kwargs &key &allow-other-key)
+(defun brush-int-selector (&rest kwargs &key (func nil) (trait "selected") &allow-other-key)
+  (remf kwargs :func)
+  (remf kwargs :trait)
   (%create-selector (find-class 'brush-interval-selector) func trait kwargs))
 
-(defun %int-selector ((func nil) (trait "selected")  &rest kwargs &key &allow-other-key)
+(defun %int-selector (&rest kwargs &key (func nil) (trait "selected") &allow-other-key)
+  (remf kwargs :func)
+  (remf kwargs :trait)
   (%create-selector (find-class 'fast-interval-selector) func trait kwargs))
 
-(defun %index-selector ((func nil) (trait "selected")  &rest kwargs &key &allow-other-key)
+(defun %index-selector (&rest kwargs &key (func nil) (trait "selected") &allow-other-key)
+  (remf kwargs :func)
+  (remf kwargs :trait)
   (%create-selector (find-class 'index-selector) func trait kwargs))
 
-(defun brush-selector ((func nil) (trait "selected")  &rest kwargs &key &allow-other-key)
+(defun brush-selector (&rest kwargs &key (func nil) (trait "selected") &allow-other-key)
+  (remf kwargs :func)
+  (remf kwargs :trait)
    (%create-selector (find-class 'brush-selector) func trait kwargs))
   
-(defun multi-selector ((func nil) (trait "selected" &rest kwargs &key &allow-other-key))
+(defun multi-selector (&rest kwargs &key (func nil) (trait "selected") &allow-other-key)
+  (remf kwargs :func)
+  (remf kwargs :trait)
   (%create-selector (find-class 'multi-selector) func trait kwargs))
 
-(defun lasso-selector ((func nil) (trait "selected" &rest kwargs &key &allow-other-key))
+(defun lasso-selector (&rest kwargs &key (func nil) (trait "selected") &allow-other-key)
+  (remf kwargs :func)
+  (remf kwargs :trait)
   (%create-selector (find-class 'lasso-selector) func trait kwargs))
 
 (defun clear ()
-  (let fig (cdr (assoc "figure" %context #'string=)))
-  (unless fig 
-      (setf ((slot-value fig marks) nil)
-	    ((axes fig) nil)
-	    ("axis-registry" fig) nil) ;; did i handle setattr right?
-      ((cdr (assoc "scales" %context :test #'string=)) nil)
-      (key (cdr (assoc "current-key" %context :test #'string=))))
-  (when key
-    (setf  (cdr (assoc "key" (cdr (assoc "scale-registry" %context :test #'string=)))) nil )))
+  (let ((fig (cdr (assoc "figure" %context :test #'string=)))
+        (key nil))
+  (when fig 
+      (setf (marks fig) nil
+	    (axes fig) nil 
+            (cdr (assoc "scales" %context :test #'string=)) nil
+            key (cdr (assoc "current-key" %context :test #'string=)))
+      (when key
+        (setf (cdr (assoc key (cdr (assoc "scale-registry" %context :test #'string=)))) nil))))
+  (values))
 
 ;;needs to be checked 
 (defun current-figure ()
   (unless (cdr (assoc "figure" %context :test #'string=))
     (figure)) ;;is the is the proper way to call the func
-  (cdr (assoc "figure" %context #'string=)))
+  (cdr (assoc "figure" %context :test #'string=)))
 
 
-(defun get-context ())
+;(defun get-context ())
 
-(defun set-context (context))
+;(defun set-context (context))
 
 
 (defun %fetch-axis (fig dimension scale)
-  (let (axis-registry (getf fig :axis-registry nil))
-    (dimension-data (getf axis-registry :dimension nil))
-    (dimension-scales
+  (let* ((axis-registry (getf fig :axis-registry))
+    (dimension-data (getf axis-registry :dimension)))
      ;;;need the last two plus the try 
-     )))
+     ))
 
 (defun update-fig-axis-registry (fig dimension scale axis)
-  (let (axis-registry (axis-registry fig)
-    (dimension-scales (getf axis-registry :dimension nil))
-    ((cdr (assoc "dimension" axis-registry :test #'string=)) dimension-scales))
+  (let* (axis-registry (axis-registry fig)
+    (dimension-scales (getf axis-registry :dimension nil)))
   (setf dimension-scales (append dimension-scales (list :scales "scales" :axis "axis"))) ;;not too sure 
   (setf (axis-registry fig) axis-registry)))
   
-(defun %get-attribute-dimension (trait-name (mark-type ni))
-  (unless mark-type
-    return-from %get-attribute-dimension) ;;is this the right way to return this  
-  (let scale-metadata ;;dont know the rest, for kevin 
-      ))
+;(defun %get-attribute-dimension (trait-name &key (mark-type nil))
+  ;(unless mark-type
+    ;return-from %get-attribute-dimension) ;;is this the right way to return this  
+  ;( ;;dont know the rest, for kevin 
+      ;))
 
 (defun %apply-properties (widget  &key (properties nil) &allow-other-keys)
   (with-pathname-p (hold-sync widget) ;;not very clear on how this portion works 
