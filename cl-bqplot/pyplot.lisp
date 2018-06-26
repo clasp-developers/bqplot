@@ -1,7 +1,7 @@
 (in-package :bqplot)
 
 (defparameter %context (list (cons "figure" nil)
-			     (cons "figure_registry" nil)
+			     (cons "figure-registry" nil)
 			     (cons "scales" nil)
 			     (cons "scale_registry" nil)
 			     (cons "last_mark" nil)
@@ -33,7 +33,7 @@
 (defun show (&key (key nil) (display-toolbar t))
   (let ((figure nil))
     (if key
-	(setf figure (nth key (cdr (assoc "figure_registry" %context :test #'string=))))
+	(setf figure (nth key (cdr (assoc "figure-registry" %context :test #'string=))))
 	(setf figure (current-figure)))
     (if display-toolbar
 	(progn (unless (pyplot figure)
@@ -48,30 +48,36 @@
   ;;;Now begins the translation of python code.
   (let ((scales-arg (getf kwargs :scales)))
     ;;Make getf an effective pop of the (:scales value)
-    (remove ':scales kwargs)
+    (remove :scales kwargs)
     (remove scales-arg kwargs)
-    (setf (cdr (assoc "current_key" %context :test #'string=)) key)
+    (setf (cdr (assoc "current-key" %context :test #'string=)) key)
     (if fig
 	(progn
 	  (setf (cdr (assoc "figure" %context :test #'string=)) fig)
 	  (when key
-	    (setf (nth key (cdr (assoc "figure_registry" %context :test #'string=))) fig))
-	  (loop for arg in kwargs));;;Python wants to add slots to the figure class...
-      ;;;setattr(%context['figure'], arg, kwargs[arg])
-	;;Else clause of the if fig
+	    (setf (nth key (cdr (assoc "figure-registry" %context :test #'string=))) fig))
+	  (loop for arg in kwargs do
+	       (unless (assoc arg (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
+		 (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=))))))))
 	(progn
 	  (if (not key)
               (setf (cdr (assoc "figure" %context :test #'string=)) (apply #'make-instance 'figure kwargs))
               (progn
-                (unless (assoc key (assoc "figure_registry" %context :test #'string=))
+                (unless (assoc key (assoc "figure-registry" %context :test #'string=))
                   (unless (getf kwargs :title)
                     (push (concatenate 'string "Figure" " " key) kwargs)
                     (push :title kwargs))
-                  (setf (cdr (assoc key (cdr (assoc "figure_registry" %context :test #'string=)))) fig)
-                (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure_registry" %context :test #'string=)))))
-                (warn "How to Add a slot for each argument in kwargs"))))))
+                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))) fig)
+                (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))))
+                (warn "How to Add a slot for each argument in kwargs"))
    ;;;(scales key :scales scales-arg)
-        (loop for arg in kwargs)
+		(loop for arg in kwargs do
+		     (unless (assoc arg (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
+		 (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=)))))))
+		))))
+    (unless (assoc "axis_registry" (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
+      (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons "axis_registry" nil))))
+    
     #|
     if(getattr(%context['figure'], 'axist_registry', None) is None):
          setattr(%context['figure'], 'axis_registry', {})
@@ -80,7 +86,7 @@
     (cdr (assoc "figure" %context :test #'string=))))
         
 (defun close (key)
-  (let ((figure-registry (cdr (assoc "figure_registry" %context)))
+  (let ((figure-registry (cdr (assoc "figure-registry" %context)))
         (fig nil))
     (unless (member key figure-registry)
       (return-from close))
@@ -222,8 +228,9 @@
 
 (defun title (label &key (style nil) &allow-other-keys) ;no need for kwargs but apparently we're not allowed to say &rest &key
   (let ((fig (current-figure)))
-  (setf (title fig) label)
-  (when style (setf (title-style fig) style)))))
+    (setf (title fig) label)
+    (when style
+      (setf (title-style fig) style))))
 
 (defun legend ()
   (loop for m in (marks (current-figure))
@@ -337,7 +344,7 @@
 
 (defun plot (&rest args)
  (let* ((x (if (keywordp (first args))
-               ;return error message
+              (nil) ;return error message
              (first args))) ;x needs to be popped 
         (y (if (or (stringp (second args))(keywordp (second args)))
                x ;x needs to be redefined
@@ -530,14 +537,14 @@
 
 (defun clear ()
   (let ((fig (cdr (assoc "figure" %context :test #'string=))))
-    (unless fig 
+    (when fig 
       (setf (marks fig) nil
 	    (axes fig) nil
 	    ;("axis-registry" fig) nil) ;; did i handle setattr right?
 	    (cdr (assoc "scales" %context :test #'string=)) nil)
       (let ((key (cdr (assoc "current-key" %context :test #'string=))))
 	(when key
-	  (setf  (cdr (assoc key (cdr (assoc "scale-registry" %context :test #'string=)))) nil )))))))
+	  (setf  (cdr (assoc key (cdr (assoc "scale-registry" %context :test #'string=)))) nil ))))))
 
 ;;needs to be checked 
 (defun current-figure ()

@@ -1,13 +1,13 @@
 (in-package :bqplot)
 
 (defclass mark (cljw:widget)
-  ((mark-types :initarg :mark-types :accessor mark-types
-               :type cljw:dict
-               :initform nil)
-   (scales :initarg :scales :accessor scales
+  (;(mark-types :initarg :mark-types :accessor mark-types
+               ;:type cljw:dict
+               ;:initform nil)
+   (scales-marks :initarg :scales :accessor scales-marks
 	   :type cljw:dict
 	   :initform nil ; Contents have to be of type 'scale
-	   :validator %validate-scales
+	   ;:validator %validate-scales
 	   :metadata #.`(:sync t
                       :json-name "scales"
                       ,@cljw:*widget-serialization*))
@@ -90,7 +90,8 @@
      :view-module (cljw:unicode "bqplot")
      :view-module-version *frontend-version*
      :model-module-version *frontend-version*
-     :ipython-display nil)
+     ;:ipython-display nil
+     )
 
     (:metaclass traitlets:traitlet-class))
 
@@ -113,7 +114,7 @@
                (push k ret))))
     ret))
 
-(defmethod %validate_scales (object val))
+;(defmethod %validate_scales (object val))
   
 
 					;TODO:

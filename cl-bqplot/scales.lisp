@@ -2,20 +2,20 @@
 
 (defclass scale (widget)
   ((scale-types :accessor scale-types
-                :initform (list (cons "bqplot.mercator" mercator)
-				(cons "bqplot.albers" albers)
-				(cons "bqplot.albers-usa" albers-usa)
-				(cons "bqplot.equi-rectangular" equi-rectangular)
-				(cons "bqplot.orthographic" orthographic)
-				(cons "bqplot.gnomonic" gnomonic)
-				(cons "bqplot.stereographic" stereographic)
-				(cons "bqplot.linear-scale" linear-scale)
-				(cons "bqplot.log-scale" log-scale)
-				(cons "bqplot.date-scale" date-sale)
-				(cons "bqplot.ordinal-scale" ordinal-scale)
-				(cons "bqplot.color-scale" color-scale)
-				(cons "bqplot.date-color-scale" date-color-scale)
-				(cons "bqplot.ordinal-color-scale" ordinal-color-scale)
+                :initform (list (cons "bqplot.mercator" (find-class 'mercator))
+				(cons "bqplot.albers" (find-class 'albers))
+				(cons "bqplot.albers-usa" (find-class 'albers-usa))
+				(cons "bqplot.equi-rectangular" (find-class 'equi-rectangular))
+				(cons "bqplot.orthographic" (find-class 'orthographic))
+				(cons "bqplot.gnomonic" (find-class 'gnomonic))
+				(cons "bqplot.stereographic" (find-class 'stereographic))
+				(cons "bqplot.linear-scale" (find-class 'linear-scale))
+				(cons "bqplot.log-scale" (find-class 'log-scale))
+				(cons "bqplot.date-scale" (find-class 'date-scale))
+				(cons "bqplot.ordinal-scale" (find-class 'ordinal-scale))
+				(cons "bqplot.color-scale" (find-class 'color-scale))
+				(cons "bqplot.date-color-scale" (find-class 'date-color-scale))
+				(cons "bqplot.ordinal-color-scale" (find-class 'ordinal-color-scale))
 				) ;;;TODO: Fill in class names
                 )
    (precedence :accessor precedence
@@ -24,7 +24,7 @@
    (domain-class :accessor domain-class
                  :type float
                  :initform nil)
-   (reverse :accessor reverse
+   (reverse-scales :accessor reverse-scales
             :type bool
             :initform :false
             :metadata (:sync t
@@ -41,14 +41,15 @@
     :model-module (cljw:unicode "bqplot")
     :view-module-version *frontend-version*
     :model-module-version *frontend-version*
-    :ipython-display nil)
+    ;:ipython-display nil
+    )
   (:metaclass traitlets:traitlet-class))
 
-(defclass geo-scale (scale)
-  (:default-initargs
-   :view-name (cljw:unicode "GeoScale")
-    :model-name (cljw:unicode "GeoScaleModel"))
-  (:metaclass traitlets:traitlet-class))
+;(defclass geo-scale (scale)
+  ;(:default-initargs
+   ;:view-name (cljw:unicode "GeoScale")
+    ;:model-name (cljw:unicode "GeoScaleModel"))
+  ;(:metaclass traitlets:traitlet-class))
 
 (defclass mercator (geo-scale)
   ((scale-factor :accessor scale-factor
@@ -123,7 +124,7 @@
 		 :initform 1200.0
 		 :metadata (:sync t
 				  :json-name "scale_factor"))
-   (translate :accessor :translate translate
+   (translate :accessor translate
 		 :type list
 		 :initform (list (cons 600 490))
 		 :metadata (:sync t
@@ -190,7 +191,7 @@
 	       :validator validate-clip-angle 
 	       :metadata (:sync t
 	                  :json-name "clip_angle"))
-   (precision :accessor :precision precision
+   (precision :accessor precision
 	       :type float
 	       :initform 0.1
 	       :metadata (:sync t
@@ -241,8 +242,8 @@
 	   :type unicode
 	   :initform (cljw:unicode "(Number, Number)"))
    (d-type :accessor d-type
-	    :type unicode
-	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
+	   :type unicode
+ 	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
  (:default-initargs
    :view-name (cljw:unicode "Gnomonic")
    :model-name (cljw:unicode "GnomonicModel"))
@@ -292,19 +293,19 @@
 (defclass linear-scale (scale)
   ((precedence :accessor precedence
                :type int
-	       :iniform 2))   
+	       :initform 2)   
    (r-type :accessor r-type
 	   :type unicode
 	   :initform (cljw:unicode "Number"))
    (d-type :accessor d-type
 	    :type unicode
 	    :initform (cljw:unicode "numpy.number"))
-   (min :accessor min
+   (min-scales :accessor min-scales
 	:type float
 	:initform 0.0              
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :accessor max
+   (max-scales :accessor max-scales
 	:type float
 	:initform 1.0              ;;;;tentative value for now not sure what it does 
 	:metadata (:sync t
@@ -325,7 +326,7 @@
 	      :initform 0.8
 	      :validator validate-mid-range
 	      :metadata (:sync t
-			       :json-name "mid_range"))
+			       :json-name "mid_range")))
    (:default-initargs
    :view-name (cljw:unicode "LinearScale")
      :model-name (cljw:unicode "LinearScaleModel"))
@@ -355,12 +356,12 @@
    (d-type :accessor d-type
 	    :type unicode
 	    :initform (cljw:unicode "numpy.number"))
-   (min :accessor min
+   (min-scales :accessor min-scales
 	:type float  
 	:initform 0            
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :accessor max
+   (max-scales :accessor max-scales
 	:type float
 	:initform 1              ;;;;tentative 
 	:metadata (:sync t
@@ -371,8 +372,7 @@
  
  (:metaclass traitlets:traitlet-class))
 
-;;HOW DO WE DO DATES?
-#|
+
 (defclass date-scale (scale)
   ((r-type :accessor r-type
 	   :type unicode
@@ -380,12 +380,12 @@
    (d-type :accessor d-type
 	    :type unicode
 	    :initform (cljw:unicode "numpy.datetime64"));;;;TODO is this right?
-   (min :accessor min
+   (min-scales :accessor min-scales
 	:type date                                 ;;;;Not sure what to put for type 
 	:initform nil
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :accessor max
+   (max-scales :accessor max-scales
 	:type date                                  ;;;Not sure what to put for type 
 	:initform nil
 	:metadata (:sync t
@@ -395,7 +395,6 @@
    :view-name (cljw:unicode "DataScale")
     :model-name (cljw:unicode "DataScaleModel"))
  (:metaclass traitlets:traitlet-class))
-|#
 
 (defclass ordinal-scale (scale)
   ((r-type :accessor r-type
@@ -432,12 +431,12 @@
 	   :initform nil ;;;; not sure how to deal with the trait = color part
 	   :metadata (:sync t
 			    :json-name "color"))
-   (min :accessor min
+   (min-scales :accessor min-scales
 	:type float        
 	:initform 0.0
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :accessor max
+   (max-scales :accessor max-scales
 	:type float
 	:initform 1   
 	:metadata (:sync t
@@ -466,12 +465,12 @@
    (domain-class :accessor domain-class
 		 :type date
 		 :initform nil) 
-   (min :accessor min
+   (min-scales :accessor min-scales
 	:type float        
 	:initform 0
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :accessor max
+   (max-scales :accessor max-scales
 	:type float             
 	:initform 1 
 	:metadata (:sync t

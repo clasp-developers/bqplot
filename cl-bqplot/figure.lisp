@@ -1,40 +1,39 @@
-;;;Needs a package to go into
 (in-package :bqplot)
 
 (defclass figure (cljw:domwidget)
-  ((title :initarg :title :accessor title
+  ((title-figure :initarg :title :accessor title-figure
           :type cljw:unicode
           :initform nil
           :metadata (:sync t
                            :json-name "title"))
                            ;;does display_name "Title" Matter??))
-   (axes :initarg :axes :accessor axes
+   (axes-figure :initarg :axes :accessor axes-figure
          :type list
-         :initform (list (make-instance 'Axis))
+         :initform (list (make-instance 'axis))
          :metadata #.`(:sync t
                           :json-name "axes"
-                          ,@*widget-serialization*))
+                          ,@cljw:*widget-serialization*))
    (marks :initarg :marks :accessor marks
           :type list
           :initform (list (make-instance 'Mark))
           :metadata #.`(:sync t
                            :json-name "marks"
-                           ,@*widget-serialization*))
+                           ,@cljw:*widget-serialization*))
    (interaction :initarg :interaction :accessor interaction
-                :initform (make-instance 'Interaction :default-value nil :allow-none t)
+                :initform (make-instance 'Interaction)
                 :metadata #.`(:sync t
                                  :json-name "interaction"
-                                 ,@*widget-serialization*))
+                                 ,@cljw:*widget-serialization*))
    (scale-x :initarg :scale-x :accessor scale-x
             :initform (make-instance 'Scale)
             :metadata #.`(:sync t
                              :json-name "scale_x"
-                             ,@*widget-serialization*))
+                             ,@cljw:*widget-serialization*))
    (scale-y :initarg :scale-y :accessor scale-y
             :initform (make-instance 'Scale)
             :metadata #.`(:sync t
                              :json-name "scale_y"
-                             ,@*widget-serialization*))
+                             ,@cljw:*widget-serialization*))
    (title-style :initarg :title-style :accessor title-style
                 :type cljw:dict
                 :initform (list (cons "trait" (cljw:unicode "")))
@@ -56,10 +55,10 @@
                 :metadata (:sync t
                                  :json-name "legend_text"))
    (layout :initarg :layout :accessor layout
-           :initform (make-instance 'LayoutTraitType :kw (list (cons min-width "125px")))
+           :initform (make-instance 'LayoutTraitType :kw (list (cons :min-width "125px")))
            :metadata #.`(:sync t
                             :json-name "layout"
-                            ,@*widget-serialization*))
+                            ,@cljw:*widget-serialization*))
    (min-aspect-ratio :initarg :min-aspect-ratio :accessor min-aspect-ratio
                      :type float
                      :initform 1.0
@@ -99,7 +98,7 @@
                        :type integer
                        :initform 0
                        :metadata (:sync t
-                                        :json-name "animation_duration"))
+                                  :json-name "animation_duration"))
                                         ;;;display-name "Animation duration"
    ;;;pyplot.py creates a pyplot slot on the fly... Adding it statically here.
    (pyplot :initarg :pyplot :accessor pyplot
@@ -141,4 +140,3 @@
   (if (< val (min-aspect-ratio self))
       (error "Trying to set max-aspect-ratio less than min-aspect ratio.")
       val))
-     
