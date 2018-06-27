@@ -100,3 +100,23 @@
 (defun strip (string)
   (string-trim #(#\Space #\Newline #\Return) string))
 
+;;;In python, the lambda list is def _mark_type(mark_type, options={}, axes_options={}, **kwargs.
+;;;I'm going to get rid of the option optionals and just have a kwargs containing all the information. 
+(defun %draw-mark (mark-type kwargs)
+  (let ((fig (getf kwargs :figure (current-figure)))
+        (scales (getf kwargs :scales))
+        (update-context (getf kwargs :update-context t))
+        (cmap (getf kwargs :cmap))
+        (options (getf kwargs :options))
+        (axes-options (getf kwargs :axes-options)))
+    (warn "Process color maps")
+    #|
+    (when cmap
+      (if (assoc "color" options :test #'string=)
+          (setf (cdr (assoc "color" options :test #'string=)) (list (cons 
+    |#
+    ))
+
+
+
+    
