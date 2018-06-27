@@ -50,7 +50,9 @@
     ;;Make getf an effective pop of the (:scales value)
     (remove :scales kwargs)
     (remove scales-arg kwargs)
-    (setf (cdr (assoc "current-key" %context :test #'string=)) key)
+    (if (assoc "current-key" %context :test #'string=)
+	(setf (cdr (assoc "current-key" %context :test #'string=)) key)
+	(setf %context (append %context (cons "current-key" key))))
     (if fig
 	(progn
 	  (setf (cdr (assoc "figure" %context :test #'string=)) fig)
@@ -77,12 +79,6 @@
 		))))
     (unless (assoc "axis_registry" (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
       (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons "axis_registry" nil))))
-    
-    #|
-    if(getattr(%context['figure'], 'axist_registry', None) is None):
-         setattr(%context['figure'], 'axis_registry', {})
-    |#
-    ;;;Return the figure in context.
     (cdr (assoc "figure" %context :test #'string=))))
         
 (defun close (key)
@@ -287,9 +283,9 @@
 (defun %process-cmap (cmap)
   (let ((option nil))
     (if (stringp cmap)
-	(setf (cdr (assoc "scheme" option :test #'string=)) cmap)
+	(setf option (append option (cons "scheme" cmap)))
 	(if (listp cmap)
-	    (setf (cdr (assoc "colors" option :test #'string=)) cmap)
+	    (setf option (append option (cons "colors" cmap)))
 	    (error "`cmap` must be a string (name of a color scheme)
                          or a list of colors, but a value of {} was given")))
     option))
@@ -313,11 +309,12 @@
 	 (let ((dimension (%get-attribute-dimension name mark-type)))
 	   (when (assoc name kwargs :test #'string=)
 	     (loop-finish))
-	   ;(if (assoc name scales :test #'string=)
-	       ;(setf (nth dimension (cdr (assoc "scales" %context :test #'string=))) (cdr (assoc name scales :test #'string=)))
-	       ;(if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
-		   ;(setf (cdr (assoc name scales :test #'string=))(nth dimension (cdr (assoc "scales" %context :test #'string=))))
-		   ;(let* ((traitlet)
+	   (if (assoc name scales :test #'string=)
+	       (when update-context
+		 (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=))) :test #'string=) (cdr (assoc name scales :test #'string=))))
+	       (if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
+		   (setf (cdr (assoc name scales :test #'string=))(cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
+		   (let* ((traitlet)
 			  ;(rtype)
 			  ;(dtype)
 			  ;(compat-scale-types)
