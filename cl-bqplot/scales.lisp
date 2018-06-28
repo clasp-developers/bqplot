@@ -3,12 +3,12 @@
 
 (defclass scale (widget)
   ((scale-types :accessor scale-types
-                :initform (list (cons "bqplot.mercator" mercator)
-				(cons "bqplot.albers" albers)
-				(cons "bqplot.albers-usa" albers-usa)
-				(cons "bqplot.equi-rectangular" equi-rectangular)
-				(cons "bqplot.orthographic" orthographic)
-				(cons "bqplot.gnomonic" gnomonic)))
+                :initform (list (cons "bqplot.mercator" (find-class 'mercator))
+				(cons "bqplot.albers" (find-class 'albers))
+				(cons "bqplot.albers-usa" (find-class 'albers-usa))
+				(cons "bqplot.equi-rectangular" (find-class 'equi-rectangular))
+				(cons "bqplot.orthographic" (find-class 'orthographic))
+				(cons "bqplot.gnomonic" (find-class 'gnomonic))))
    (domain-class :accessor domain-class
                  :type float
                  :initform nil)
@@ -29,7 +29,8 @@
     :model-module (cljw:unicode "bqplot")
     :view-module-version *frontend-version*
     :model-module-version *frontend-version*
-    :ipython-display nil)
+    ;;:ipython-display nil
+    )
   (:metaclass traitlets:traitlet-class))
 
 (defclass geo-scale (scale)
@@ -89,7 +90,7 @@
 	   :metadata (:sync t
 			    :json-name "parallels"))
    (precision :accessor precision
-	       :type float
+	      :type float
 	       :initform 0.1
 	       :metadata (:sync t
 				:json-name "precision"))

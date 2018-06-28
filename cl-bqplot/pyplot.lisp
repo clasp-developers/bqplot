@@ -30,17 +30,18 @@
 (defun hashtable (data v)
   (warn "How to try data[v]"))
 
-#|(defun show (&key (key nil) (display-toolbar t))
+(defun show (&key (key nil) (display-toolbar t))
   (let ((figure nil))
     (if key
 	(setf figure (nth key (cdr (assoc "figure_registry" %context :test #'string=))))
-      (setf figure (current-figure)))
+        (setf figure (current-figure)))
     (if display-toolbar
-	(unless (pyplot figure)
-	  (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
-	(display (make-instance 'vbox :children (vector figure (pyplot figure))))
-      (display figure)))
-  (values))|#
+        (prgn 
+	 (unless (pyplot figure)
+	   (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
+	 (display (make-instance 'vbox :children (vector figure (pyplot figure)))))
+        (display figure)))
+  (values))
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
   ;;;We don't want key and fig to actually be in the kwargs plist
@@ -137,14 +138,14 @@
                                
       )))))))|#
 ;;;FINISH AXES
-#|    
+#|
 (defun %set-label (label mark dim &rest kwargs &key &allow-other-keys)
   (unless (or mark (cdr (assoc "last_mark" %context :test #'string=)))
     (return-from %set-label nil))
   (unless mark
     (setf mark (cdr (assoc "last_mark" %context :test #'string=))))
   (let ((fig nil)
-        (fig-val (getf ':figure kwargs))
+        (fig-val (getf :figure kwargs))
         (scales (scales mark))
         (scale-metadata nil)
         (scale-metadata-val (getf dim (scales-metadata mark)))
@@ -168,6 +169,7 @@
         (%apply-properties axis (list (cons "label" label))))))
   (values))
 |#
+#|
 (defun %set-label (label mark dim &rest kwargs &key &allow-other-keys)
   (unless mark
     (setf mark (cdr (assoc "last-mark" %context :test #'string=))))
@@ -186,7 +188,17 @@
       (when axis
 	(%apply-properties axis (cons "label" label)))))
   (values))
+|#
 
+(defun xlabel (&rest kwargs &key (label nil) (mark nil) &allow-other-keys)
+  (remf kwargs :label)
+  (remf kwargs :mark)
+  (%set-label (label mark "x" kwargs)))
+
+(defun ylabel (&rest kwargs &key (label nil) (mark nil) &allow-other-keys)
+  (remf kwargs :label)
+  (remf kwargs :mark)
+  (%set-label (label mark "y" kwargs)))
 
 
 ;;;for plot func pass in x and y as the parameres instead of the arg and kwarg 
@@ -200,7 +212,7 @@
        (setf (grid-lines a) value)))
 
 (defun title (label &key (style nil))
-  (let (fig current-figure)
+  (let ((fig (current-figure)))
    (setf (title fig) label)
   (when style
     (setf (title-style fig) style))))
@@ -234,6 +246,9 @@
               y (column-stack (list level level))))
   (plot x y :scales scales :preserve-domain (list (cons "x" t)(cons "y" (getf kwargs ':preserve-domain))) :axes nil :update-context nil kwargs)))
 
+;;NEED TO ADD 
+;;v-line
+;;process-cmap
 
 (defun set-cmap (cmap)
   (let ((scale (cdr (assoc "color" (cdr (assoc "scales" %context :test #'string=)) :test #'string=))))
