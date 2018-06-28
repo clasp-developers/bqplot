@@ -1,7 +1,8 @@
 (in-package :bqplot)
 
-(defclass-widget-register toolbar (cljw:domwidget)
-  ((figure :accessor figure
+;;;This class technically had a @register decorator but I removed it 
+(defclass toolbar (cljw:domwidget)
+  ((figure-toolbar :accessor figure-toolbar
 	   :initform (make-instance 'figure)
 	   :metadata #.`(:sync t
 			    :json-name "figure"
@@ -14,7 +15,7 @@
    (%panzoom :accessor panzoom
 	     :initform (make-instance 'pan-zoom)
 	     :metadata (:sync t
-			      :json-name "_panzoom"
+			      :json-name "_panzoom" (make-instance 'bqplot::toolbar)
 			      *widget serialization*)))
 					;TODO: look into non translated variables
    (:default-initargs

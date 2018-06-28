@@ -50,12 +50,12 @@
     ;;Make getf an effective pop of the (:scales value)
     (remove :scales kwargs)
     (remove scales-arg kwargs)
-    (if (assoc "current-key" %context :test #'string=)
-	(setf (cdr (assoc "current-key" %context :test #'string=)) key)
-	(setf %context (append %context (cons "current-key" key))))
+    (if (assoc "current_key" %context :test #'string=)
+	(setf (cdr (assoc "current_key" %context :test #'string=)) key)
+	(setf %context (append %context (cons "current_key" key))))
     (if fig
 	(progn
-	  (setf (cdr (assoc "figure" %context :test #'string=)) fig)
+	  (setf (cdr (assoc "figure" %context :test #'string=)) (list fig))
 	  (when key
 	    (setf (nth key (cdr (assoc "figure-registry" %context :test #'string=))) fig))
 	  (loop for arg in kwargs do
@@ -63,19 +63,19 @@
 		 (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=))))))))
 	(progn
 	  (if (not key)
-              (setf (cdr (assoc "figure" %context :test #'string=)) (apply #'make-instance 'figure kwargs))
-              (progn
+              (setf (cdr (assoc "figure" %context :test #'string=))(list (make-instance 'figure))) ;kwargs are supposed to be added after the make-instance but doing so raised error
+	      (progn
                 (unless (assoc key (assoc "figure-registry" %context :test #'string=))
                   (unless (getf kwargs :title)
                     (push (concatenate 'string "Figure" " " key) kwargs)
                     (push :title kwargs))
-                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))) fig)
+                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (make-instance 'figure))))
                 (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))))
-                (warn "How to Add a slot for each argument in kwargs"))
+                (warn "How to Add a slot for each argument in kwargs")
    ;;;(scales key :scales scales-arg)
 		(loop for arg in kwargs do
 		     (unless (assoc arg (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
-		 (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=)))))))
+		       (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=)))))))
 		))))
     (unless (assoc "axis_registry" (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
       (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons "axis_registry" nil))))
@@ -135,17 +135,15 @@
       (if new_mark
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
-  (let ((fig (getf kwargs :figure)))
-    (unless fig
-      (setf fig (current-figure)))
-    (let ((scales (scales mark))
-          (fig-axes (loop for axis in (axes fig) collect axis))
-          (axes nil))
+  (let ((fig (getf kwargs :figure (current-figure)))
+	(scales (scales mark))
+        (fig-axes (loop for axis in (axes fig) collect axis))
+	(axes nil))
       ;(loop for name in scales
             ;do
                ;(unless (member name ((getf scales-metadata name nil) mark))))
                                
-      )))
+      ))
 ;;;FINISH AXES
 #|    
 (defun %set-label (label mark dim &rest kwargs &key &allow-other-keys)
@@ -335,7 +333,8 @@
 	 ;(array (cdr (assoc 0 array-shape :test #'equalp=))))
   ;pretty sure arange is a numpy function that we can't call because we haven't  
        ;(when (> (length array-shape) 1)
-	 ;(array (cdr (assoc 1 array-shape :test #'equalp=))))))
+					;(array (cdr (assoc 1 array-shape :test #'equalp=))))))
+	   ))))
 
 ;;;%infer-x-for-line just needs to be completly rewritten
 
@@ -411,7 +410,7 @@
      (setf dimension (%get-attribute-dimension "count" (find-class 'Hist)))
      (if (member dimension (cdr (assoc "scales" %context :test #'string=)))
 	 (setf scales (append scales (list :count (nth dimension (cdr (assoc "scales" %context :test #'string=))))))
-	 (progn (setf (cdr (assoc "count" scales :test #'string=)) (make-instance linear-scale (getf options "count")))
+	 (progn (setf (cdr (assoc "count" scales :test #'string=)) (make-instance 'linear-scale (getf options "count")))
 		(setf (nth dimension (cdr (assoc "scales" %context :test #'string=))) (cdr (assoc "count" scales :test #'string=))))))
  (setf (cdr (assoc "scales" kwargs :test #'string=)) scales))
  (%draw-mark (find-class 'Hist) :options options kwargs))
@@ -456,7 +455,7 @@
   (let ((scales (getf kwargs :scales (cdr (assoc "scales" %context :test #'string=))))
 	(options (getf kwargs :options)))
     (unless (member "projections" scales)
-      (setf (cdr (assoc "projection" scales :test #'string=)) (make-instance mercator (getf options "projection"))))
+      (setf (cdr (assoc "projection" scales :test #'string=)) (make-instance 'mercator (getf options "projection"))))
     (setf (cdr (assoc "scales" kwargs :test #'string=)) scales)
     ;(if (isinstance map-data string-types)
 	;(setf (cdr (assoc "map-data" kwargs :test #'string=)) (topo-load ));figure out how the string works
@@ -556,7 +555,7 @@
 
 
 ;(defun %fetch-axis (fig dimension scale)
-  ;(let (axis-registry (getf fig :axis-registry nil))
+  ;(let (axis-registry (getf fig "axis-registry"))
     ;(dimension-data (getf axis-registry :dimension nil))
     ;(dimension-scales
      ;;;need the last two plus the try 
