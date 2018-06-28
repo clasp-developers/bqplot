@@ -55,7 +55,7 @@
                 :metadata (:sync t
                                  :json-name "legend_text"))
    (layout :initarg :layout :accessor layout
-           :initform (make-instance 'LayoutTraitType :kw (list (cons :min-width "125px")))
+           :initform (make-instance 'LayoutTraitType :kw (list (cons "min-width" "125px")))
            :metadata #.`(:sync t
                             :json-name "layout"
                             ,@cljw:*widget-serialization*))
@@ -108,8 +108,8 @@
     :model-name (cljw:unicode "FigureModel")
     :view-module (cljw:unicode "bqplot")
     :model-module (cljw:unicode "bqplot")
-    :view-module-version (cljw:unicode *frontend-version*)
-    :model-module-version (cljw:unicode *frontend-version*))
+    :view-module-version *frontend-version*
+    :model-module-version *frontend-version*)
   (:metaclass traitlets:traitlet-class))
 
 

@@ -15,7 +15,7 @@
    (%panzoom :accessor panzoom
 	     :initform (make-instance 'pan-zoom)
 	     :metadata (:sync t
-			      :json-name "_panzoom" (make-instance 'bqplot::toolbar)
+			      :json-name "_panzoom"
 			      *widget serialization*)))
 					;TODO: look into non translated variables
    (:default-initargs

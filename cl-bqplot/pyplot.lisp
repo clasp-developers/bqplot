@@ -195,23 +195,20 @@
 	(%apply-properties axis (cons "label" label)))))
   (values))
 
-
-
-;;;for plot func pass in x and y as the parameres instead of the arg and kwarg
-
 (defun xlabel (&rest kwargs &key (label nil) (mark nil) &allow-other-keys)
-  (setf kwargs (remove label kwargs)
-        kwargs (remove ':label kwargs)
-        kwargs (remove mark kwargs)
-        kwargs (remove ':mark kwargs))
-  (%set-label label mark "x" kwargs))
+  (remf kwargs :label)
+  (remf kwargs :mark)
+  (%set-label (label mark "x" kwargs)))
 
 (defun ylabel (&rest kwargs &key (label nil) (mark nil) &allow-other-keys)
-  (setf kwargs (remove label kwargs)
-        kwargs (remove ':label kwargs)
-        kwargs (remove mark kwargs)
-        kwargs (remove ':mark kwargs))
-  (%set-label label mark "x" kwargs))
+  (remf kwargs :label)
+  (remf kwargs :mark)
+  (%set-label (label mark "y" kwargs)))
+
+
+;;;for plot func pass in x and y as the parameres instead of the arg and kwarg 
+
+;;;for plot func pass in x and y as the parameres instead of the arg and kwarg
 
 (defun grids (&key (fig nil) (value "solid"))
   (unless fig
@@ -443,6 +440,13 @@
 	kwargs (append kwargs (list :y y)))
   (%draw-mark (find-class 'boxplot) kwargs))
 
+#|
+(defun barh (arg kwargs) ;args and kwargs 
+  (setf kwargs (append kwargs (list :orientation "horizontal")))
+  (bar (args kwargs)));;arg kwargs 
+|#
+
+;;checked 
 (defun pie (sizes &rest kwargs &key &allow-other-key)
    (setf kwargs (append kwargs (list :sizes sizes)))
   (%draw-mark (find-class 'pie)  kwargs))
@@ -549,9 +553,9 @@
   (cdr (assoc "figure" %context :test #'string=)))
 
 
-(defun get-context ())
+;(defun get-context ())
 
-(defun set-context (context))
+;(defun set-context (context))
 
 
 ;(defun %fetch-axis (fig dimension scale)

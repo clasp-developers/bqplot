@@ -114,8 +114,43 @@
                (push k ret))))
     ret))
 
-;(defmethod %validate_scales (object val))
-  
+#|(defmethod %validate_scales (object val)
+  (let ((scales (values proposal))
+        (loop for name in ((trait-names scaled = true) (self mark))
+           do
+           ;;need  trait = self.traits()[name]
+             (let ((trait  (cdr (assoc traits name (assoc traits self :test #'string=))))))|#
+             
+
+(defmethod on-hover ((self mark) callback &key (remove nil))
+  (register-callback (%hover-handlers self) callback :remove remove))
+(defmethod on-click ((self mark) call &key (remove nil))
+  (register-callback (%click-handlers self) callback :remove remove))
+(defmethod on-legend-click ((self mark) calllback &key (remove nil))
+  (register-callback (%legend-click-handlers self) callback :remove remove))
+(defmethod on-legend-hover ((self mark) callback &key (remove nil))
+  (register-callback (%legend-hover-handlers self) callback :remove remove))
+(defmethod on-element-click ((self mark) callback &key (remove nil))
+  (register-callback (%element-click-handlers self) callback :remove remove))
+(defmethod on-background-click ((self mark) callback &key (remove nil))
+  (register-callback (%bg-ckick-handlers self) callback :remove remove))
+
+(defmethod %handle-custom-msgs ((self mark) _  content &key (buffer nil))
+  (declare (ignore _))
+  (cond ((string= (getf content "event") "hover")
+         (%hover-handlers self self content))
+        ((string= (getf content "event") "click")
+         (%click-handlers self self content))
+        ((string= (getf content "event") "legend-click")
+         (%legend-click-handlers self self content))
+        ((string= (getf content "event") "legend-hover")
+         (%legend-hover-handlers self self content))
+        ((string= (getf content "event") "element-click")
+         (%element-click-handlers self self content))
+        ((string= (getf content "event") "background-click")
+         (%bg-click-handlers self self content))
+        (t (values))))
+      
 
 					;TODO:
 					;def get-dimension-scales

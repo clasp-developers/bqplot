@@ -45,11 +45,12 @@
     )
   (:metaclass traitlets:traitlet-class))
 
-;(defclass geo-scale (scale)
-  ;(:default-initargs
-   ;:view-name (cljw:unicode "GeoScale")
-    ;:model-name (cljw:unicode "GeoScaleModel"))
-  ;(:metaclass traitlets:traitlet-class))
+(defclass geo-scale (scale)
+  ()
+  (:default-initargs
+   :view-name (cljw:unicode "GeoScale")
+    :model-name (cljw:unicode "GeoScaleModel"))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass mercator (geo-scale)
   ((scale-factor :accessor scale-factor
@@ -101,7 +102,7 @@
 	   :metadata (:sync t
 			    :json-name "parallels"))
    (precision :accessor precision
-	       :type float
+	      :type float
 	       :initform 0.1
 	       :metadata (:sync t
 				:json-name "precision"))
@@ -138,10 +139,9 @@
 	   :initform (cljw:unicode "numpy.number")) ;;;;TODO kevin has no idea whats going on 
    )
   
-   (:default-initargs
-   :view-name (cljw:unicode "AlbersUSA")
+  (:default-initargs
+    :view-name (cljw:unicode "AlbersUSA")
      :model-name (cljw:unicode "AlbersUSAModel"))
-   
    (:metaclass traitlets:traitlet-class))
 
 
@@ -190,23 +190,22 @@
 	       :initform 90.0 
 	       :validator validate-clip-angle 
 	       :metadata (:sync t
-	                  :json-name "clip_angle"))
+	                        :json-name "clip_angle"))
    (precision :accessor precision
-	       :type float
-	       :initform 0.1
-	       :metadata (:sync t
-				:json-name "precision"))
+	      :type float
+	      :initform 0.1
+	      :metadata (:sync t
+			       :json-name "precision"))
    (r-type :accessor r-type
 	   :type unicode
 	   :initform (cljw:unicode "(Number, Number)"))
    (d-type :accessor d-type
-	    :type unicode
+	   :type unicode
 	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
- (:default-initargs
+  (:default-initargs
    :view-name (cljw:unicode "Orthographic")
    :model-name (cljw:unicode "OrthographicModel"))
- 
- (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
   
 (defun validate-clip-angle (object val)
@@ -242,8 +241,8 @@
 	   :type unicode
 	   :initform (cljw:unicode "(Number, Number)"))
    (d-type :accessor d-type
-	   :type unicode
- 	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
+	    :type unicode
+	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
  (:default-initargs
    :view-name (cljw:unicode "Gnomonic")
    :model-name (cljw:unicode "GnomonicModel"))
@@ -300,12 +299,12 @@
    (d-type :accessor d-type
 	    :type unicode
 	    :initform (cljw:unicode "numpy.number"))
-   (min-scales :accessor min-scales
+   (min :accessor min
 	:type float
 	:initform 0.0              
 	:metadata (:sync t
 			 :json-name "min"))
-   (max-scales :accessor max-scales
+   (max :accessor max
 	:type float
 	:initform 1.0              ;;;;tentative value for now not sure what it does 
 	:metadata (:sync t
@@ -356,12 +355,12 @@
    (d-type :accessor d-type
 	    :type unicode
 	    :initform (cljw:unicode "numpy.number"))
-   (min-scales :accessor min-scales
+   (min :accessor min
 	:type float  
 	:initform 0            
 	:metadata (:sync t
 			 :json-name "min"))
-   (max-scales :accessor max-scales
+   (max :accessor max
 	:type float
 	:initform 1              ;;;;tentative 
 	:metadata (:sync t
@@ -380,12 +379,12 @@
    (d-type :accessor d-type
 	    :type unicode
 	    :initform (cljw:unicode "numpy.datetime64"));;;;TODO is this right?
-   (min-scales :accessor min-scales
+   (min :accessor min
 	:type date                                 ;;;;Not sure what to put for type 
 	:initform nil
 	:metadata (:sync t
 			 :json-name "min"))
-   (max-scales :accessor max-scales
+   (max :accessor max
 	:type date                                  ;;;Not sure what to put for type 
 	:initform nil
 	:metadata (:sync t
@@ -431,12 +430,12 @@
 	   :initform nil ;;;; not sure how to deal with the trait = color part
 	   :metadata (:sync t
 			    :json-name "color"))
-   (min-scales :accessor min-scales
+   (min :accessor min
 	:type float        
 	:initform 0.0
 	:metadata (:sync t
 			 :json-name "min"))
-   (max-scales :accessor max-scales
+   (max :accessor max
 	:type float
 	:initform 1   
 	:metadata (:sync t
@@ -465,12 +464,12 @@
    (domain-class :accessor domain-class
 		 :type date
 		 :initform nil) 
-   (min-scales :accessor min-scales
+   (min :accessor min
 	:type float        
 	:initform 0
 	:metadata (:sync t
 			 :json-name "min"))
-   (max-scales :accessor max-scales
+   (max :accessor max
 	:type float             
 	:initform 1 
 	:metadata (:sync t
