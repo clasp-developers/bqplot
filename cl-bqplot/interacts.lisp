@@ -7,14 +7,16 @@
 	  :type list
 	  :initform nil))
    (:default-initargs
-    :view-name (cljw:unicode "Interaction")
-     :model-name (cljw:unicode "BaseModel")
-     :view-module (cljw:unicode "bqplot")
-     :model-module (cljw:unicode "bqplot")
-     :view-module-version *frontend-version*
-     :model-module-version *frontend-version*
-     :ipython-display nil) 
-   (:metaclass traitlets:traitlet-class))
+	:view-name (cljw:unicode "Interaction")
+      :model-name (cljw:unicode "BaseModel")
+      :view-module (cljw:unicode "bqplot")
+      :model-module (cljw:unicode "bqplot")
+      :view-module-version *frontend-version*
+      :model-module-version *frontend-version*
+      ;:ipython-display nil
+      )
+   
+  (:metaclass traitlets:traitlet-class))
 
 (defclass hand-draw (interaction)
   ((lines :accessor lines
@@ -43,7 +45,8 @@
    
   (:metaclass traitlets:traitlet-class))
 
-(defclass-widget-register pan-zoom (interaction)
+;;;This class had a @register decorator that I removed (should be defclass-wigdet-register)
+(defclass pan-zoom (interaction)
   ((allow-pan :accessor allow-pan
 	      :type bool
 	      :initform :true
@@ -54,9 +57,10 @@
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "allow_zoom"))
-   (scales :accessor scales
+   (scales-interacts :accessor scales-interacts
 	   :type list
-	   :initform (list (cons 'trait (cons 'trait (make-instance 'scale))))
+	   :initform (make-instance 'scale)
+         ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
 	   :metadata #.`(:sync t
 			    :json-name "scales"
 			    ,@cljw:*widget-serialization*)))

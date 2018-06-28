@@ -6,4 +6,3 @@
    )
   (:documentation "Implements the bqplot package"))
 
-

@@ -1,6 +1,5 @@
 (in-package :bqplot)
 
-
 (defclass scale (widget)
   ((scale-types :accessor scale-types
                 :initform (list (cons "bqplot.mercator" (find-class 'mercator))
@@ -8,11 +7,24 @@
 				(cons "bqplot.albers-usa" (find-class 'albers-usa))
 				(cons "bqplot.equi-rectangular" (find-class 'equi-rectangular))
 				(cons "bqplot.orthographic" (find-class 'orthographic))
-				(cons "bqplot.gnomonic" (find-class 'gnomonic))))
+				(cons "bqplot.gnomonic" (find-class 'gnomonic))
+				(cons "bqplot.stereographic" (find-class 'stereographic))
+				(cons "bqplot.linear-scale" (find-class 'linear-scale))
+				(cons "bqplot.log-scale" (find-class 'log-scale))
+				(cons "bqplot.date-scale" (find-class 'date-scale))
+				(cons "bqplot.ordinal-scale" (find-class 'ordinal-scale))
+				(cons "bqplot.color-scale" (find-class 'color-scale))
+				(cons "bqplot.date-color-scale" (find-class 'date-color-scale))
+				(cons "bqplot.ordinal-color-scale" (find-class 'ordinal-color-scale))
+				) ;;;TODO: Fill in class names
+                )
+   (precedence :accessor precedence
+               :type integer
+	       :initform 1)
    (domain-class :accessor domain-class
                  :type float
                  :initform nil)
-   (reverse-scale :accessor reverse-scale
+   (reverse-scales :accessor reverse-scales
             :type bool
             :initform :false
             :metadata (:sync t
@@ -29,7 +41,7 @@
     :model-module (cljw:unicode "bqplot")
     :view-module-version *frontend-version*
     :model-module-version *frontend-version*
-    ;;:ipython-display nil
+    ;:ipython-display nil
     )
   (:metaclass traitlets:traitlet-class))
 
@@ -90,7 +102,7 @@
 	   :metadata (:sync t
 			    :json-name "parallels"))
    (precision :accessor precision
-	      :type float
+	       :type float
 	       :initform 0.1
 	       :metadata (:sync t
 				:json-name "precision"))
@@ -359,8 +371,7 @@
  
  (:metaclass traitlets:traitlet-class))
 
-;;HOW DO WE DO DATES?
-#|
+
 (defclass date-scale (scale)
   ((r-type :accessor r-type
 	   :type unicode
@@ -383,7 +394,6 @@
    :view-name (cljw:unicode "DataScale")
     :model-name (cljw:unicode "DataScaleModel"))
  (:metaclass traitlets:traitlet-class))
-|#
 
 (defclass ordinal-scale (scale)
   ((r-type :accessor r-type

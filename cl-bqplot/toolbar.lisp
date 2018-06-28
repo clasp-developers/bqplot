@@ -1,7 +1,8 @@
 (in-package :bqplot)
 
+;;;This class technically had a @register decorator but I removed it 
 (defclass toolbar (cljw:domwidget)
-  ((toolbar-figure :accessor toolbar-figure
+  ((figure-toolbar :accessor figure-toolbar
 	   :initform (make-instance 'figure)
 	   :metadata #.`(:sync t
 			    :json-name "figure"

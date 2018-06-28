@@ -12,7 +12,7 @@
 	    :metadata (:sync t
 			     :json-name "formats"))
    (show-labels :accessor show-labels
-		:type :bool
+		:type cljw:bool
 		:initform :true
 		:metadata (:sync t
 				 :json-name "show_labels"))

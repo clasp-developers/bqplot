@@ -1,13 +1,13 @@
 (in-package :bqplot)
 
 (defclass mark (cljw:widget)
-  ((mark-types :initarg :mark-types :accessor mark-types
-               :type cljw:dict
-               :initform nil)
-   (scales :initarg :scales :accessor scales
+  (;(mark-types :initarg :mark-types :accessor mark-types
+               ;:type cljw:dict
+               ;:initform nil)
+   (scales-marks :initarg :scales :accessor scales-marks
 	   :type cljw:dict
 	   :initform nil ; Contents have to be of type 'scale
-	   :validator %validate-scales
+	   ;:validator %validate-scales
 	   :metadata #.`(:sync t
                       :json-name "scales"
                       ,@cljw:*widget-serialization*))
@@ -85,13 +85,15 @@
 		     :metadata (:sync t
 				      :json-name "tooltip_location")))
   (:default-initargs
-   :model-name (cljw:unicode "MarkModel")
-    :model-module (cljw:unicode "bqplot")
-    :view-module (cljw:unicode "bqplot")
-    :view-module-version *frontend-version*
-    :model-module-version *frontend-version*
-    :ipython-display nil)
-  (:metaclass traitlets:traitlet-class))
+       :model-name (cljw:unicode "MarkModel")
+     :model-module (cljw:unicode "bqplot")
+     :view-module (cljw:unicode "bqplot")
+     :view-module-version *frontend-version*
+     :model-module-version *frontend-version*
+     ;:ipython-display nil
+     )
+
+    (:metaclass traitlets:traitlet-class))
 
 (defmethod %get-dimension-scales ((self mark) dimension &key (preserve-domain nil))
   (let ((ret nil))
@@ -425,7 +427,7 @@
    
 					;TODO: default-opacities
    
-   (style :initarg :hovered-style :accessor hovered-style
+   (hovered-style :initarg :hovered-style :accessor hovered-style
 		  :type list
 		  :initform nil
 		  :metadata (:sync t

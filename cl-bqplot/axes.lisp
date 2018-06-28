@@ -26,7 +26,7 @@
 	 :initform (cljw:unicode "")
 	 :metadata (:sync t
 			  :json-name "side"))
-   (label :accessor label
+   (label-axes :accessor label-axes
 	  :type unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
@@ -56,13 +56,15 @@
 		:initform nil
 		:metadata (:sync t
 				 :json-name "tick_values"
-				 *array-serialization*))
+				 ;*array-serialization*
+				 ))
    (offset :accessor offset
 	   :type list
 	   :initform ()
 	   :metadata (:sync t
 			    :json-name "offset"
-			    *array-serialization*))
+			    ;*array-serialization*
+			    ))
    (label-location :accessor label-location
 		   :type unicode 
 		   :initform (cljw:unicode "middle")
@@ -101,7 +103,8 @@
    (:default-initargs
        :view-name (cljw:unicode "Axis")
      :model-name (cljw:unicode "AxisModel")
-     :ipython-display nil)
+     ;:ipython-display nil
+     )
 
    (:metaclass traitlets:traitlet-class))
 
