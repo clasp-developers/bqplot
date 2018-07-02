@@ -19,22 +19,22 @@
           :initform (list (make-instance 'Mark))
           :metadata #.`(:sync t
                            :json-name "marks"
-                           ,@*widget-serialization*))
+                           ;,@*widget-serialization*))
    (interaction :initarg :interaction :accessor interaction
                 :initform (make-instance 'Interaction :default-value nil :allow-none t)
                 :metadata #.`(:sync t
                                  :json-name "interaction"
-                                 ,@*widget-serialization*))
+                                 ;,@*widget-serialization*))
    (scale-x :initarg :scale-x :accessor scale-x
             :initform (make-instance 'Scale)
             :metadata #.`(:sync t
                              :json-name "scale_x"
-                             ,@*widget-serialization*))
+                             ;,@*widget-serialization*))
    (scale-y :initarg :scale-y :accessor scale-y
             :initform (make-instance 'Scale)
             :metadata #.`(:sync t
                              :json-name "scale_y"
-                             ,@*widget-serialization*))
+                             ;,@*widget-serialization*))
    (title-style :initarg :title-style :accessor title-style
                 :type cljw:dict
                 :initform (list (cons "trait" (cljw:unicode "")))
@@ -59,7 +59,7 @@
            :initform (make-instance 'LayoutTraitType :kw (list (cons min-width "125px")))
            :metadata #.`(:sync t
                             :json-name "layout"
-                            ,@*widget-serialization*))
+                            ;,@*widget-serialization*))
    (min-aspect-ratio :initarg :min-aspect-ratio :accessor min-aspect-ratio
                      :type float
                      :initform 1.0

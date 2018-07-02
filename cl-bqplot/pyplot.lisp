@@ -137,8 +137,6 @@
           (marks fig) (concatenate 'list (marks fig) (list mark)))
     (axes mark :options axes-options)
     mark))
-    
-    ))
 
 
 
