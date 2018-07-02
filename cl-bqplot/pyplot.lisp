@@ -39,7 +39,7 @@
 	(progn (unless (pyplot figure)
 		 (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
 	       (display (make-instance 'vbox :children (vector figure (pyplot figure)))))
-	(display figure)))) ;;;what's this display function?
+	(display figure)))) ;;;what's this display function? LOL Steve
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
   ;;;We don't want key and fig to actually be in the kwargs plist
@@ -544,7 +544,7 @@
 ;;needs to be checked 
 (defun current-figure ()
   (unless (cdr (assoc "figure" %context :test #'string=))
-    (figure)) ;;is the is the proper way to call the func
+    (figure))
   (cdr (assoc "figure" %context :test #'string=)))
 
 

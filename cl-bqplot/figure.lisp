@@ -12,28 +12,33 @@
          :initform (make-instance 'axis)
          :metadata #.`(:sync t
                           :json-name "axes"
-                          ;,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                          ))
    (marks :initarg :marks :accessor marks
           :type list
           :initform (make-instance 'Mark)
           :metadata #.`(:sync t
                            :json-name "marks"
-                           ;,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                           ))
    (interaction :initarg :interaction :accessor interaction
                 :initform (make-instance 'Interaction)
                 :metadata #.`(:sync t
                                  :json-name "interaction"
-                                 ;,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                                 ))
    (scale-x :initarg :scale-x :accessor scale-x
             :initform (make-instance 'Scale)
             :metadata #.`(:sync t
                              :json-name "scale_x"
-                             ;,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                             ))
    (scale-y :initarg :scale-y :accessor scale-y
             :initform (make-instance 'Scale)
             :metadata #.`(:sync t
                              :json-name "scale_y"
-                             ;,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                             ))
    (title-style :initarg :title-style :accessor title-style
                 :type cljw:dict
                 :initform (list (cons "trait" (cljw:unicode "")))
@@ -58,7 +63,8 @@
            :initform (make-instance 'LayoutTraitType :kw (list (cons "min-width" "125px")))
            :metadata #.`(:sync t
                             :json-name "layout"
-                            ;,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                            ))
    (min-aspect-ratio :initarg :min-aspect-ratio :accessor min-aspect-ratio
                      :type float
                      :initform 1.0
