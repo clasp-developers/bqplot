@@ -285,55 +285,50 @@
                          or a list of colors, but a value of {} was given")))
     option))
 
-(defun %draw-mark (mark-type &rest kwargs &key (options nil) (axes-options nil) &allow-other-keys)
-  (setf kwargs (remove options kwargs)
-        kwargs (remove :options kwargs)
-        kwargs (remove axes-options kwargs)
-        kwargs (remove :axes-options kwargs))
+(defun %draw-mark (mark-type kwargs)
   (let ((fig (getf kwargs :figure (current-figure)))
-	(scales (getf kwargs :scales))
-	(update-context (getf kwargs :update-context t))
-	(cmap (getf kwargs :cmap)))
-    (remf kwargs :figure)
+        (scales (getf kwargs :scales))
+        (update-context (getf kwargs :update-context t))
+        (cmap (getf kwargs :cmap))
+        (options (getf kwargs :options))
+        (axes-options (getf kwargs :axes-options))
+        (mark nil))
+    (remf kwargs :fig)
     (remf kwargs :scales)
-    (remf kwargs :update-context)
     (remf kwargs :cmap)
+    (warn "Process color maps")
+    #|
     (when cmap
-      (setf (cdr (assoc "color" options :test #'string=)) (list (cons (getf options "color")(%process-cmap cmap)))))
-    (loop for name in (class-trait-names mark-type) do
-	 (let ((dimension (%get-attribute-dimension name mark-type)))
-	   (when (assoc name kwargs :test #'string=)
-	     (loop-finish))
-	   (if (assoc name scales :test #'string=)
-	       (when update-context
-		 (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=))) :test #'string=) (cdr (assoc name scales :test #'string=))))
-	       (if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
-		   (setf (cdr (assoc name scales :test #'string=))(cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
-		   (let* ((traitlet)
-			  ;(rtype)
-			  ;(dtype)
-			  ;(compat-scale-types)
-			  ;(sorted-scales)
-			  ;(scales)))))
-	   ))))      
+      (if (assoc "color" options :test #'string=)
+          (setf (cdr (assoc "color" options :test #'string=)) (list (cons 
+    |#
+    (loop for name in (list "x" "y" "z")
+       do
+         (let ((dimension (%get-attribute-dimension name (make-instance mark-type))))
+           (cond ((not (getf kwargs (intern name "KEYWORD")))
+                  (values))
+                 ((getf scales (intern name "KEYWORD"))
+                  (when update-context
+                    (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=)))))
+                 ;;;Need to address (elif dimension not in _context['scales']: ...What is dimension here?
+                 (t
+                  (if (assoc name scales :test #'string=)
+                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string=)))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string))) scales))))))
+    (setf mark (mark-type :scales scales kwargs)
+          (cdr (assoc "last-mark" %context :test #'string=)) mark
+          (marks fig) (concatenate 'list (marks fig) (list mark)))
+    (axes mark :options axes-options)
+    mark))
 
 
-	 ;(let ((scales-arg (getf kwargs :scales)))
-    ;;Make getf an effective pop of the (:scales value)
-    ;(remove ':scales kwargs)
-    ;(remove scales-arg kwargs)))
 
-;(defun %infer-x-for-line (y)
-  ;(let ((array-shape (array-dimensions y)))
-       ;(when (= (length array-shape) 0) nil)
-       ;(when (= (length array-shape) 1)
-	 ;(array (cdr (assoc 0 array-shape :test #'equalp=))))
-  ;pretty sure arange is a numpy function that we can't call because we haven't  
-       ;(when (> (length array-shape) 1)
-					;(array (cdr (assoc 1 array-shape :test #'equalp=))))))
-	   ))))
-
-;;;%infer-x-for-line just needs to be completly rewritten
+    
+(defun %get-attribute-dimension (trait-name &optional mark-type)
+  (unless mark-type
+    (return-from %get-attribute-dimension trait-name))
+  (let ((scale-metadata (scales-metadata mark-type)))
+    (cdr (assoc "dimension" (cdr (assoc trait-name scale-metadata :test #'string=)) :test #'string=)))) 
 
 (defun plot (&rest args)
  (let* ((x (if (keywordp (first args))

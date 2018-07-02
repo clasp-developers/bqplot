@@ -498,14 +498,13 @@
 			    :display-name "Marker"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode "")(cons 'default-value "steelblue")))
+	   :initform (list (cons 'trait (cljw:unicode "")) (cons 'default-value "steelblue"))
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
    (scales-metadata :accessor scales-metadata
 		    :type list
-		    :initform (list (cons "x" (list (cons "orientation" "horizontal")
-						   (cons "dimension" "x")))
+		    :initform (list (cons "x" (list (cons "orientation" "horizontal")		 (cons "dimension" "x")))
 				    (cons "y" (list (cons "orientation" "vertical")
 						   (cons "dimension" "y")))
 				    (cons "color" (cons "dimension" "color"))

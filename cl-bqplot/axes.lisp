@@ -119,7 +119,7 @@
 	 :initform (cljw:unicode "bottom")
 	 :metadata (:sync t
 			 :json-name "side"))
-   (label :accessor label
+   (label-axes :accessor label-axes
 	  :type unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
