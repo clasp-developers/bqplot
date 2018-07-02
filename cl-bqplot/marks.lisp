@@ -168,7 +168,8 @@
       :initform (list (cons "x" (list (cons "orientation" "horizontal")
 				      (cons "dimension" "x")))
 		      (cons "y" (list (cons "orientation" "vertical")
-				      (cons "dimension" "y"))))
+				      (cons "dimension" "y")))
+                      (cons "color" (list (cons "dimension" "color"))))
       :metadata (:sync t
 		       :json-name "scales_metadata"))
    (colors :accessor colors

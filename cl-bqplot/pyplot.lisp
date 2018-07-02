@@ -108,15 +108,43 @@
         (update-context (getf kwargs :update-context t))
         (cmap (getf kwargs :cmap))
         (options (getf kwargs :options))
-        (axes-options (getf kwargs :axes-options)))
+        (axes-options (getf kwargs :axes-options))
+        (mark nil))
+    (remf kwargs :fig)
+    (remf kwargs :scales)
+    (remf kwargs :cmap)
     (warn "Process color maps")
     #|
     (when cmap
       (if (assoc "color" options :test #'string=)
           (setf (cdr (assoc "color" options :test #'string=)) (list (cons 
     |#
+    (loop for name in (list "x" "y" "z")
+       do
+         (let ((dimension (%get-attribute-dimension name mark-type)))
+           (cond ((not (getf kwargs (intern name "KEYWORD")))
+                  (values))
+                 ((getf scales (intern name "KEYWORD"))
+                  (when update-context
+                    (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=)))))
+                 ;;;Need to address (elif dimension not in _context['scales']: ...What is dimension here?
+                 (t
+                  (if (assoc name scales :test #'string=)
+                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string=)))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string))) scales))))))
+    (setf mark (mark-type :scales scales kwargs)
+          (cdr (assoc "last-mark" %context :test #'string=)) mark
+          (marks fig) (concatenate 'list (marks fig) (list mark)))
+    (axes mark :options axes-options)
+    mark))
+    
     ))
 
 
 
     
+(defun %get-attribute-dimension (trait-name &optional mark-type)
+  (unless mark-type
+    (return-from %get-attribute-dimension trait-name))
+  (let ((scale-metadata (scales-metadata mark-type)))
+    (cdr (assoc "dimension" (cdr (assoc trait-name scale-metadata :test #'string=)) :test #'string=)))) 
