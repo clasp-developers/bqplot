@@ -2,20 +2,20 @@
 
 (defclass scale (widget)
   ((scale-types :accessor scale-types
-                :initform (list (cons "bqplot.mercator" mercator)
-				(cons "bqplot.albers" albers)
-				(cons "bqplot.albers-usa" albers-usa)
-				(cons "bqplot.equi-rectangular" equi-rectangular)
-				(cons "bqplot.orthographic" orthographic)
-				(cons "bqplot.gnomonic" gnomonic)
-				(cons "bqplot.stereographic" stereographic)
-				(cons "bqplot.linear-scale" linear-scale)
-				(cons "bqplot.log-scale" log-scale)
-				(cons "bqplot.date-scale" date-sale)
-				(cons "bqplot.ordinal-scale" ordinal-scale)
-				(cons "bqplot.color-scale" color-scale)
-				(cons "bqplot.date-color-scale" date-color-scale)
-				(cons "bqplot.ordinal-color-scale" ordinal-color-scale)
+                :initform (list (cons "bqplot.mercator" (find-class 'mercator))
+				(cons "bqplot.albers" (find-class 'albers))
+				(cons "bqplot.albers-usa" (find-class 'albers-usa))
+				(cons "bqplot.equi-rectangular" (find-class 'equi-rectangular))
+				(cons "bqplot.orthographic" (find-class 'orthographic))
+				(cons "bqplot.gnomonic" (find-class 'gnomonic))
+				(cons "bqplot.stereographic" (find-class 'stereographic))
+				(cons "bqplot.linear-scale" (find-class 'linear-scale))
+				(cons "bqplot.log-scale" (find-class 'log-scale))
+				(cons "bqplot.date-scale" (find-class 'date-scale))
+				(cons "bqplot.ordinal-scale" (find-class 'ordinal-scale))
+				(cons "bqplot.color-scale" (find-class 'color-scale))
+				(cons "bqplot.date-color-scale" (find-class 'date-color-scale))
+				(cons "bqplot.ordinal-color-scale" (find-class 'ordinal-color-scale))
 				) ;;;TODO: Fill in class names
                 )
    (precedence :accessor precedence
@@ -24,7 +24,7 @@
    (domain-class :accessor domain-class
                  :type float
                  :initform nil)
-   (reverse :accessor reverse
+   (reverse-scales :accessor reverse-scales
             :type bool
             :initform :false
             :metadata (:sync t
@@ -41,10 +41,12 @@
     :model-module (cljw:unicode "bqplot")
     :view-module-version *frontend-version*
     :model-module-version *frontend-version*
-    :ipython-display nil)
+    ;:ipython-display nil
+    )
   (:metaclass traitlets:traitlet-class))
 
 (defclass geo-scale (scale)
+  ()
   (:default-initargs
    :view-name (cljw:unicode "GeoScale")
     :model-name (cljw:unicode "GeoScaleModel"))
@@ -123,7 +125,7 @@
 		 :initform 1200.0
 		 :metadata (:sync t
 				  :json-name "scale_factor"))
-   (translate :accessor :translate translate
+   (translate :accessor translate
 		 :type list
 		 :initform (list (cons 600 490))
 		 :metadata (:sync t
@@ -137,10 +139,9 @@
 	   :initform (cljw:unicode "numpy.number")) ;;;;TODO kevin has no idea whats going on 
    )
   
-   (:default-initargs
-   :view-name (cljw:unicode "AlbersUSA")
+  (:default-initargs
+    :view-name (cljw:unicode "AlbersUSA")
      :model-name (cljw:unicode "AlbersUSAModel"))
-   
    (:metaclass traitlets:traitlet-class))
 
 
@@ -169,7 +170,7 @@
    
   
 (defclass orthographic (geo-scale)
-   ((scale-factor :accessor scale-factor
+  ((scale-factor :accessor scale-factor
 		 :type float
 		 :initform 145.0
 		 :metadata (:sync t
@@ -189,23 +190,22 @@
 	       :initform 90.0 
 	       :validator validate-clip-angle 
 	       :metadata (:sync t
-	                  :json-name "clip_angle"))
-   (precision :accessor :precision precision
-	       :type float
-	       :initform 0.1
-	       :metadata (:sync t
-				:json-name "precision"))
+	                        :json-name "clip_angle"))
+   (precision :accessor precision
+	      :type float
+	      :initform 0.1
+	      :metadata (:sync t
+			       :json-name "precision"))
    (r-type :accessor r-type
 	   :type unicode
 	   :initform (cljw:unicode "(Number, Number)"))
    (d-type :accessor d-type
-	    :type unicode
+	   :type unicode
 	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
- (:default-initargs
+  (:default-initargs
    :view-name (cljw:unicode "Orthographic")
    :model-name (cljw:unicode "OrthographicModel"))
- 
- (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
   
 (defun validate-clip-angle (object val)
@@ -292,7 +292,7 @@
 (defclass linear-scale (scale)
   ((precedence :accessor precedence
                :type int
-	       :iniform 2))   
+	       :initform 2)   
    (r-type :accessor r-type
 	   :type unicode
 	   :initform (cljw:unicode "Number"))
@@ -325,7 +325,7 @@
 	      :initform 0.8
 	      :validator validate-mid-range
 	      :metadata (:sync t
-			       :json-name "mid_range"))
+			       :json-name "mid_range")))
    (:default-initargs
    :view-name (cljw:unicode "LinearScale")
      :model-name (cljw:unicode "LinearScaleModel"))
@@ -364,15 +364,14 @@
 	:type float
 	:initform 1              ;;;;tentative 
 	:metadata (:sync t
-			 :json-name "max")))
+    :json-name "max")))
  (:default-initargs
    :view-name (cljw:unicode "LogScale")
    :model-name (cljw:unicode "LogScaleModel"))
  
  (:metaclass traitlets:traitlet-class))
 
-;;HOW DO WE DO DATES?
-#|
+
 (defclass date-scale (scale)
   ((r-type :accessor r-type
 	   :type unicode
@@ -395,7 +394,6 @@
    :view-name (cljw:unicode "DataScale")
     :model-name (cljw:unicode "DataScaleModel"))
  (:metaclass traitlets:traitlet-class))
-|#
 
 (defclass ordinal-scale (scale)
   ((r-type :accessor r-type

@@ -10,10 +10,11 @@
 	:view-name (cljw:unicode "Interaction")
       :model-name (cljw:unicode "BaseModel")
       :view-module (cljw:unicode "bqplot")
-      :model-name (cljw:unicode "bqplot")
+      :model-module (cljw:unicode "bqplot")
       :view-module-version *frontend-version*
       :model-module-version *frontend-version*
-      :ipython-display nil)
+      ;:ipython-display nil
+      )
    
   (:metaclass traitlets:traitlet-class))
 
@@ -22,7 +23,8 @@
 	  :initform (make-instance 'lines)
 	  :metadata #.`(:sync t
 			   :json-name "lines"
-			   ,@*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                           ))
    (line-index :accessor line-index
 	       :type integer
 	       :initform nil
@@ -44,7 +46,8 @@
    
   (:metaclass traitlets:traitlet-class))
 
-(defclass-widget-register pan-zoom (interaction)
+;;;This class had a @register decorator that I removed (should be defclass-wigdet-register)
+(defclass pan-zoom (interaction)
   ((allow-pan :accessor allow-pan
 	      :type bool
 	      :initform :true
@@ -55,17 +58,19 @@
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "allow_zoom"))
-   (scales :accessor scales
+   (scales-interacts :accessor scales-interacts
 	   :type list
-	   :initform (list (cons 'trait (cons 'trait (make-instance 'scale))))
+	   :initform (make-instance 'scale)
+         ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
 	   :metadata #.`(:sync t
 			    :json-name "scales"
-			    ,@*widget-serialization*)))
+                                        ;,@cljw:*widget-serialization*
+                            )))
    (:default-initargs
     :view-name (cljw:unicode "PanZoom")
     :model-name (cljw:unicode "PanZoomModel"))
 
-  (:metaclass trailets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
 					;TODO def panzoom
 (defclass selector (interaction)
@@ -74,7 +79,8 @@
 	  :initform nil
 	  :metadata #.`(:sync t
 			   :json-name "marks"
-			   ,@*widget-serialization*)))
+                                        ;,@cljw:*widget-serialization*
+                           )))
    (:default-initargs
     :view-name (cljw:unicode "Selector"))
    
@@ -88,11 +94,12 @@
 	  :metadata #.`(:sync t
 			   :json-name "one-d-selector"
 			   :dimension "x"
-			   ,@*widget-serialization*)))
+                                        ;,@cljw:*widget-serialization*
+                           )))
    (:default-initargs
     :model-name (cljw:unicode "OneDSelectorModel"))
 
-  (:metaclass traitlets:trailet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass two-d-selector (selector)
   ((x-scale :accessor x-scale
@@ -100,13 +107,15 @@
 	    :metadata #.`(:sync t
 			     :json-name "x_scale"
 			     :dimension "x"
-			     ;,@*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                             ))
    (y-scale :accessor y-scale
 	    :initform (make-instance 'scale)
 	    :metadata #.`(:sync t
 			     :json-name "y_scale"
 			     :dimension "y"
-			     ;,@*widget-serialization*)))
+                                        ;,@cljw:*widget-serialization*
+                             )))
    (:default-initargs
     :model-name (cljw:unicode "TwoDSelectorModel"))
    
@@ -133,7 +142,7 @@
        :view-name (cljw:unicode "FastIntervalSelector")
      :model-name (cljw:unicode "FastIntervalSelectorModel"))
   
-  (:metaclass traitlets:trailet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass index-selector (one-d-selector)
   ((selected :accessor selected
@@ -184,7 +193,7 @@
        :view-name (cljw:unicode "BrushIntervalSelector")
      :model-name (cljw:unicode "BrushIntervalSelectorModel"))
 
-  (:metaclass traitlets:trailet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass brush-selector (two-d-selector)
   ((clear :initarg :clear :accessor clear
@@ -211,7 +220,7 @@
     :view-name (cljw:unicode "BrushSelector")
     :model-name (cljw:unicode "BrushSelectorModel"))
   
-  (:metaclass traitlets:trailet-class))
+  (:metaclass traitlets:traitlet-class))
 
 					;TODO: def selected-changed
 (defclass multi-selector (brush-interval-selector)
@@ -237,7 +246,7 @@
 				:json-name "show_names")))
    (:default-initargs
     :view-name (cljw:unicode "MultiSelector")
-    :model-name (uncode "MultiSelectorModel"))
+    :model-name (unicode "MultiSelectorModel"))
     
   (:metaclass traitlets:traitlet-class))
 
@@ -248,9 +257,9 @@
 	  :type unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
-			   :json-name "color"))
-   (:defualt-initargs
+			   :json-name "color")))
+   (:default-initargs
        :view-name (cljw:unicode "LassoSelector")
-    :model-name (cljw:unicode "LassoSelectorModel")))
-
+     :model-name (cljw:unicode "LassoSelectorModel"))
+  
   (:metaclass traitlets:traitlet-class))

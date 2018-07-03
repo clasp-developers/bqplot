@@ -1,40 +1,44 @@
-;;;Needs a package to go into
 (in-package :bqplot)
 
 (defclass figure (cljw:domwidget)
-  ((title :initarg :title :accessor title
+  ((title-figure :initarg :title :accessor title-figure
           :type cljw:unicode
           :initform nil
           :metadata (:sync t
                            :json-name "title"))
                            ;;does display_name "Title" Matter??))
-   (axes :initarg :axes :accessor axes
+   (axes-figure :initarg :axes :accessor axes-figure
          :type list
-         :initform (list (make-instance 'Axis))
+         :initform (make-instance 'axis)
          :metadata #.`(:sync t
                           :json-name "axes"
-                          ,@*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                          ))
    (marks :initarg :marks :accessor marks
           :type list
-          :initform (list (make-instance 'Mark))
+          :initform (make-instance 'Mark)
           :metadata #.`(:sync t
                            :json-name "marks"
-                           ;,@*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                           ))
    (interaction :initarg :interaction :accessor interaction
-                :initform (make-instance 'Interaction :default-value nil :allow-none t)
+                :initform (make-instance 'Interaction)
                 :metadata #.`(:sync t
                                  :json-name "interaction"
-                                 ;,@*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                                 ))
    (scale-x :initarg :scale-x :accessor scale-x
             :initform (make-instance 'Scale)
             :metadata #.`(:sync t
                              :json-name "scale_x"
-                             ;,@*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                             ))
    (scale-y :initarg :scale-y :accessor scale-y
             :initform (make-instance 'Scale)
             :metadata #.`(:sync t
                              :json-name "scale_y"
-                             ;,@*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                             ))
    (title-style :initarg :title-style :accessor title-style
                 :type cljw:dict
                 :initform (list (cons "trait" (cljw:unicode "")))
@@ -56,20 +60,21 @@
                 :metadata (:sync t
                                  :json-name "legend_text"))
    (layout :initarg :layout :accessor layout
-           :initform (make-instance 'LayoutTraitType :kw (list (cons min-width "125px")))
+           :initform (make-instance 'LayoutTraitType :kw (list (cons "min-width" "125px")))
            :metadata #.`(:sync t
                             :json-name "layout"
-                            ;,@*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                            ))
    (min-aspect-ratio :initarg :min-aspect-ratio :accessor min-aspect-ratio
                      :type float
                      :initform 1.0
-                     :validator %validate-min-aspect-ratio
+                     ;:validator %validate-min-aspect-ratio
                      :metadata (:sync t
                                       :json-name "min_aspect_ratio"))
    (max-aspect-ratio :initarg :max-aspect-ratio :accessor max-aspect-ratio
                      :type float
                      :initform 6.0
-                     :validator %validate-max-aspect-ratio
+                     ;:validator %validate-max-aspect-ratio
                      :metadata (:sync t
                                       :json-name "max_aspect_ratio"))
    (fig-margin :initarg :fig-margin :accessor fig-margin
@@ -90,11 +95,10 @@
                                :json-name "padding_y"
                                :help "min 0.0, max 1.0"))
    (legend-location :initarg :legend-location :accessor legend-location
-                   ; :type enum ENUM?
-                   ; :initform (enum "top-right" "top" "top-left" "left" "bottom-left" "bottom" "bottom-right" "right")
+		    :type cljw:unicode
+		    :initform (cljw:unicode "top-right")
                     :metadata (:sync t
                                      :json-name "legend_location"))
-                                     ;;;display-name "Legend Position"
    (animation-duration :initarg :animation-duration :accessor animation-duration
                        :type integer
                        :initform 0
@@ -110,8 +114,8 @@
     :model-name (cljw:unicode "FigureModel")
     :view-module (cljw:unicode "bqplot")
     :model-module (cljw:unicode "bqplot")
-    :view-module-version (cljw:unicode *frontend-version*)
-    :model-module-version (cljw:unicode *frontend-version*))
+    :view-module-version *frontend-version*
+    :model-module-version *frontend-version*)
   (:metaclass traitlets:traitlet-class))
 
 
@@ -126,10 +130,11 @@
 (defmethod save-png ((self figure) &key (filename nil))
   (let ((msg (list (cons "type" "save_png"))))
     (when filename
-      (push (cons "filename" filename) msg)))
-  (send self msg)
-  (values))
+      (push (cons "filename" filename) msg))
+  ;(send self msg) 
+  (values)))
 
+#|
 ;;;@validate('min-aspect-ratio')
 (defmethod %validate-min-aspect-ratio (object val)
   (if (> val (max-aspect-ratio self))
@@ -141,4 +146,9 @@
   (if (< val (min-aspect-ratio self))
       (error "Trying to set max-aspect-ratio less than min-aspect ratio.")
       val))
-     
+
+|# ;;;All this was commented out because of an error compiling
+   ;;;claiming that self was not a valid variable.
+
+
+
