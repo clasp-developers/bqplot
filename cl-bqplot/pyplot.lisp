@@ -33,7 +33,7 @@
 (defun show (&key (key nil) (display-toolbar t))
   (let ((figure nil))
     (if key
-	(setf figure (nth key (cdr (assoc "figure-registry" %context :test #'string=))))
+	(setf figure (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)) :test #'string=)))
 	(setf figure (current-figure)))
     (if display-toolbar
 	(progn (unless (pyplot figure)
@@ -63,13 +63,13 @@
 		 (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=))))))))
 	(progn
 	  (if (not key)
-              (setf (cdr (assoc "figure" %context :test #'string=))(list (make-instance 'figure))) ;kwargs are supposed to be added after the make-instance but doing so raised error
+              (setf (cdr (assoc "figure" %context :test #'string=))(list (cons "1" (make-instance 'figure))));(make-instance 'figure)) ;kwargs are supposed to be added after the make-instance but doing so raised error
 	      (progn
                 (unless (assoc key (assoc "figure-registry" %context :test #'string=))
                   (unless (getf kwargs :title)
                     (push (concatenate 'string "Figure" " " key) kwargs)
                     (push :title kwargs))
-                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (make-instance 'figure))))
+                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (cons "1" (make-instance 'figure)))))
                 (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))))
                 (warn "How to Add a slot for each argument in kwargs")
    ;;;(scales key :scales scales-arg)
@@ -337,7 +337,7 @@
 ;;;In python, the lambda list is def _mark_type(mark_type, options={}, axes_options={}, **kwargs.
 ;;;I'm going to get rid of the option optionals and just have a kwargs containing all the information.
 
-(defun %draw-mark (mark-type kwargs)
+(defun %draw-mark (mark-type &rest kwargs)
   (let ((fig (getf kwargs :figure (current-figure)))
         (scales (getf kwargs :scales))
         (update-context (getf kwargs :update-context t))
@@ -365,9 +365,9 @@
                  ;;;Need to address (elif dimension not in _context['scales']: ...What is dimension here?
                  (t
                   (if (assoc name scales :test #'string=)
-                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string=)))
-                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string))) scales))))))
-    (setf mark (mark-type :scales scales kwargs)
+                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
+    (setf mark (apply #'make-instance mark-type (concatenate 'list '(:scales scales) kwargs))
           (cdr (assoc "last-mark" %context :test #'string=)) mark
           (marks fig) (concatenate 'list (marks fig) (list mark)))
     (axes mark :options axes-options)

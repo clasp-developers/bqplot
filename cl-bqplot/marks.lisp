@@ -171,7 +171,7 @@
   (name :accessor name
 	:type string
 	:initform "Lines")
-  (x :accessor x
+  (x :initarg :x :accessor x
       :type list
       :initform nil
       :metadata (:sync t
@@ -179,9 +179,10 @@
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       *array-serialization*))
+		       ;*array-serialization*
+		       ))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
-   (y :accessor y
+   (y :initarg :y :accessor y
       :type list
       :initform nil
       :metadata (:sync t
@@ -189,7 +190,8 @@
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       *array-serialization*))
+		       ;*array-serialization*
+		       ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :accessor color
       :type list
@@ -199,7 +201,8 @@
 		       :scaled t
 		       :rtype "Color"
 		       :atype "bqplot.ColorAxis"
-		       *array-serialization*))
+		       ;*array-serialization*
+		       ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
   (scales-metadata :accessor scales-metadata
       :type list
@@ -211,7 +214,7 @@
 		       :json-name "scales_metadata"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode "")(cons 'default-value CATEGORY10)))
+	   :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value (cljw:unicode "#1f77b4")));this 
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "colors"))
@@ -1300,7 +1303,8 @@
 			 :scaled t
 			 :rtype "Number"
                          :atype "bqplot.Axis"
-                         *array-serialization*))
+                         ;*array-serialization*
+			 ))
    (y :initarg :y :accessor y
 	:type list
 	:initform nil
@@ -1309,7 +1313,8 @@
 			 :scaled t
 			 :rtype "Number"
                          :atype "bqplot.Axis"
-                         *array-serialization*))
+                         ;*array-serialization*
+			 ))
    (color :initarg :color :accessor color
 	:type list
 	:initform nil
@@ -1318,7 +1323,8 @@
 			 :scaled t
 			 :rtype="Color"
                          :atype="bqplot.ColorAxis"
-                         *array-serialization*))
+                         ;*array-serialization*
+			 ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		   :type list
 		   :initform (list (cons "x" (list (cons "orientation" "horizontal")
