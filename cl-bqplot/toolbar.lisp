@@ -6,7 +6,8 @@
 	   :initform (make-instance 'figure)
 	   :metadata #.`(:sync t
 			    :json-name "figure"
-			    ,@cljw:*widget-serialization*))
+					; ,@cljw:*widget-serialization*
+			    ))
    (%panning :accessor panning
 	     :type bool
 	     :initform :true
@@ -14,9 +15,10 @@
 			      :json-name "_panning"))
    (%panzoom :accessor panzoom
 	     :initform (make-instance 'pan-zoom)
-	     :metadata (:sync t
+	     :metadata #.`(:sync t
 			      :json-name "_panzoom"
-			      *widget serialization*)))
+					;*widget serialization*
+			      )))
 					;TODO: look into non translated variables
    (:default-initargs
     :view-name (cljw:unicode "Toolbar")

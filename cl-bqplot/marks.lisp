@@ -10,7 +10,8 @@
 	   ;:validator %validate-scales
 	   :metadata #.`(:sync t
                       :json-name "scales"
-                      ,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                      ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		    :type list
 		    :initform nil
@@ -68,7 +69,8 @@
 	    :initform (make-instance 'domwidget)
 	    :metadata #.`(:sync t
 			     :json-name "tooltip"
-			     ,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*
+                             ))
    (tooltip-style :initarg :tooltip-style :accessor tooltip-style
 		  :type list
 		  :initform (list (cons "opacity" 0.9))
@@ -498,16 +500,17 @@
 			    :display-name "Marker"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode "")(cons 'default-value "steelblue")))
+	   :initform (list (cons 'trait (cljw:unicode ""))
+			   (cons 'default-value "steelblue"))
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
    (scales-metadata :accessor scales-metadata
 		    :type list
 		    :initform (list (cons "x" (list (cons "orientation" "horizontal")
-						   (cons "dimension" "x")))
+						    (cons "dimension" "x")))
 				    (cons "y" (list (cons "orientation" "vertical")
-						   (cons "dimension" "y")))
+						    (cons "dimension" "y")))
 				    (cons "color" (cons "dimension" "color"))
 				    (cons "size" (cons "dimension" "size"))
 				    (cons "opacity" (cons "dimension" "opacity"))

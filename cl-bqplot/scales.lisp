@@ -364,7 +364,7 @@
 	:type float
 	:initform 1              ;;;;tentative 
 	:metadata (:sync t
-			 :json-name "max")))
+    :json-name "max")))
  (:default-initargs
    :view-name (cljw:unicode "LogScale")
    :model-name (cljw:unicode "LogScaleModel"))
