@@ -2,7 +2,7 @@
 
 ;;;This class technically had a @register decorator but I removed it 
 (defclass toolbar (cljw:domwidget)
-  ((figure-toolbar :accessor figure-toolbar
+  ((figure-toolbar :initarg :figure :accessor figure-toolbar
 	   :initform (make-instance 'figure)
 	   :metadata #.`(:sync t
 			    :json-name "figure"

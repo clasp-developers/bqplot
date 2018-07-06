@@ -172,7 +172,7 @@
 	:type string
 	:initform "Lines")
   (x :initarg :x :accessor x
-      :type list
+      :type vector
       :initform nil
       :metadata (:sync t
 		       :json-name "x"
@@ -183,7 +183,7 @@
 		       ))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :initarg :y :accessor y
-      :type list
+      :type vector
       :initform nil
       :metadata (:sync t
 		       :json-name "y"
