@@ -10,7 +10,7 @@
 	   ;:validator %validate-scales
 	   :metadata #.`(:sync t
                       :json-name "scales"
-                                        ;,@cljw:*widget-serialization*
+                                        ,@cljw:*widget-serialization*
                       ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		    :type list
@@ -69,7 +69,7 @@
 	    :initform (make-instance 'domwidget)
 	    :metadata #.`(:sync t
 			     :json-name "tooltip"
-                                        ;,@cljw:*widget-serialization*
+                                        ,@cljw:*widget-serialization*
                              ))
    (tooltip-style :initarg :tooltip-style :accessor tooltip-style
 		  :type list

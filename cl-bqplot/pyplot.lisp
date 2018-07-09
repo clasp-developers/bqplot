@@ -35,24 +35,13 @@
     (if key
 	(setf figure (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)) :test #'string=)))
 	(setf figure (cdr (assoc "1" (current-figure) :test #'string=))))
+	;(setf figure (make-instance 'figure :title "Example")))
     (if display-toolbar
 	(progn (unless (pyplot figure)
 		 (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
 	       (make-instance 'cljw::vbox :children (vector figure (pyplot figure))))
 	figure))) ;;;what's this display function?
 
-(defun show (&key (key nil) (display-toolbar t))
-  (let ((figure nil))
-    (if key
-	(setf figure (nth key (cdr (assoc "figure-registry" %context :test #'string=))))
-	(setf figure (current-figure)))
-    (if display-toolbar
-	(progn (unless (pyplot figure)
-		 (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
-	       (make-instance 'cljw:vbox :children (vector figure (pyplot figure))))
-        ;;;We had (display (make-instance 'vbox :children (vector figure (pyplot figure))))
-        ;;;and (display figure)))), but we decided we don't need a display function.
-    figure)))
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
   ;;;We don't want key and fig to actually be in the kwargs plist
@@ -144,7 +133,7 @@
       (if new-mark
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
-  (let* ((fig (getf kwargs :figure (current-figure)))
+  (let* ((fig (getf kwargs :figure (cdr (assoc "1" (bqplot::current-figure) :test #'string=))))
 	 (scales (scales-marks mark))
 	 (fig-axes (loop for (key . axis) in fig collect axis))
 	(axes-val nil))
@@ -380,6 +369,7 @@
           (cdr (assoc "last_mark" %context :test #'string=)) mark
           (marks (cdr (assoc "1" fig :test #'string=))) (append (list (marks (cdr (assoc "1" fig :test #'string=)))) (list mark)))
     (axes :mark mark :options axes-options)
+    (print (axes :mark mark))
     mark))
 
 ;;;%infer-x-for-line just needs to be completly rewritten
@@ -643,10 +633,11 @@
 ;(defun set-context (context))
 
 
-;(defun %fetch-axis (fig dimension scale)
-  ;(let (axis-registry (getf fig "axis-registry"))
-    ;(dimension-data (getf axis-registry :dimension nil))
-    ;(dimension-scales
+(defun %fetch-axis (fig dimension scale)
+  (let* (axis-registry (getf fig "axis-registry"))
+    (dimension-data (getf axis-registry :dimension nil))
+    (dimension-scales (loop for dim in dimension-data collect (cdr (assoc "scale" dim :test #'string=))))
+    (dimension-axes (loop for dim in dimension-data collect (cdr (assoc "axis" dim :test #'string=))))
      ;;;need the last two plus the try 
      ;)))
 
