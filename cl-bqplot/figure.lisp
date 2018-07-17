@@ -15,7 +15,7 @@
                                         ;,@cljw:*widget-serialization*
                           ))
    (marks :initarg :marks :accessor marks
-          :type list
+          :type Mark
           :initform (make-instance 'Mark)
           :metadata #.`(:sync t
                            :json-name "marks"

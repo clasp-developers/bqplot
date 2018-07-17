@@ -20,24 +20,23 @@
 
 (defclass hand-draw (interaction)
   ((lines :accessor lines
-	  :initform (make-instance 'lines)
+	  :initform :null;(make-instance 'lines)
 	  :metadata #.`(:sync t
-			   :json-name "lines"
-                                        ;,@cljw:*widget-serialization*
-                           ))
+			   :json-name "lines"))
+			   ;,@cljw:*widget-serialization*))
    (line-index :accessor line-index
 	       :type integer
-	       :initform nil
+	       :initform 0
 	       :metadata (:sync t
 				:json-name "line_index"))
    (min-x :accessor min-x
-	  :type float
-	  :initform nil
+	  :type cljw:bool
+	  :initform :null
 	  :metadata (:sync t
 			   :json-name "min_x"))
    (max-x :accessor max-x
-	  :type float
-	  :initform nil
+	  :type cljw:bool
+	  :initform :null
 	  :metadata (:sync t
 			   :json-name "max_x")))
    (:default-initargs
@@ -63,9 +62,8 @@
 	   :initform (make-instance 'scale)
          ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
 	   :metadata #.`(:sync t
-			    :json-name "scales"
-                                        ;,@cljw:*widget-serialization*
-                            )))
+			    :json-name "scales")))
+			    ;,@cljw:*widget-serialization*)))
    (:default-initargs
     :view-name (cljw:unicode "PanZoom")
     :model-name (cljw:unicode "PanZoomModel"))
@@ -78,9 +76,8 @@
 	  :type list
 	  :initform nil
 	  :metadata #.`(:sync t
-			   :json-name "marks"
-                                        ;,@cljw:*widget-serialization*
-                           )))
+			   :json-name "marks")))
+			   ;,@cljw:*widget-serialization*)))
    (:default-initargs
     :view-name (cljw:unicode "Selector"))
    
@@ -93,9 +90,8 @@
 	  :initform (make-instance 'scale)
 	  :metadata #.`(:sync t
 			   :json-name "one-d-selector"
-			   :dimension "x"
-                                        ;,@cljw:*widget-serialization*
-                           )))
+			   :dimension "x")))
+			   ;,@cljw:*widget-serialization*)))
    (:default-initargs
     :model-name (cljw:unicode "OneDSelectorModel"))
 

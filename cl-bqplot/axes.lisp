@@ -2,8 +2,8 @@
 
 (defclass base-axis (widget)
   ((axis-types :accessor axis-types
-	       :type list
-	       :initform (list (cons "bqplot.Axis" "Axis")
+           :type list
+           :initform (list (cons "bqplot.Axis" "Axis")
                                (cons "bqplot.ColorAxis" "ColorAxis"))))
    (:default-initargs
     :view-module (cljw:unicode "bqplot")
@@ -41,7 +41,7 @@
 		:initform (cljw:unicode "")
 		:metadata (:sync t
 				 :jsone-name "tick_format"))
-   (scale :accessor scale
+   (scale :initarg :scale :accessor scale
 	  :initform (make-instance 'scale)
 	  :metadata #.`(:sync t
 			   :json-name "scale"
@@ -128,9 +128,8 @@
    (scale :accessor scale
 	  :initform (make-instance 'scale)
 	  :metadata #.`(:sync t
-			   :json-name "scale"
-                                        ,@cljw:*widget-serialization*
-)))
+			   :json-name "scale")))
+			   ;,@cljw:*widget-serialization*)))
    (:default-initargs
        :view-name (cljw:unicode "ColorAxis")
      :model-name (cljw:unicode "ColorAxisModel"))
