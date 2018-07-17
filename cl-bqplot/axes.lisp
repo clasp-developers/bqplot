@@ -1,7 +1,7 @@
 (in-package :bqplot)
 
 (defclass base-axis (widget)
-  ((axis-types :accessor axis-types
+  ((axis-types :initarg :axis-types :accessor axis-types
            :type list
            :initform (list (cons "bqplot.Axis" "Axis")
                                (cons "bqplot.ColorAxis" "ColorAxis"))))
@@ -16,12 +16,12 @@
   ((icon :accessor icon
 	 :type unicode
 	 :initform (cljw:unicode "fa-arrows"))	 
-   (orientation :accessor orientation
+   (orientation :initarg :orientation :accessor orientation
 		:type unicode
 		:initform (cljw:unicode "horizontal")
 		:metadata (:sync t
 				 :json-name "orientation"))   
-   (side :accessor side
+   (side :initarg :side :accessor side
 	 :type unicode
 	 :initform (cljw:unicode "")
 	 :metadata (:sync t
@@ -115,7 +115,7 @@
 		:initform (cljw:unicode "horizontal")
 		:metadata (:sync t
 				 :json-name "orientation"))
-   (side :accessor side
+   (side :initarg :side :accessor side
 	 :type unicode
 	 :initform (cljw:unicode "bottom")
 	 :metadata (:sync t
@@ -128,8 +128,9 @@
    (scale :accessor scale
 	  :initform (make-instance 'scale)
 	  :metadata #.`(:sync t
-			   :json-name "scale")))
-			   ;,@cljw:*widget-serialization*)))
+			   :json-name "scale"
+					;,@cljw:*widget-serialization*
+			   )))
    (:default-initargs
        :view-name (cljw:unicode "ColorAxis")
      :model-name (cljw:unicode "ColorAxisModel"))

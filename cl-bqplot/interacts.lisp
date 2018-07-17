@@ -22,8 +22,9 @@
   ((lines :accessor lines
 	  :initform :null;(make-instance 'lines)
 	  :metadata #.`(:sync t
-			   :json-name "lines"))
-			   ;,@cljw:*widget-serialization*))
+			   :json-name "lines"
+					;,@cljw:*widget-serialization*
+			   ))
    (line-index :accessor line-index
 	       :type integer
 	       :initform 0
@@ -57,13 +58,14 @@
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "allow_zoom"))
-   (scales-interacts :accessor scales-interacts
+   (scales-interacts :initarg :scales :accessor scales-interacts
 	   :type list
 	   :initform (make-instance 'scale)
          ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
 	   :metadata #.`(:sync t
-			    :json-name "scales")))
-			    ;,@cljw:*widget-serialization*)))
+			    :json-name "scales"
+					;,@cljw:*widget-serialization*
+			    )))
    (:default-initargs
     :view-name (cljw:unicode "PanZoom")
     :model-name (cljw:unicode "PanZoomModel"))
@@ -76,8 +78,9 @@
 	  :type list
 	  :initform nil
 	  :metadata #.`(:sync t
-			   :json-name "marks")))
-			   ;,@cljw:*widget-serialization*)))
+			   :json-name "marks"
+					;,@cljw:*widget-serialization*
+			   )))
    (:default-initargs
     :view-name (cljw:unicode "Selector"))
    
@@ -90,8 +93,9 @@
 	  :initform (make-instance 'scale)
 	  :metadata #.`(:sync t
 			   :json-name "one-d-selector"
-			   :dimension "x")))
-			   ;,@cljw:*widget-serialization*)))
+			   :dimension "x"
+					;,@cljw:*widget-serialization*
+			   )))
    (:default-initargs
     :model-name (cljw:unicode "OneDSelectorModel"))
 
@@ -103,15 +107,15 @@
 	    :metadata #.`(:sync t
 			     :json-name "x_scale"
 			     :dimension "x"
-                                        ;,@cljw:*widget-serialization*
-                             ))
+					;,@cljw:*widget-serialization*
+			     ))
    (y-scale :accessor y-scale
 	    :initform (make-instance 'scale)
 	    :metadata #.`(:sync t
 			     :json-name "y_scale"
 			     :dimension "y"
-                                        ;,@cljw:*widget-serialization*
-                             )))
+					;,@cljw:*widget-serialization*
+			     )))
    (:default-initargs
     :model-name (cljw:unicode "TwoDSelectorModel"))
    

@@ -80,8 +80,9 @@
 	  :type list
 	  :initform nil
 	  :metadata #.`(:sync t
-			   :json-name "color"))
-			   ;,@cljw:*widget-serialization*))
+			   :json-name "color"
+					;,@cljw:*widget-serialization*
+			   ))
    ;;;;checked if cons "top" 50 is the same as top = 50 
    (map-margin :initarg :map-margin :accessor map-margin
 	       :type list

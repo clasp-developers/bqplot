@@ -29,7 +29,7 @@
             :initform :false
             :metadata (:sync t
                              :json-name "reverse"))
-   (allow-padding :accessor allow-padding
+   (allow-padding :initarg :allow-padding :accessor allow-padding
 		  :type bool
 		  :initform :true
 		  :metadata (:sync t
@@ -102,7 +102,7 @@
 	   :metadata (:sync t
 			    :json-name "parallels"))
    (precision :accessor precision
-	       :type float
+	      :type float
 	       :initform 0.1
 	       :metadata (:sync t
 				:json-name "precision"))
