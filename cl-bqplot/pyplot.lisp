@@ -47,9 +47,7 @@
   (remf kwargs :fig)
   ;;;Now begins the translation of python code.
   (let ((scales-arg (getf kwargs :scales)))
-    ;;Make getf an effective pop of the (:scales value)
-    (remove :scales kwargs)
-    (remove scales-arg kwargs)
+    (remf kwargs :scales)
     (if (assoc "current_key" %context :test #'string=)
 	(setf (cdr (assoc "current_key" %context :test #'string=)) key)
 	(setf %context (append %context (cons "current_key" key))))
@@ -63,20 +61,22 @@
 		 (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=))))))))
 	(progn
 	  (if (not key)
-              (setf (cdr (assoc "figure" %context :test #'string=))(list (make-instance 'figure))) ;kwargs are supposed to be added after the make-instance but doing so raised error
-	      (progn
+              (progn
+                (print "Debug inside (if (not key))")
+                (setf (cdr (assoc "figure" %context :test #'string=)) (apply #'(make-instance 'figure kwargs)))) ;kwargs are supposed to be added after the make-instance but doing so raised error
+	       (progn
                 (unless (assoc key (assoc "figure-registry" %context :test #'string=))
                   (unless (getf kwargs :title)
                     (push (concatenate 'string "Figure" " " key) kwargs)
                     (push :title kwargs))
-                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (make-instance 'figure))))
-                (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))))
+                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (make-instance 'figure)))) (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))))
                 (warn "How to Add a slot for each argument in kwargs")
    ;;;(scales key :scales scales-arg)
 		(loop for arg in kwargs do
 		     (unless (assoc arg (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
 		       (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=)))))))
 		))))
+    (print "Debug after 'if fig'")
     (unless (assoc "axis_registry" (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
       (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons "axis_registry" nil))))
     (cdr (assoc "figure" %context :test #'string=))))
@@ -126,6 +126,8 @@
 
 (defun axes (&rest kwargs &key (mark nil) (options nil) &allow-other-keys)
   ;;;Remove mark and options from kwargs
+  (remf kwargs :mark)
+  (remf kwargs :options)
   (setf kwargs (remove mark kwargs)
         kwargs (remove ':mark kwargs)
         kwargs (remove options kwargs)
@@ -136,14 +138,38 @@
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
   (let ((fig (getf kwargs :figure (current-figure)))
-	(scales (scales mark))
+        (scales (scales-marks mark))
         (fig-axes (loop for axis in (axes fig) collect axis))
-	(axes nil))
-      ;(loop for name in scales
-            ;do
-               ;(unless (member name ((getf scales-metadata name nil) mark))))
+        (axes nil)
+        (scale-metadata nil)
+        (dimension nil)
+        (axis-args nil)
+        (axis nil)
+        (key nil)
+        (axis-type nil))
+    (loop for name in scales
+       do
+         (setf scale-metadata (getf (intern name "KEYWORD") (scales-metadata mark) nil)
+               dimension (getf  (scales-metadata mark) :dimension (cdr (assoc name scales :test #'string=)))
+               axis-args (list scale-metadata)
+               axis (%fetch-axis fig dimension (cdr (assoc name scales :test #'string=))))
+         (warn "How to handle **(options.get(name, {}))")
+         (if axis
+             (progn
+               (%apply-properties axis (getf options (intern name "KEYWORD") nil))
+               (push (cons name axis) axes))
+             (progn
+               (setf key (traitlets:traitlet-metadata (find-class 'mark) (intern name "KEYWORD") :atype)))
+               (when key
+                 (setf axis-type (cdr (assoc key (axis-types (make-instance 'axes) :test #'string=)))
+                       axis (axis-type :scale (cdr (assoc name scales :test #'string=)) axis-args) ;;;How to handle **Axis_args
+                       fig-axes (append fig-axes (list axis)))
+                 (%update-fig-axis-registry fig dimension (cdr (assoc name scales :test #'string=)) axis)))))
+    (setf (axes fig) fig-axes)
+    axes))
+           
                                
-      ))
+
 ;;;FINISH AXES
 #|    
 (defun %set-label (label mark dim &rest kwargs &key &allow-other-keys)
@@ -313,9 +339,9 @@
                  ;;;Need to address (elif dimension not in _context['scales']: ...What is dimension here?
                  (t
                   (if (assoc name scales :test #'string=)
-                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string=)))
-                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string))) scales))))))
-    (setf mark (mark-type :scales scales kwargs)
+                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
+    (setf mark (apply #'make-instance mark-type (concatenate 'list '(:scales scales) kwargs))
           (cdr (assoc "last-mark" %context :test #'string=)) mark
           (marks fig) (concatenate 'list (marks fig) (list mark)))
     (axes mark :options axes-options)
@@ -330,6 +356,35 @@
   (let ((scale-metadata (scales-metadata mark-type)))
     (cdr (assoc "dimension" (cdr (assoc trait-name scale-metadata :test #'string=)) :test #'string=)))) 
 
+
+;;;In Python, x and y are optional arguments, but we're going to make them forced positional arguments here. If you want to call plot without x, use nil as the first argument, and we'll catch it here.
+;;;Use keyword arguments, so we have a plist for kwargs
+;;;In python, they give an 'index_data' as a key, and if x is not supplied, then this index_data key becomes x. That should not be relevant to us. 
+(defun plot (x y &rest kwargs &key &allow-other-keys)
+  (let ((marker-str (getf kwargs :marker-str)))
+    (unless x
+      (setf x (%infer-x-for-line y)))
+    (setf kwargs (append kwargs (list :x x :y y)))
+    (if  marker-str
+         (progn
+           (strip marker-str)
+           (multiple-value-bind (line-style color marker) (%get-line-styles marker-str)
+             (if (and marker (not line-style))
+                 (progn
+                   (when color
+                     (setf kwargs (append kwargs (list :default-colors (list color)))))
+                   (return-from plot (%draw-mark (find-class 'scatter) kwargs)))
+                 (progn
+                   (if line-style
+                       (setf kwargs (append kwargs (list :line-style line-style)))
+                       (setf kwargs (append kwargs (list :line-style "solid"))))
+                   (when marker
+                     (setf kwargs (append kwargs (list :marker marker))))
+                   (when color
+                     (setf kwargs (append kwargs (list :color (list color)))))
+                   (return-from plot (%draw-mark (find-class 'lines) kwargs))))))
+         (%draw-mark (find-class 'lines) kwargs))))
+#|
 (defun plot (&rest args)
  (let* ((x (if (keywordp (first args))
               (nil) ;return error message
@@ -365,6 +420,12 @@
      ;; 3. x and y are something
      ;;
            ;  )
+|#
+
+;;;Helper function for plot
+(defun strip (string)
+  (string-trim #(#\Space #\Newline #\Return) string))
+
 
 (defun imshow (image format &rest kwargs &key &allow-other-key)
   (let ((ipyimage)(data))
@@ -609,3 +670,66 @@
 
 
   
+(defmethod %ipython-display ((widget nglwidget) &rest key &key &allow-other-keys)
+  (if (first-time-loaded widget)
+      (setf (first-time-loaded widget) nil)
+      (sync-view widget))
+  (when (init-gui widget)
+    (when (not (gui widget))
+      (setf (gui widget) (%display (player widget))))
+    (display (gui widget)))
+  (when (or (string= "dark" (theme widget)) (string= "oceans16" (theme widget)))
+    (warn "how do we set the theme")
+    (%remote-call widget "cleanOutput" :target "Widget"))
+  (%ipython-display (place-proxy widget))
+  (values))
+
+(defmethod display ((widget nglwidget) &key (gui nil) (use-box nil))
+  (if gui
+      (if use-box
+          (let ((box (apply #'make-instance 'BoxNGL widget (%display (player widget)))))
+            (setf (%gui-style box) "row")
+             box)
+          (progn
+            (display widget)
+            (display (%display (player widget)))
+            (values)))
+      widget))
+
+
+(defmethod %display ((self trajectory-player))
+  (let* ((box-factory (list
+		       (cons (%make-general-box self) "General")
+		       (cons (%make-widget-repr self) "Representation")
+		       (cons (%make-widget-preference self) "Preference")
+		       (cons (%make-theme-box self) "Theme")
+		       (cons (%make-extra-box self) "Extra")
+		       (cons (%make-hide-tab-with-place-proxy self) "Hide")
+		       (cons (%show-website self) "Help")))
+	 (tab (%make-delay-tab box-factory :selected-index 0)))
+    (setf (align-self (layout tab)) "center" (align-items (layout tab)) "stretch")
+    (setf (widget-tab self) tab)
+    (widget-tab self)))
+
+(defun %make-delay-tab (box-factory &optional (selected-index 0))
+  (let ((tab (make-instance 'cl-jupyter-widgets::tab
+			    :children (loop for (box) in box-factory
+					 collect (make-instance 'cl-jupyter-widgets::Box))))
+	(i 0))
+    
+    (loop for (dummy . title) in box-factory
+       do
+	 (set-title tab i title)
+	 (incf i))
+
+    (if (not (children (aref (children tab) selected-index)))
+	(setf (selected-index tab) -1))
+
+    (flet ((on-update-selected-index (change)
+	     (let ((index (aref change "new")))
+	       (if (not (children (aref (children tab) index)))
+		   (setf (children (aref (children tab) index)) (error "I don't know what to set it to")))
+	       )))
+      (observe tab on-update-selected-index :names "selected-index")
+      (setf (selected-index tab) selected-index)
+      tab)))

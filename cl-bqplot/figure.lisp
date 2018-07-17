@@ -9,7 +9,7 @@
                            ;;does display_name "Title" Matter??))
    (axes-figure :initarg :axes :accessor axes-figure
          :type list
-         :initform (make-instance 'axis)
+         :initform (list (make-instance 'axis))
          :metadata #.`(:sync t
                           :json-name "axes"
                                         ;,@cljw:*widget-serialization*
