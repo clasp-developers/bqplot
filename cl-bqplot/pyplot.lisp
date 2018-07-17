@@ -28,7 +28,15 @@
 				 (cons "+" "cross")))
 
 ;(defun hashtable (data v)
-  ;(warn "How to try data[v]"))
+					;(warn "How to try data[v]"))
+
+(defun reset-context (&key &allow-other-keys)
+    (defparameter %context (list (cons "figure" nil)
+			     (cons "figure-registry" nil)
+			     (cons "scales" nil)
+			     (cons "scale_registry" nil)
+			     (cons "last_mark" nil)
+			     (cons "current_key" nil)))) 
 
 (defun show (&key (key nil) (display-toolbar t))
   (let ((figure nil))
@@ -138,7 +146,7 @@
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
   (let* ((fig (getf kwargs :figure (current-figure)))
-	 (scales (scales-marks (car mark))) ;;; I cheated here. The variable mark is a list containing an instance of a mark and the scales-marks function wasn't working well on itso I just used car to pull the instance out of the list. VERY messy but it works. 
+	 (scales (scales-marks (car mark))) ;;; I cheated here. The variable mark is a list containing an instance of a mark and the scales-marks function wasn't working well on its own so I just used car to pull the instance out of the list. VERY messy but it works. 
 	 (fig-axes  (axes-figure (cdr (assoc "1" (current-figure) :test #'string=))))
 	 ;(fig-axes (loop for axis in (axes-figure (cdr (assoc "1" (current-figure) :test #'string=))) collect axis))
         (axes nil)
@@ -149,10 +157,11 @@
         (key nil)
 	(axis-type nil))
     (loop for name in scales
-       do	 
+       do
+	 ;missing the function that checks to see if the scale is even needed (if name not in mark.class_trait_names(scaled=True):)
          (setf name (car name)
-	       scale-metadata (getf (scales-metadata (car mark)) (intern name "KEYWORD") nil)
-               dimension (getf (scales-metadata (car mark)) :dimension (cdr (assoc (intern name "KEYWORD") scales :test #'string=)))
+	       scale-metadata (cdr (assoc name (scales-metadata (car mark)) :test #'string=))
+               dimension (if (cdr (assoc "dimension" scale-metadata :test #'string=))(cdr (assoc "dimension" scale-metadata :test #'string=))(cdr (assoc (intern name "KEYWORD") scales :test #'string=)))
                axis-args (list scale-metadata))
                ;axis (%fetch-axis fig dimension (cdr (assoc name scales :test #'string=))) removing the ability to access an already existing set of axes from axis registry
          (warn "How to handle **(options.get(name, {}))")
@@ -165,12 +174,14 @@
 					;(setf key (traitlets:traitlet-metadata (find-class 'lines) (intern name) :atype))))
 	 (when key
 	   (setf axis-type (intern (cdr (assoc key (axis-types (make-instance 'axis)) :test #'string=)))
-		 axis (make-instance 'axis :scale (cdr (assoc name scales :test #'string=))) ;;;How to handle **Axis_args? just remove it lol. Also 'axis should be axis-type but that was giving me hell. 
+		 axis (make-instance 'axis :scale (cdr (assoc name scales :test #'string=))) ;;;How to handle **Axis_args? just remove it lol. Also 'axis should be axis-type but that was giving me hell.
+		 
 		 fig-axes (append (list fig-axes)(list axis)))
-	   ;(%update-fig-axis-registry (cdr (assoc "1" fig :test #'string=)) dimension (cdr (assoc name scales :test #'string=)) axis) THIS NEEDS TO WORK
+	   (%update-fig-axis-registry (cdr (assoc "1" fig :test #'string=)) dimension (cdr (assoc name scales :test #'string=)) axis) 
+	   ;(setf key nil)
 	   ))
     (setf (axes-figure (cdr (assoc "1" fig :test #'string=))) fig-axes) 
-    (cdr (car axes))))
+    axes))
 
 
 (defun %set-label (label mark dim &rest kwargs &key &allow-other-keys)
@@ -636,15 +647,18 @@
 	 (dimension-data (getf axis-registry dimension nil))
 	 (dimension-scales (loop for dim in dimension-data collect (cdr (assoc "scale" dim :test #'string=))))
 	 (dimension-axes (loop for dim in dimension-data collect (cdr (assoc "axis" dim :test #'string=)))))
-     ;;;need the last two plus the try 
      ))
 
 (defun %update-fig-axis-registry (fig dimension scale axis)
   (let* ((axis-registry (axis-registry fig))
 	 (dimension-scales (cdr (assoc dimension axis-registry :test #'string=))))
-    (setf dimension-scales (append dimension-scales (list :scale scale :axis axis))
-	  (cdr (assoc dimension axis-registry :test #'string=)) dimension-scales
-	  (axis-registry fig) axis-registry)))
+    (setf dimension-scales (append dimension-scales (list (cons "scale" scale) (cons "axis" axis))))
+    (if (cdr (assoc dimension axis-registry :test #'string=))
+	(setf (cdr (assoc dimension axis-registry :test #'string=)) dimension-scales)
+	(if axis-registry
+	    (setf axis-registry (append axis-registry (cons dimension dimension-scales)))
+	    (setf axis-registry (list (cons dimension dimension-scales)))))
+    (setf (axis-registry fig) axis-registry)))
   
 ;(defun %get-attribute-dimension (trait-name &key (mark-type nil) &allow-other-keys)
   ;(unless mark-type

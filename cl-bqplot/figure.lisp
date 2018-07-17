@@ -6,10 +6,10 @@
           :initform nil
           :metadata (:sync t
                            :json-name "title"))
-                           ;;does display_name "Title" Matter??))
+   ;;does display_name "Title" Matter??))xb
    (axes-figure :initarg :axes-figure :accessor axes-figure
          :type list
-         :initform (make-instance 'axis)
+         :initform nil ;(make-instance 'axis)
          :metadata #.`(:sync t
                           :json-name "axes"
                                         ,@cljw:*widget-serialization*

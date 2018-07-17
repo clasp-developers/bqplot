@@ -16,12 +16,12 @@
   ((icon :accessor icon
 	 :type unicode
 	 :initform (cljw:unicode "fa-arrows"))	 
-   (orientation :accessor orientation
+   (orientation :initarg :orientation :accessor orientation
 		:type unicode
 		:initform (cljw:unicode "horizontal")
 		:metadata (:sync t
 				 :json-name "orientation"))   
-   (side :accessor side
+   (side :initarg :side :accessor side
 	 :type unicode
 	 :initform (cljw:unicode "")
 	 :metadata (:sync t
@@ -115,7 +115,7 @@
 		:initform (cljw:unicode "horizontal")
 		:metadata (:sync t
 				 :json-name "orientation"))
-   (side :accessor side
+   (side :initarg :side :accessor side
 	 :type unicode
 	 :initform (cljw:unicode "bottom")
 	 :metadata (:sync t

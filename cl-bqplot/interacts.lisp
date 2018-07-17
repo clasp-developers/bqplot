@@ -58,7 +58,7 @@
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "allow_zoom"))
-   (scales-interacts :accessor scales-interacts
+   (scales-interacts :initarg :scales :accessor scales-interacts
 	   :type list
 	   :initform (make-instance 'scale)
          ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))

@@ -29,7 +29,7 @@
             :initform :false
             :metadata (:sync t
                              :json-name "reverse"))
-   (allow-padding :accessor allow-padding
+   (allow-padding :initarg :allow-padding :accessor allow-padding
 		  :type bool
 		  :initform :true
 		  :metadata (:sync t
@@ -299,12 +299,12 @@
    (d-type :accessor d-type
 	    :type unicode
 	    :initform (cljw:unicode "numpy.number"))
-   (min :accessor min
+   (min :initarg :min :accessor min
 	:type float
 	:initform 0.0              
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :accessor max
+   (max :initarg :max :accessor max
 	:type float
 	:initform 1.0              ;;;;tentative value for now not sure what it does 
 	:metadata (:sync t
