@@ -33,13 +33,26 @@
 (defun show (&key (key nil) (display-toolbar t))
   (let ((figure nil))
     (if key
+	(setf figure (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)) :test #'string=)))
+	(setf figure (cdr (assoc "1" (current-figure) :test #'string=))))
+    (if display-toolbar
+	(progn (unless (pyplot figure)
+		 (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
+	       (make-instance 'cljw::vbox :children (vector figure (pyplot figure))))
+	figure))) ;;;what's this display function?
+
+(defun show (&key (key nil) (display-toolbar t))
+  (let ((figure nil))
+    (if key
 	(setf figure (nth key (cdr (assoc "figure-registry" %context :test #'string=))))
 	(setf figure (current-figure)))
     (if display-toolbar
 	(progn (unless (pyplot figure)
 		 (setf (pyplot figure) (make-instance 'toolbar :figure figure)))
-	       (display (make-instance 'vbox :children (vector figure (pyplot figure)))))
-	(display figure)))) ;;;what's this display function? LOL Steve
+	       (make-instance 'cljw:vbox :children (vector figure (pyplot figure))))
+        ;;;We had (display (make-instance 'vbox :children (vector figure (pyplot figure))))
+        ;;;and (display figure)))), but we decided we don't need a display function.
+    figure)))
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
   ;;;We don't want key and fig to actually be in the kwargs plist
@@ -63,13 +76,13 @@
 		 (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=))))))))
 	(progn
 	  (if (not key)
-              (setf (cdr (assoc "figure" %context :test #'string=))(list (make-instance 'figure))) ;kwargs are supposed to be added after the make-instance but doing so raised error
+              (setf (cdr (assoc "figure" %context :test #'string=))(list (cons "1" (make-instance 'figure))));(make-instance 'figure)) ;kwargs are supposed to be added after the make-instance but doing so raised error
 	      (progn
                 (unless (assoc key (assoc "figure-registry" %context :test #'string=))
                   (unless (getf kwargs :title)
                     (push (concatenate 'string "Figure" " " key) kwargs)
                     (push :title kwargs))
-                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (make-instance 'figure))))
+                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (cons "1" (make-instance 'figure)))))
                 (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))))
                 (warn "How to Add a slot for each argument in kwargs")
    ;;;(scales key :scales scales-arg)
@@ -77,8 +90,6 @@
 		     (unless (assoc arg (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
 		       (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=)))))))
 		))))
-    (unless (assoc "axis_registry" (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
-      (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons "axis_registry" nil))))
     (cdr (assoc "figure" %context :test #'string=))))
         
 (defun close (key)
@@ -126,6 +137,8 @@
 
 (defun axes (&rest kwargs &key (mark nil) (options nil) &allow-other-keys)
   ;;;Remove mark and options from kwargs
+  (remf kwargs :mark)
+  (remf kwargs :options)
   (setf kwargs (remove mark kwargs)
         kwargs (remove ':mark kwargs)
         kwargs (remove options kwargs)
@@ -135,15 +148,36 @@
       (if new_mark
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
-  (let ((fig (getf kwargs :figure (current-figure)))
-	(scales (scales mark))
+  (let* ((fig (getf kwargs :figure (current-figure)))
+        (scales (scales-marks mark))
         (fig-axes (loop for axis in (axes fig) collect axis))
-	(axes nil))
-      ;(loop for name in scales
-            ;do
-               ;(unless (member name ((getf scales-metadata name nil) mark))))
-                               
-      ))
+        (axes nil)
+        (scale-metadata nil)
+        (dimension nil)
+        (axis-args nil)
+        (axis nil)
+        (key nil)
+        (Axis-type nil))
+    (loop for name in scales
+       do
+         (setf scale-metadata (getf (intern name "KEYWORD") (scales-metadata mark) nil)
+               dimension (getf  (scales-metadata mark) :dimension (cdr (assoc name scales :test #'string=)))
+               axis-args (list scale-metadata)
+               axis (%fetch-axis fig dimension (cdr (assoc name scales :test #'string=))))
+         (warn "How to handle **(options.get(name, {}))")
+         (if axis
+             (progn
+               (%apply-properties axis (getf options (intern name "KEYWORD") nil))
+               (push (cons name axis) axes))
+             (progn
+               (setf key (traitlets:traitlet-metadata (find-class 'mark) (intern name "KEYWORD") :atype))
+               (when key
+                 (setf axis-type (cdr (assoc key (axis-types (make-instance 'axes) :test #'string=)))
+                       axis (axis-type :scale (cdr (assoc name scales :test #'string=)) axis-args) ;;;How to handle **Axis_args
+                       fig-axes (append fig-axes (list axis)))
+                 (%update-fig-axis-registry fig dimension (cdr (assoc name scales :test #'string=)) axis)))))
+    (setf (axes fig) fig-axes)
+    axes))
 ;;;FINISH AXES
 #|    
 (defun %set-label (label mark dim &rest kwargs &key &allow-other-keys)
@@ -178,7 +212,7 @@
 |#
 (defun %set-label (label mark dim &rest kwargs &key &allow-other-keys)
   (unless mark
-    (setf mark (cdr (assoc "last-mark" %context :test #'string=))))
+    (setf mark (cdr (assoc "last_mark" %context :test #'string=))))
   (unless mark
     (return-from %set-label nil))
   (let* ((fig (getf kwargs :figure))
@@ -205,10 +239,10 @@
   (remf kwargs :mark)
   (%set-label (label mark "y" kwargs)))
 
-;;;for plot func pass in x and y as the parameres instead of the arg and kwarg
 
 ;;;for plot func pass in x and y as the parameres instead of the arg and kwarg 
 
+;;;for plot func pass in x and y as the parameres instead of the arg and kwarg
 
 (defun grids (&key (fig nil) (value "solid"))
   (unless fig
@@ -285,7 +319,59 @@
                          or a list of colors, but a value of {} was given")))
     option))
 
-(defun %draw-mark (mark-type kwargs)
+#|
+(defun %draw-mark (mark-type &rest kwargs &key (options nil) (axes-options nil) &allow-other-keys)
+  (setf kwargs (remove options kwargs)
+        kwargs (remove :options kwargs)
+        kwargs (remove axes-options kwargs)
+        kwargs (remove :axes-options kwargs))
+  (let ((fig (getf kwargs :figure (current-figure)))
+	(scales (getf kwargs :scales))
+	(update-context (getf kwargs :update-context t))
+	(cmap (getf kwargs :cmap)))
+    (remf kwargs :figure)
+    (remf kwargs :scales)
+    (remf kwargs :update-context)
+    (remf kwargs :cmap)
+    (when cmap
+      (setf (cdr (assoc "color" options :test #'string=)) (list (cons (getf options "color")(%process-cmap cmap)))))
+    (loop for name in (class-trait-names mark-type) do
+	 (let ((dimension (%get-attribute-dimension name mark-type)))
+	   (when (assoc name kwargs :test #'string=)
+	     (loop-finish))
+	   (if (assoc name scales :test #'string=)
+	       (when update-context
+		 (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=))) :test #'string=) (cdr (assoc name scales :test #'string=))))
+	       (if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
+		   (setf (cdr (assoc name scales :test #'string=))(cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
+		   (let* ((traitlet)
+			  ;(rtype)
+			  ;(dtype)
+			  ;(compat-scale-types)
+			  ;(sorted-scales)
+			  ;(scales)))))
+	   ))))      
+
+
+	 ;(let ((scales-arg (getf kwargs :scales)))
+    ;;Make getf an effective pop of the (:scales value)
+    ;(remove ':scales kwargs)
+    ;(remove scales-arg kwargs)))
+
+(defun %infer-x-for-line (y)
+  (let ((array-shape (array-dimensions y)))
+       (when (= (length array-shape) 0) nil)
+       (when (= (length array-shape) 1)
+	 (array (cdr (assoc 0 array-shape :test #'equalp=))))
+  pretty sure arange is a numpy function that we can't call because we haven't  
+       (when (> (length array-shape) 1)
+					(array (cdr (assoc 1 array-shape :test #'equalp=))))))
+	   )))) |#
+
+;;;In python, the lambda list is def _mark_type(mark_type, options={}, axes_options={}, **kwargs.
+;;;I'm going to get rid of the option optionals and just have a kwargs containing all the information.
+
+(defun %draw-mark (mark-type &rest kwargs)
   (let ((fig (getf kwargs :figure (current-figure)))
         (scales (getf kwargs :scales))
         (update-context (getf kwargs :update-context t))
@@ -313,22 +399,17 @@
                  ;;;Need to address (elif dimension not in _context['scales']: ...What is dimension here?
                  (t
                   (if (assoc name scales :test #'string=)
-                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string=)))
-                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" :test #'string=)) :test #'string))) scales))))))
-    (setf mark (mark-type :scales scales kwargs)
-          (cdr (assoc "last-mark" %context :test #'string=)) mark
-          (marks fig) (concatenate 'list (marks fig) (list mark)))
-    (axes mark :options axes-options)
+                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
+    (setf mark (apply #'make-instance mark-type (list* :scales scales kwargs))
+          (cdr (assoc "last_mark" %context :test #'string=)) mark
+          (marks (cdr (assoc "1" fig :test #'string=))) (append (list (marks (cdr (assoc "1" fig :test #'string=)))) (list mark)))
+    (axes :mark mark :options axes-options)
     mark))
 
+;;;%infer-x-for-line just needs to be completly rewritten
 
-
-    
-(defun %get-attribute-dimension (trait-name &optional mark-type)
-  (unless mark-type
-    (return-from %get-attribute-dimension trait-name))
-  (let ((scale-metadata (scales-metadata mark-type)))
-    (cdr (assoc "dimension" (cdr (assoc trait-name scale-metadata :test #'string=)) :test #'string=)))) 
+#|
 
 (defun plot (&rest args)
  (let* ((x (if (keywordp (first args))
@@ -365,6 +446,40 @@
      ;; 3. x and y are something
      ;;
            ;  )
+
+|#
+
+;;;In Python, x and y are optional arguments, but we're going to make them forced positional arguments here. If you want to call plot without x, use nil as the first argument, and we'll catch it here.
+;;;Use keyword arguments, so we have a plist for kwargs
+;;;In python, they give an 'index_data' as a key, and if x is not supplied, then this index_data key becomes x. That should not be relevant to us. 
+(defun plot (x y &rest kwargs &key &allow-other-keys)
+  (let ((marker-str (getf kwargs :marker-str)))
+    (unless x
+      (setf x (%infer-x-for-line y)))
+    (setf kwargs (append kwargs (list :x x :y y)))
+    (if  marker-str
+         (progn
+           (strip marker-str)
+           (multiple-value-bind (line-style color marker) (%get-line-styles marker-str)
+             (if (and marker (not line-style))
+                 (progn
+                   (when color
+                     (setf kwargs (append kwargs (list :default-colors (list color)))))
+                   (return-from plot (%draw-mark (find-class 'scatter) kwargs)))
+                 (progn
+                   (if line-style
+                       (setf kwargs (append kwargs (list :line-style line-style)))
+                       (setf kwargs (append kwargs (list :line-style "solid"))))
+                   (when marker
+                     (setf kwargs (append kwargs (list :marker marker))))
+                   (when color
+                     (setf kwargs (append kwargs (list :color (list color)))))
+                   (return-from plot (%draw-mark (find-class 'lines) kwargs))))))
+         (%draw-mark (find-class 'lines) kwargs))))
+
+;;;Helper function for plot
+(defun strip (string)
+  (string-trim #(#\Space #\Newline #\Return) string))
 
 (defun imshow (image format &rest kwargs &key &allow-other-key)
   (let ((ipyimage)(data))
@@ -534,17 +649,17 @@
   (let ((fig (cdr (assoc "figure" %context :test #'string=))))
     (when fig 
       (setf (marks fig) nil
-	    (axes fig) nil 
-            (cdr (assoc "scales" %context :test #'string=)) nil
-            key (cdr (assoc "current-key" %context :test #'string=)))
-      (when key
-        (setf (cdr (assoc key (cdr (assoc "scale-registry" %context :test #'string=)))) nil))))
-  (values))
+	    (axes fig) nil
+	    ;("axis-registry" fig) nil) ;; did i handle setattr right?
+	    (cdr (assoc "scales" %context :test #'string=)) nil)
+      (let ((key (cdr (assoc "current-key" %context :test #'string=))))
+	(when key
+	  (setf  (cdr (assoc key (cdr (assoc "scale-registry" %context :test #'string=)))) nil ))))))
 
 ;;needs to be checked 
 (defun current-figure ()
   (unless (cdr (assoc "figure" %context :test #'string=))
-    (figure))
+    (figure)) ;;is the is the proper way to call the func
   (cdr (assoc "figure" %context :test #'string=)))
 
 
@@ -578,7 +693,13 @@
   ;(with-pathname-p (hold-sync widget) ;;not very clear on how this portion works 
     ;(loop for (key . value)  in (items properties)
        ;do
-	 ;(setf (slot-value widget key) value))))
+					;(setf (slot-value widget key) value))))
+
+(defun %get-attribute-dimension (trait-name &optional mark-type)
+  (unless mark-type
+    (return-from %get-attribute-dimension trait-name))
+  (let ((scale-metadata (scales-metadata mark-type)))
+    (cdr (assoc "dimension" (cdr (assoc trait-name scale-metadata :test #'string=)) :test #'string=)))) 
 
 (defun %get-line-styles (marker-str)
   (flet ((%extract-marker-value (marker-str code-dict) ;flet lets a fcn in a fcn 

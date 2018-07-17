@@ -300,13 +300,11 @@
 	    :type unicode
 	    :initform (cljw:unicode "numpy.number"))
    (min :accessor min
-	:type float
-	:initform 0.0              
+	:initform :null              
 	:metadata (:sync t
 			 :json-name "min"))
    (max :accessor max
-	:type float
-	:initform 1.0              ;;;;tentative value for now not sure what it does 
+	:initform :null           ;;;;tentative value for now not sure what it does 
 	:metadata (:sync t
 			 :json-name "max"))
    (stabilized :accessor stabilized
@@ -429,20 +427,17 @@
 	   :type list
 	   :initform nil ;;;; not sure how to deal with the trait = color part
 	   :metadata (:sync t
-			    :json-name "color"))
-   (min :accessor min
-	:type float        
-	:initform 0.0
+			    :json-name "colors"))
+   (min :accessor min        
+	:initform :null
 	:metadata (:sync t
 			 :json-name "min"))
    (max :accessor max
-	:type float
-	:initform 1   
+	:initform :null  
 	:metadata (:sync t
 			 :json-name "max"))
    (mid :accessor mid
-	:type float
-	:initform 0.5    ;;;;not sure if you can use this value. just using for now   
+	:initform :null   ;;;;not sure if you can use this value. just using for now   
 	:metadata (:sync t
 			 :json-name "mid"))
    (scheme :accessor scheme

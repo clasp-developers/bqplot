@@ -9,6 +9,7 @@
     :components (
                  (:file "packages")
                  (:file "frontend")
+                 (:file "colorschemes")
                  (:file "figure")
                  (:file "marks")
                  (:file "pyplot")
