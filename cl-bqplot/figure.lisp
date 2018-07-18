@@ -12,7 +12,7 @@
          :initform nil ;(make-instance 'axis)
          :metadata #.`(:sync t
                           :json-name "axes"
-                                        ,@cljw:*widget-serialization*
+                                        ;,@cljw:*widget-serialization*
 					))
    (axis-registry :initarg :axis-registry :accessor axis-registry
 		  :type list
