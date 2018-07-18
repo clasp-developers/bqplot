@@ -1,9 +1,9 @@
 (in-package :bqplot)
 
 (defclass mark (cljw:widget)
-  (;(mark-types :initarg :mark-types :accessor mark-types
-               ;:type cljw:dict
-               ;:initform nil)
+  ((mark-types :initarg :mark-types :accessor mark-types
+               :type cljw:dict
+               :initform nil)
    (scales-marks :initarg :scales :accessor scales-marks
 	   :type cljw:dict
 	   :initform nil ; Contents have to be of type 'scale

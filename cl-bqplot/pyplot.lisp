@@ -69,7 +69,7 @@
                   (unless (getf kwargs :title)
                     (push (concatenate 'string "Figure" " " key) kwargs)
                     (push :title kwargs))
-                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (make-instance 'figure)))) (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))))
+                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (make-instance 'figure)))) (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))))
                 (warn "How to Add a slot for each argument in kwargs")
    ;;;(scales key :scales scales-arg)
 		(loop for arg in kwargs do
