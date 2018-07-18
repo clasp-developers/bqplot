@@ -740,7 +740,7 @@
 
   
 
-
+#|
 (defmethod %ipython-display ((widget nglwidget) &rest key &key &allow-other-keys)
   (if (first-time-loaded widget)
       (setf (first-time-loaded widget) nil)
@@ -806,6 +806,7 @@
       tab)))
 
 
+|#
 
 
       
