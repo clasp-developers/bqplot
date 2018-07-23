@@ -14,4 +14,10 @@
                  (:file "marks")
                  (:file "pyplot")
                  (:file "scales")
+                 (:file "axes")
+                 (:file "default_tooltip")
+                 (:file "toolbar")
+                 (:file "market_map")
+                 (:file "interacts")
                  ))
+
