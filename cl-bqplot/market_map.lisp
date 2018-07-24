@@ -73,13 +73,13 @@
    (marketmap-axes :initarg :marketmap-axes :accessor marketmap-axes
 	 :type list
 	 :initform nil
-	 :metadata #.`(:sync t
+	 :metadata (:sync t
 			  :json-name "axes"))
 			  ;,@cljw:*widget-serialization*))
    (color :initarg :color :accessor color
 	  :type list
 	  :initform nil
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "color"
 					;,@cljw:*widget-serialization*
 			   ))
@@ -95,7 +95,7 @@
    (layout :initarg :layout :accessor layout
 	   :type list
 	   :initform (list (cons "min_width" "125px"))
-	   :metadata #.`(:sync t
+	   :metadata (:sync t
 			    :json-name "layout"))
 			    ;,@cljw:*widget-serialization*))
    (min-aspect-ratio :initarg :min-aspect-ratio :accessor min-aspect-ratio
@@ -155,7 +155,7 @@
 				  :json-name "enable_select"))
    (tooltip-widget :initarg :tooltip-widget :accessor tooltip-widget
 		   :initform (make-instance 'domwidget)
-		   :metadata #.`(:sync t
+		   :metadata (:sync t
 				    :json-name "tooltip_widget")))
 				    ;,@cljw:*widget-serialization*)))
    (:default-initargs

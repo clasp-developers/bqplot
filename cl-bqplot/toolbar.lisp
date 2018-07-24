@@ -4,7 +4,7 @@
 (defclass toolbar (cljw:domwidget)
   ((figure-toolbar :initarg :figure :accessor figure-toolbar
 	   :initform (make-instance 'figure)
-	   :metadata #.`(:sync t
+	   :metadata (:sync t
 			    :json-name "figure"
 					; ,@cljw:*widget-serialization*
 			    ))
@@ -15,7 +15,7 @@
 			      :json-name "_panning"))
    (%panzoom :accessor panzoom
 	     :initform (make-instance 'pan-zoom)
-	     :metadata #.`(:sync t
+	     :metadata (:sync t
 			      :json-name "_panzoom"
 					;*widget serialization*
 			      )))

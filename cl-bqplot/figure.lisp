@@ -10,7 +10,7 @@
    (axes-figure :initarg :axes-figure :accessor axes-figure
          :type list
          :initform nil ;(make-instance 'axis)
-         :metadata #.`(:sync t
+         :metadata (:sync t
                           :json-name "axes"
                                         ;,@cljw:*widget-serialization*
 					))
@@ -20,25 +20,25 @@
    (marks :initarg :marks :accessor marks
           :type Mark
           :initform (make-instance 'Mark)
-          :metadata #.`(:sync t
+          :metadata (:sync t
                            :json-name "marks"
                                         ;,@cljw:*widget-serialization*
                            ))
    (interaction :initarg :interaction :accessor interaction
                 :initform (make-instance 'Interaction)
-                :metadata #.`(:sync t
+                :metadata (:sync t
                                  :json-name "interaction"
                                         ;,@cljw:*widget-serialization*
                                  ))
    (scale-x :initarg :scale-x :accessor scale-x
             :initform (make-instance 'Scale)
-            :metadata #.`(:sync t
+            :metadata (:sync t
                              :json-name "scale_x"
                                         ;,@cljw:*widget-serialization*
                              ))
    (scale-y :initarg :scale-y :accessor scale-y
             :initform (make-instance 'Scale)
-            :metadata #.`(:sync t
+            :metadata (:sync t
                              :json-name "scale_y"
                                         ;,@cljw:*widget-serialization*
                              ))
@@ -65,7 +65,7 @@
    (layout :initarg :layout :accessor layout
            ;:initform (make-instance 'LayoutTraitType :kw (list (cons "min-width" "125px")))
 	   :initform (make-instance 'cljw::layout :min-width "125px")
-           :metadata #.`(:sync t
+           :metadata (:sync t
                             :json-name "layout"
                                         ;,@cljw:*widget-serialization*
                             ))

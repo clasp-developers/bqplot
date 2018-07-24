@@ -67,7 +67,7 @@
 
    (tooltip :initarg :tooltip :accessor tooltip
 	    :initform (make-instance 'domwidget)
-	    :metadata #.`(:sync t
+	    :metadata (:sync t
 			     :json-name "tooltip"
                                         ;,@cljw:*widget-serialization*
                              ))

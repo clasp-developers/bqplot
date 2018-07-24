@@ -43,7 +43,7 @@
 				 :jsone-name "tick_format"))
    (scale :initarg :scale :accessor scale
 	  :initform (make-instance 'scale)
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "scale"
                                         ;,@cljw:*widget-serialization*
                            ))
@@ -127,7 +127,7 @@
 			   :json-name "label"))
    (scale :accessor scale
 	  :initform (make-instance 'scale)
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "scale"
 					;,@cljw:*widget-serialization*
 			   )))
