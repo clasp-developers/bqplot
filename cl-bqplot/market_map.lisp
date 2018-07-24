@@ -25,7 +25,7 @@
 	     :metadata (:sync t
 			      :json-name "ref_data"
 			      *dataframe-serialization*))
-   (title :initarg :title :accessor title
+   (title-map :initarg :title :accessor title-map
 	  :type unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
@@ -65,14 +65,14 @@
 	   :initform *CATEGORY10*
 	   :metadata (:sync t
 			    :json-name "colors"))
-   (scales :initarg :scales :accessor scales
+   (scales-map :initarg :scales :accessor scales-map
 	   :type list
 	   :initform nil
 	   :metadata #.`(:sync t
 			   :json-name "scales"
 					;,@cljw:*widget-serialization*
 			   ))
-   (axes :initarg :axes :accessor axes
+   (axes-map :initarg :axes :accessor axes-map
 	 :type list
 	 :initform nil
 	 :metadata #.`(:sync t

@@ -1,16 +1,16 @@
 (in-package :bqplot)
 
 (defclass mark (cljw:widget)
-  (;(mark-types :initarg :mark-types :accessor mark-types
-               ;:type cljw:dict
-               ;:initform nil)
-   (scales-marks :initarg :scales :accessor scales-marks
+  ((mark-type :initarg :mark-types :accessor mark-types
+               :type cljw:dict
+               :initform nil)
+   (scales-mark :initarg :scales :accessor scales-marks
 	   :type cljw:dict
 	   :initform nil ; Contents have to be of type 'scale
 	   ;:validator %validate-scales
 	   :metadata #.`(:sync t
                       :json-name "scales"
-                                        ,@cljw:*widget-serialization*
+                                        ;,@cljw:*widget-serialization*
                       ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		    :type list
@@ -69,7 +69,7 @@
 	    :initform (make-instance 'domwidget)
 	    :metadata #.`(:sync t
 			     :json-name "tooltip"
-                                        ,@cljw:*widget-serialization*
+                                        ;,@cljw:*widget-serialization*
                              ))
    (tooltip-style :initarg :tooltip-style :accessor tooltip-style
 		  :type list
@@ -209,12 +209,12 @@
       :initform (list (cons "x" (list (cons "orientation" "horizontal")
 				      (cons "dimension" "x")))
 		      (cons "y" (list (cons "orientation" "vertical")
-				      (cons "dimension" "y"))))
+				      (cons "dimension" "y")))
+		      (cons "color" (list (cons "dimension" "color"))))
       :metadata (:sync t
 		       :json-name "scales_metadata"))
    (colors :accessor colors
-	   :type list
-	   ;:initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value (cljw:unicode "#1f77b4")));this
+	   :type vector
 	   :initform (vector "#1f77b4" "#ff7f0e" "#2ca02c" "#d62728" "#9467bd" "#8c564b" "#e377c2" "#7f7f7f" "#bcbd22" "#17becf")
 	   :metadata (:sync t
 			    :json-name "colors"
