@@ -140,7 +140,7 @@
   (remf kwargs :mark)
   (remf kwargs :options)
   (unless mark
-    (let ((new_mark (cdr (assoc "last_mark" %context :test #'string=))))
+    (let ((new_mark (cdr (assoc "last_mark" axes%context :test #'string=))))
       (if new_mark
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
@@ -401,10 +401,8 @@
                       (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
     (format t "~&MARK-TYPE: ~a~%" mark-type)
     (format t "~&KWARGS: ~a~%" kwargs)
-    (setf mark (apply #'make-instance mark-type (list* :scales-mark scales kwargs)))
-     #|mark (apply #'make-instance mark-type (list :scales-mark scales :x (list (cons 1 2)
-                                                                              (cons 3 4)) :y (list (cons 2 3)
-                                                                                                   (cons 4 5)))))|#
+    ;(setf mark (apply #'make-instance mark-type (list* :scales-mark scales kwargs)))
+    (setf mark (apply #'make-instance mark-type (list :scales-mark scales kwargs)))
     (setf 
           (cdr (assoc "last_mark" %context :test #'string=)) mark
           (marks (cdr (assoc "1" fig :test #'string=))) (append (list (marks (cdr (assoc "1" fig :test #'string=)))) (list mark)))

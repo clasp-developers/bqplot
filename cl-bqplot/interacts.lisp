@@ -103,13 +103,15 @@
 	    :metadata #.`(:sync t
 			     :json-name "x_scale"
 			     :dimension "x"
-			     ;,@cljw:*widget-serialization*))
+                                        ;,@cljw:*widget-serialization*))
+                             ))
    (y-scale :accessor y-scale
 	    :initform (make-instance 'scale)
 	    :metadata #.`(:sync t
 			     :json-name "y_scale"
 			     :dimension "y"
-			     ;,@cljw:*widget-serialization*)))
+                                        ;,@cljw:*widget-serialization*)))
+                             )))
    (:default-initargs
     :model-name (cljw:unicode "TwoDSelectorModel"))
    
