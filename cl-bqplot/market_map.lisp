@@ -68,6 +68,7 @@
    (marketmap-scales :initarg :marketmap-scales :accessor marketmap-scales
 	   :type list
 	   :initform nil
+           :metadata (:sync t
 			   :json-name "scales"))
 			   ;,@cljw:*widget-serialization*))
    (marketmap-axes :initarg :marketmap-axes :accessor marketmap-axes
