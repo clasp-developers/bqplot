@@ -134,19 +134,14 @@
   ;;;Remove mark and options from kwargs
   (remf kwargs :mark)
   (remf kwargs :options)
-  (setf kwargs (remove mark kwargs)
-        kwargs (remove ':mark kwargs)
-        kwargs (remove options kwargs)
-        kwargs (remove ':options kwargs))
   (unless mark
-    (let ((new_mark (cdr (assoc "last_mark" %context :test #'string=))))
+    (let ((new_mark (cdr (assoc "last_mark" axes%context :test #'string=))))
       (if new_mark
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
   (let* ((fig (getf kwargs :figure (current-figure)))
-	 (scales (scales-marks (car mark))) ;;; I cheated here. The variable mark is a list containing an instance of a mark and the scales-marks function wasn't working well on its own so I just used car to pull the instance out of the list. VERY messy but it works. 
-	 (fig-axes  (axes-figure (cdr (assoc "1" (current-figure) :test #'string=))))
-	 ;(fig-axes (loop for axis in (axes-figure (cdr (assoc "1" (current-figure) :test #'string=))) collect axis))
+        (scales (scales-mark mark))
+        (fig-axes (axes-figure (cdr (assoc "1" fig :test #'string=))))
         (axes nil)
         (scale-metadata nil)
         (dimension nil)
@@ -168,17 +163,14 @@
                ;(%apply-properties axis (getf options name nil)) THIS NEEDS TO WORK
                (push (cons name axis) axes))
              (progn
-	       (setf key "bqplot.Axis"))) ;couldnt find a way to access the atype locked insidethe dimension's metadata so i just set the key to its most common value 
-					;(setf key (traitlets:traitlet-metadata (find-class 'lines) (intern name) :atype))))
-	 (when key
-	   (setf axis-type (intern (cdr (assoc key (axis-types (make-instance 'axis)) :test #'string=)))
-		 axis (make-instance 'axis :scale (cdr (assoc name scales :test #'string=))) ;;;How to handle **Axis_args? just remove it lol. Also 'axis should be axis-type but that was giving me hell.
-		 
-		 fig-axes (append (list fig-axes)(list axis)))
-	   (%update-fig-axis-registry (cdr (assoc "1" fig :test #'string=)) dimension (cdr (assoc name scales :test #'string=)) axis) 
-	   ;(setf key nil)
-	   ))
-    (setf (axes-figure (cdr (assoc "1" fig :test #'string=))) fig-axes) 
+               (setf key (traitlets:traitlet-metadata (find-class 'mark) (intern name "KEYWORD") :atype))
+               (when key
+                 (setf axis-type (cdr (assoc key (axis-types (make-instance 'axes) :test #'string=)))
+                       axis (axis-type :scale (cdr (assoc name scales :test #'string=)) axis-args) ;;;How to handle **Axis_args
+                       fig-axes (append fig-axes (list axis)))
+                 (%update-fig-axis-registry fig dimension (cdr (assoc name scales :test #'string=)) axis)))))
+    (setf (axes-figure (cdr (assoc "1" fig :test #'string=))) fig-axes)
+    (print "Done with axes")
     axes))
 
 
@@ -343,12 +335,12 @@
 ;;;In python, the lambda list is def _mark_type(mark_type, options={}, axes_options={}, **kwargs.
 ;;;I'm going to get rid of the option optionals and just have a kwargs containing all the information.
 
-(defun %draw-mark (mark-type &rest kwargs)
+(defun %draw-mark (mark-type kwargs)
   (let ((fig (getf kwargs :figure (current-figure)))
         (scales (getf kwargs :scales))
         (update-context (getf kwargs :update-context t))
         (cmap (getf kwargs :cmap))
-        (options (getf kwargs :options))
+        (Options (getf kwargs :options))
         (axes-options (getf kwargs :axes-options))
         (mark nil))
     (remf kwargs :fig)
@@ -367,16 +359,24 @@
                   (values))
                  ((getf scales (intern name "KEYWORD"))
                   (when update-context
-                    (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=)))))
+                    (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=))))
+                  (print "name not in kwargs,  name is in scales and update-context exist"))
                  ;;;Need to address (elif dimension not in _context['scales']: ...What is dimension here?
                  (t
                   (if (assoc name scales :test #'string=)
                       (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
                       (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
-    (setf mark (apply #'make-instance mark-type (list* :scales scales kwargs))
+    (format t "~&MARK-TYPE: ~a~%" mark-type)
+    (format t "~&KWARGS: ~a~%" kwargs)
+    ;(setf mark (apply #'make-instance mark-type (list* :scales-mark scales kwargs)))
+    (setf mark (apply #'make-instance mark-type (list :scales-mark scales kwargs)))
+    (setf 
           (cdr (assoc "last_mark" %context :test #'string=)) mark
           (marks (cdr (assoc "1" fig :test #'string=))) (append (list (marks (cdr (assoc "1" fig :test #'string=)))) (list mark)))
+    (format t "~&MARK: ~a~%" mark)
+    (format t "~&AXES-OPTIONS: ~a~%" axes-options)
     (axes :mark mark :options axes-options)
+    (print "Done with %draw-mark")
     mark))
 
 ;;;%infer-x-for-line just needs to be completly rewritten
@@ -515,14 +515,16 @@
 (defun scatter (x y &rest kwargs &key &allow-other-keys)
   (setf kwargs (append kwargs (list :x x))
 	kwargs (append kwargs (list :y y)))
-  (%draw-mark (find-class 'scatter) kwargs))
+  (print "scatter working")
+  (%draw-mark (find-class 'scatter) kwargs)
+  )
 
 (defun hist (sample &rest kwargs &key (options nil)  &allow-other-key)
  (remf kwargs :option)
  (setf kwargs (append kwargs (list :sample sample)))
  (let ((scales (getf kwargs ':scales))(dimension))
    (remf kwargs ':scales)
-   (unless (member "count" scales)
+draw-   (unless (member "count" scales)
      (setf dimension (%get-attribute-dimension "count" (find-class 'Hist)))
      (if (member dimension (cdr (assoc "scales" %context :test #'string=)))
 	 (setf scales (append scales (list :count (nth dimension (cdr (assoc "scales" %context :test #'string=))))))

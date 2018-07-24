@@ -3,7 +3,7 @@
 (defclass base-axis (widget)
   ((axis-types :initarg :axis-types :accessor axis-types
            :type list
-           :initform (list (cons "bqplot.Axis" "Axis")
+           :Initform (List (cons "bqplot.Axis" "Axis")
                                (cons "bqplot.ColorAxis" "ColorAxis"))))
    (:default-initargs
     :view-module (cljw:unicode "bqplot")

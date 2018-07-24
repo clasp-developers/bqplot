@@ -1,14 +1,14 @@
 (in-package :bqplot)
 
 (defclass mark (cljw:widget)
-  ((mark-type :initarg :mark-types :accessor mark-types
+  ((mark-type :initarg :mark-type :accessor mark-type
                :type cljw:dict
                :initform nil)
-   (scales-mark :initarg :scales :accessor scales-marks
-	   :type cljw:dict
+   (scales-mark :initarg :scales-mark :accessor scales-mark
+	  ;; :type cljw:dict
 	   :initform nil ; Contents have to be of type 'scale
 	   ;:validator %validate-scales
-	   :metadata #.`(:sync t
+	   :metadata (:sync t
                       :json-name "scales"
                                         ;,@cljw:*widget-serialization*
                       ))
@@ -491,7 +491,7 @@
 					;3 callbacks, 1 handle custom messages
 
 (defclass scatter (%scatter-base)
-  ((icon :accessor icon
+   ((icon :accessor icon
 	   :type string
 	   :initform "fa-cloud")
    (name :accessor name
