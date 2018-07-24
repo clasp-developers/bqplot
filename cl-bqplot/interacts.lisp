@@ -196,7 +196,7 @@
   (:metaclass traitlets:traitlet-class))
 
 (defclass brush-selector (two-d-selector)
-  ((clear :initarg :clear :accessor clear
+  ((clear-brush :initarg :clear :accessor clear-brush
 	 :type bool
 	 :initform :false
 	 :metadata (:sync t

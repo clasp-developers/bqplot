@@ -63,7 +63,8 @@
                 :metadata (:sync t
                                  :json-name "legend_text"))
    (layout :initarg :layout :accessor layout
-           :initform (make-instance 'LayoutTraitType :kw (list (cons "min-width" "125px")))
+           ;:initform (make-instance 'LayoutTraitType :kw (list (cons "min-width" "125px")))
+	   :initform (make-instance 'cljw::layout :min-width "125px")
            :metadata #.`(:sync t
                             :json-name "layout"
                                         ;,@cljw:*widget-serialization*
