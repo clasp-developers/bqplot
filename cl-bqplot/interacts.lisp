@@ -21,7 +21,7 @@
 (defclass hand-draw (interaction)
   ((lines :accessor lines
 	  :initform :null;(make-instance 'lines)
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "lines"
 					;,@cljw:*widget-serialization*
 			   ))
@@ -62,7 +62,7 @@
 	   :type list
 	   :initform (make-instance 'scale)
          ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
-	   :metadata #.`(:sync t
+	   :metadata (:sync t
 			    :json-name "scales"
 					;,@cljw:*widget-serialization*
 			    )))
@@ -77,7 +77,7 @@
   ((marks :accessor marks
 	  :type list
 	  :initform nil
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "marks"
 					;,@cljw:*widget-serialization*
 			   )))
@@ -91,7 +91,7 @@
 (defclass one-d-selector (selector)
   ((scale :accessor scale
 	  :initform (make-instance 'scale)
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "one-d-selector"
 			   :dimension "x"
 					;,@cljw:*widget-serialization*
@@ -104,14 +104,14 @@
 (defclass two-d-selector (selector)
   ((x-scale :accessor x-scale
 	    :initform (make-instance 'scale)
-	    :metadata #.`(:sync t
+	    :metadata (:sync t
 			     :json-name "x_scale"
 			     :dimension "x"
 					;,@cljw:*widget-serialization*
 			     ))
    (y-scale :accessor y-scale
 	    :initform (make-instance 'scale)
-	    :metadata #.`(:sync t
+	    :metadata (:sync t
 			     :json-name "y_scale"
 			     :dimension "y"
 					;,@cljw:*widget-serialization*
