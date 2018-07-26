@@ -61,7 +61,7 @@
    (scales-interacts :initarg :scales :accessor scales-interacts
 	   :type list
 	   :initform (make-instance 'scale)
-         ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
+         ;;  (list (cons "trait" (cons "trait" (make-instance 'scale))))
 	   :metadata #.`(:sync t
 			    :json-name "scales"
 					;,@cljw:*widget-serialization*

@@ -30,7 +30,7 @@
 				    :display-name "Display legend"))
    (labels-mark :initarg :labels :accessor labels-mark
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode "")))
+	   :initform (list (cons "trait" (cljw:unicode "")))
 	   :metadata (:sync t
 			    :json-name "labels"
 			    :display-name "Labels"))
@@ -221,7 +221,7 @@
 			    :display-name "colors"))
    (fill-colors :accessor fill-colors
 		:type list
-		:initform (list (cons 'trait (cljw:unicode "")))
+		:initform (list (cons "trait" (cljw:unicode "")))
 		:metadata (:sync t
 				 :json-name "fill_colors"
 				 :display-name "Fill colors"))
@@ -356,7 +356,7 @@
 				  :display-name "Stroke width"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))
+	   :initform (list (cons "trait" (cljw:unicode ""))
                            (cons 'default-value (cljw:unicode "#1f77b4")))
            :metadata (:sync t
 			    :json-name "colors")))
@@ -515,7 +515,7 @@
 			    :display-name "Marker"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))
+	   :initform (list (cons "trait" (cljw:unicode ""))
 			   (cons 'default-value "steelblue"))
 	   :metadata (:sync t
 			    :json-name "colors"
@@ -619,7 +619,7 @@
 			      :json-name "y_offset"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value (cljw:unicode "#1f77b4")))
+	   :initform (list (cons "trait" (cljw:unicode ""))(cons 'default-value (cljw:unicode "#1f77b4")))
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
@@ -723,7 +723,7 @@
 			  :display-name "Mid points"))
    (colors :accessor colors
 	 :type list
-	 :initform (list (cons 'trait (cljw:unicode ""))
+	 :initform (list (cons "trait" (cljw:unicode ""))
 			 (cons 'default-value (cljw:unicode "#1f77b4")))
 	 :metadata (:sync t
 			  :json-name "colors"
@@ -735,7 +735,7 @@
 			  :json-name "stroke"))
    (opacities :accessor opacities
 	 :type list
-	 :initform (list (cons 'trait 1.0))
+	 :initform (list (cons "trait" 1.0))
 	 :metadata (:sync t
 			  :json-name "opacities"
 			  :display-name "Opacities")))
@@ -796,7 +796,7 @@
 			  :display-name "Outlier fill color"))
    (opacities :accessor opacities
 	 :type list
-	 :initform (list (cons 'trait 1.0))
+	 :initform (list (cons "trait" 1.0))
 	 :metadata (:sync t
 			  :json-name "opacities"
 			  :display-name "Opacities"))
@@ -868,7 +868,7 @@
 			  :display-name "Type"))
    (colors :accessor colors
 	 :type list
-	 :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value "steelblue"))
+	 :initform (list (cons "trait" (cljw:unicode ""))(cons 'default-value "steelblue"))
 	 :metadata (:sync t
 			  :json-name "colors"
 			  :display-name "Colors"))
@@ -1036,7 +1036,7 @@
 			    :display-name "Colors"))
    (opacities :accessor opacities
 	      :type list
-	      :initform (list (cons 'trait 1.0))
+	      :initform (list (cons "trait" 1.0))
 	      :metadata (:sync t
 			       :json-name "opacities"
 			       :display-name "Opacities"))
@@ -1094,7 +1094,7 @@
 			   :json-name "sort"))
     (colors :accessor colors
 	    :type list
-	    :initform (list (cons 'trait (cljw:unicode ""))
+	    :initform (list (cons "trait" (cljw:unicode ""))
 			    (cons 'default-value (cljw:unicode "#1f77b4")))
 	    :metadata (:sync t
 			     :json-name "Colors"))
@@ -1105,7 +1105,7 @@
 			     :json-name "stroke"))
     (opacities :accessor opacities
 	       :type list
-	       :initform (list (cons 'trait 1.0))
+	       :initform (list (cons "trait" 1.0))
 	       :metadata (:sync t
 				:json-name "opacities"
 				:display-name "Opacities"))
@@ -1417,7 +1417,7 @@
    ;;need to finisht this 
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))
+	   :initform (list (cons "trait" (cljw:unicode ""))
 			   (cons 'default-value (cljw:unicode "#1f77b4")))
 	   :metadata (:sync t
 			    :json-name "colors"))
