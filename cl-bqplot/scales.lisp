@@ -29,7 +29,7 @@
             :initform :false
             :metadata (:sync t
                              :json-name "reverse"))
-   (allow-padding :accessor allow-padding
+   (allow-padding :initarg :allow-padding :accessor allow-padding
 		  :type bool
 		  :initform :true
 		  :metadata (:sync t
@@ -102,7 +102,7 @@
 	   :metadata (:sync t
 			    :json-name "parallels"))
    (precision :accessor precision
-	       :type float
+	      :type float
 	       :initform 0.1
 	       :metadata (:sync t
 				:json-name "precision"))
@@ -170,7 +170,7 @@
    
   
 (defclass orthographic (geo-scale)
-  ((scale-factor :accessor scale-factor
+   ((scale-factor :accessor scale-factor
 		 :type float
 		 :initform 145.0
 		 :metadata (:sync t
@@ -299,12 +299,12 @@
    (d-type :accessor d-type
 	    :type unicode
 	    :initform (cljw:unicode "numpy.number"))
-   (min :accessor min
+   (min :initarg :min :accessor min
 	:initform :null              
 	:metadata (:sync t
 			 :json-name "min"))
-   (max :accessor max
-	:initform :null           ;;;;tentative value for now not sure what it does 
+   (max :initarg :max :accessor max
+	:initform :null          ;;;;tentative value for now not sure what it does 
 	:metadata (:sync t
 			 :json-name "max"))
    (stabilized :accessor stabilized
@@ -427,17 +427,20 @@
 	   :type list
 	   :initform nil ;;;; not sure how to deal with the trait = color part
 	   :metadata (:sync t
-			    :json-name "colors"))
-   (min :accessor min        
-	:initform :null
+			    :json-name "color"))
+   (min :accessor min
+	:type float        
+	:initform 0.0
 	:metadata (:sync t
 			 :json-name "min"))
    (max :accessor max
-	:initform :null  
+	:type float
+	:initform 1   
 	:metadata (:sync t
 			 :json-name "max"))
    (mid :accessor mid
-	:initform :null   ;;;;not sure if you can use this value. just using for now   
+	:type float
+	:initform 0.5    ;;;;not sure if you can use this value. just using for now   
 	:metadata (:sync t
 			 :json-name "mid"))
    (scheme :accessor scheme

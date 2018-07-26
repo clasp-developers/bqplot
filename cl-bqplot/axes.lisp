@@ -6,8 +6,8 @@
            :Initform (List (cons "bqplot.Axis" "Axis")
                                (cons "bqplot.ColorAxis" "ColorAxis"))))
    (:default-initargs
-    :view-module (cljw:unicode "bqplot")
-     :model-module (cljw:unicode "bqplot")
+    :view-module (cljw:unicode "Bqplot")
+     :Model-module (cljw:unicode "bqplot")
      :view-module-version *frontend-version*
      :model-module-version *frontend-version*)
    (:metaclass traitlets:traitlet-class))
@@ -16,12 +16,12 @@
   ((icon :accessor icon
 	 :type unicode
 	 :initform (cljw:unicode "fa-arrows"))	 
-   (orientation :accessor orientation
+   (orientation :initarg :orientation :accessor orientation
 		:type unicode
 		:initform (cljw:unicode "horizontal")
 		:metadata (:sync t
 				 :json-name "orientation"))   
-   (side :accessor side
+   (side :initarg :side :accessor side
 	 :type unicode
 	 :initform (cljw:unicode "")
 	 :metadata (:sync t

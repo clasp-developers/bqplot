@@ -7,7 +7,7 @@
           :metadata (:sync t
                            :json-name "title"))
                            ;;does display_name "Title" Matter??))
-   (axes-figure :initarg :axes :accessor axes-figure
+   (axes-figure :initarg :axes-figure :accessor axes-figure
          :type list
          :initform (make-instance 'axis)
          :metadata #.`(:sync t
