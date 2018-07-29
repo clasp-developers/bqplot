@@ -44,7 +44,8 @@
    
   (:metaclass traitlets:traitlet-class))
 
-(defclass-widget-register pan-zoom (interaction)
+;; -widget-register FIXME
+(defclass pan-zoom (interaction)
   ((allow-pan :accessor allow-pan
 	      :type bool
 	      :initform :true
@@ -59,15 +60,15 @@
 	   :type list
 	   :initform (list (cons 'trait (cons 'trait (make-instance 'scale))))
 	   :metadata #.`(:sync t
-			    :json-name "scales"
-			    ,@*widget-serialization*)))
-   (:default-initargs
-    :view-name (cljw:unicode "PanZoom")
+			       :json-name "scales"
+			       ,@*widget-serialization*)))
+  (:default-initargs
+   :view-name (cljw:unicode "PanZoom")
     :model-name (cljw:unicode "PanZoomModel"))
-
+  
   (:metaclass trailets:traitlet-class))
 
-					;TODO def panzoom
+;;TODO def panzoom
 (defclass selector (interaction)
   ((marks :accessor marks
 	  :type list

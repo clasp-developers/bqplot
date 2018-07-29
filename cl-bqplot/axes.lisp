@@ -56,13 +56,15 @@
 		:initform nil
 		:metadata (:sync t
 				 :json-name "tick_values"
-				 *array-serialization*))
+				 ;; FIXME *array-serialization*
+				 ))
    (offset :accessor offset
 	   :type list
 	   :initform ()
 	   :metadata (:sync t
 			    :json-name "offset"
-			    *array-serialization*))
+			    ;; FIXME *array-serialization*
+			    ))
    (label-location :accessor label-location
 		   :type unicode 
 		   :initform (cljw:unicode "middle")
