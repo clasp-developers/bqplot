@@ -29,8 +29,8 @@
 				    :json-name "display_legend"
 				    :display-name "Display legend"))
    (labels-mark :initarg :labels :accessor labels-mark
-	   :type list
-	   :initform (list (cons 'trait (cljw:unicode "")))
+	   :type vector
+	   :initform #()
 	   :metadata (:sync t
 			    :json-name "labels"
 			    :display-name "Labels"))
@@ -55,8 +55,8 @@
 		    :metadata (:sync t
 				     :json-name "unselected_style"))
    (selected :initarg :selected :accessor selected
-	     :type list
-	     :initform nil
+	     :type vector
+	     :initform #()
 	     :metadata (:sync t
 			      :json-name "selected"))
    (enable-hover :initarg :enable-hover :accessor enable-hover
@@ -66,7 +66,7 @@
 				  :json-name "enable_hover"))
 
    (tooltip :initarg :tooltip :accessor tooltip
-	    :initform (make-instance 'domwidget)
+	    :initform :null
 	    :metadata (:sync t
 			     :json-name "tooltip"
                                         ;,@cljw:*widget-serialization*
@@ -82,7 +82,7 @@
 		 :metadata (:sync t
 				  :json-name "interactions"))
    (tooltip-location :initarg :tooltip-location :accessor tooltip-location
-		     :type unicode
+		     :type cljw:unicode
 		     :initform (cljw:unicode "mouse")
 		     :metadata (:sync t
 				      :json-name "tooltip_location")))
@@ -195,7 +195,7 @@
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :accessor color
       :type list
-      :initform nil
+      :initform (list (cons "type" :null) (cons "values" :null))
       :metadata (:sync t
 		       :json-name "color"
 		       :scaled t
@@ -215,13 +215,13 @@
 		       :json-name "scales_metadata"))
    (colors :accessor colors
 	   :type vector
-	   :initform (vector "#1f77b4" "#ff7f0e" "#2ca02c" "#d62728" "#9467bd" "#8c564b" "#e377c2" "#7f7f7f" "#bcbd22" "#17becf")
+	   :initform *CATEGORY10* 
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "colors"))
    (fill-colors :accessor fill-colors
-		:type list
-		:initform (list (cons 'trait (cljw:unicode "")))
+		:type vector
+		:initform #()
 		:metadata (:sync t
 				 :json-name "fill_colors"
 				 :display-name "Fill colors"))
@@ -232,61 +232,61 @@
 				  :json-name "stroke_width"
 				  :display-name "Stroke width"))
    (labels-visibility :accessor labels-visibility
-		      :type unicode
+		      :type cljw:unicode
 		      :initform (cljw:unicode "none")
 		      :metadata (:sync t
 				       :json-name "labels_visibility"
 				       :display-name "Labels visibility"))
    (curves-subset :accessor curves-subset
-		  :type list
-		  :initform nil
+		  :type vector
+		  :initform #()
 		  :metadata (:sync t
 				   :json-name "curves_subset"))
    (line-style :accessor line-style
-	       :type unicode
+	       :type cljw:unicode
 	       :initform (cljw:unicode "solid")
 	       :metadata (:sync t
 				:json-name "line_style"
 				:display-name "Line style"))
    (interpolation :accessor interpolation
-		  :type unicode 
+		  :type cljw:unicode 
 		  :initform (cljw:unicode "linear")
 		  :metadata (:sync t
 				   :json-name "interpolation"
 				   :display-name "Interpolation"))
    (close-path :accessor close-path
-	       :type bool
+	       :type cljw:bool
 	       :initform :false
 	       :metadata (:sync t
 				:json-name "close_path"
 				:display-name "Close path"))
    (fill-marks :accessor fill-marks
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "none")
 	 :metadata (:sync t
 			  :json-name "fill"
 			  :display-name "Fill"))
    (marker :accessor marker
-	   :type unicode
-	   :initform nil
+	   :type cljw:unicode
+	   :initform (cljw:unicode "None")
 	   :metadata (:sync t
 			    :json-name "marker"
 			    :display-name "Marker"))
    (marker-size :accessor marker-size
-		:type int
+		:type integer
 		:initform 64
 		:metadata (:sync t
 				 :json-name "marker_size"
 				 :display-name "Default size"))
    (opacities :accessor opacities
-	      :type list
-	      :initform nil
+	      :type vector
+	      :initform #()
 	      :metadata (:sync t
 			       :json-name "opacities"
 			       :display-name "Opacity"))
    (fill-opacities :accessor fill-opacities
-		   :type list
-		   :initform nil
+		   :type vector 
+		   :initform #()
 		   :metadata (:sync t
 				    :json-name "fill_opacities"
 				    :display-name "Fill Opacity")))
@@ -459,27 +459,27 @@
 		  :metadata (:sync t
 				   :json-name "hovered_point"))
    (enable-move :initarg :enable-move :accessor enable-move
-		:type bool
+		:type cljw:bool
 		:initform :false
 		:metadata (:sync t
 				 :json-name "enable_move"))
    (enable-delete :initarg :enable-delete :accessor enable-delete
-		  :type bool
+		  :type cljw:bool
 		  :initform :false
 		  :metadata (:sync t
 				   :json-name "enable_delete"))
    (restrict-x :initarg :restrict-x :accessor restrict-x
-	       :type bool
+	       :type cljw:bool
 	       :initform :false
 	       :metadata (:sync t
 				:json-name "restrict_x"))
    (restrict-y :initarg :restrict-y :accessor restrict-y
-	       :type bool
+	       :type cljw:bool
 	       :initform :false
 	       :metadata (:sync t
 				:json-name "restrict_y"))
    (update-on-move :initarg :update-on-move :accessor update-on-move
-		   :type bool
+		   :type cljw:bool
 		   :initform :false
 		   :metadata (:sync t
 				    :json-name "update_on_move")))
@@ -492,11 +492,11 @@
 
 (defclass scatter (%scatter-base)
    ((icon :accessor icon
-	   :type string
-	   :initform "fa-cloud")
+	   :type cljw:unicode
+	   :initform (cljw:unicode "fa-cloud"))
    (name :accessor name
-	   :type string
-	   :initform "Scatter")
+	   :type cljw:unicode
+	   :initform (cljw:unicode "Scatter"))
    (skew :accessor skew
 	 :type list
 	 :initform nil
@@ -515,8 +515,8 @@
 			    :display-name "Marker"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))
-			   (cons 'default-value "steelblue"))
+	   :initform (list (cons "trait" (cljw:unicode ""))
+			   (cons "default-value" "steelblue"))
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
@@ -537,7 +537,7 @@
 ;TODO: def some methods (default colors)
    
    (stroke :accessor stroke
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "")
 	   :metadata (:sync t
 			    :json-name "stroke"
@@ -555,7 +555,7 @@
 		 :metadata (:sync t
 				  :json-name "default_skew"))
    (default-size :accessor default-size
-                 :type int
+                 :type integer
 		 :initform 64
 		 :metadata (:sync t
 				  :json-name "default_size"
@@ -569,18 +569,18 @@
 			   ))
 					;TODO: .valid(array_squeeze)
    (display-names :accessor display-names
-	   :type bool
+	   :type cljw:bool
 	   :initform :true
 	   :metadata (:sync t
 			    :json-name "display_names"
 			    :display-name "Display names"))
    (fill-marks :accessor fill-marks
-	 :type bool
+	 :type cljw:bool
 	 :initform :true
 	 :metadata (:sync t
 			  :json-name "fill"))
    (drag-color :accessor drag-color
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "")
 	   :metadata (:sync t
 			    :json-name "drag_color"))
@@ -590,7 +590,7 @@
 	   :metadata (:sync t
 			    :json-name "drag_size"))
    (names-unique :accessor names-unique
-	   :type bool
+	   :type cljw:bool
 	   :initform :true
 	   :metadata (:sync t
 			    :json-name "names_unique")))
@@ -602,24 +602,24 @@
 
 (defclass label (%scatter-base)
   ((icon :accessor icon
-	 :type string
-	 :initform "fa-font")
+	 :type cljw:unicode
+	 :initform (cljw:unicode "fa-font"))
    (name :accessor name
 	 :type string
 	 :initform "Labels")
    (x-offset :accessor x-offset
-	     :type int
+	     :type integer
 	     :initform nil
 	     :metadata (:sync t
 			      :json-name "x_offset"))
    (y-offset :accessor y-offset
-	     :type int
+	     :type integer
 	     :initform nil
 	     :metadata (:sync t
 			      :json-name "y_offset"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value (cljw:unicode "#1f77b4")))
+	   :initform (list (cons "trait" (cljw:unicode ""))(cons "default-value" (cljw:unicode "#1f77b4")))
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
@@ -647,17 +647,17 @@
 	      :metadata (:sync t
 			       :json-name "drag_size"))
    (font-unit :accessor font-unit
-	      :type unicode
+	      :type cljw:unicode
 	      :initform (cljw:unicode "px")
 	      :metadata (:sync t
 			       :json-name "font_unit"))
    (font-weight :accessor font-weight
-		:type unicode
+		:type cljw:unicode
 		:initform (cljw:unicode "bold")
 		:metadata (:sync t
 				 :json-name "font_weight"))
    (align :accessor align
-	  :type unicode
+	  :type cljw:unicode
 	  :initform (cljw:unicode "start")
 	  :metadata (:sync t
 			   :json-name "align")))
@@ -669,11 +669,11 @@
 
 (defclass hist (mark)
   ((icon :accessor icon
-	 :type string
-	 :initform "fa-signal")
+	 :type cljw:unicode
+	 :initform (cljw:unicode "fa-signal"))
    (name :accessor name
-	 :type string
-	 :initform "Histogram")
+	 :type cljw:unicode
+	 :initform (cljw:unicode "Histogram"))
    (sample :accessor sample
 	   :type list
 	   :initform nil
@@ -697,7 +697,7 @@
 			   :atype "bqplot.Axis"))
 					;TODO: valid
    (normalized :accessor normalized
-	       :type bool
+	       :type cljw:bool
 	       :initform :false
 	       :metadata (:sync t
 				:json-name "normalized"))
@@ -710,7 +710,7 @@
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
    (bins :accessor bins
-	 :type int
+	 :type integer
 	 :initform 10
 	 :metadata (:sync t
 			  :json-name "bins"
@@ -723,19 +723,19 @@
 			  :display-name "Mid points"))
    (colors :accessor colors
 	 :type list
-	 :initform (list (cons 'trait (cljw:unicode ""))
-			 (cons 'default-value (cljw:unicode "#1f77b4")))
+	 :initform (list (cons "trait" (cljw:unicode ""))
+			 (cons "default-value" (cljw:unicode "#1f77b4")))
 	 :metadata (:sync t
 			  :json-name "colors"
 			  :display-name "Colors"))
    (stroke :accessor stroke
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "")
 	 :metadata (:sync t
 			  :json-name "stroke"))
    (opacities :accessor opacities
 	 :type list
-	 :initform (list (cons 'trait 1.0))
+	 :initform (list (cons "trait" 1.0))
 	 :metadata (:sync t
 			  :json-name "opacities"
 			  :display-name "Opacities")))
@@ -796,7 +796,7 @@
 			  :display-name "Outlier fill color"))
    (opacities :accessor opacities
 	 :type list
-	 :initform (list (cons 'trait 1.0))
+	 :initform (list (cons "trait" 1.0))
 	 :metadata (:sync t
 			  :json-name "opacities"
 			  :display-name "Opacities"))
@@ -856,12 +856,12 @@
       :metadata (:sync t
 		       :json-name "scales_metadata"))
    (color-mode :accessor color-mode
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "auto")
 	 :metadata (:sync t
 			  :json-name "color_mode"))
    (type :accessor type
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "stacked")
 	 :metadata (:sync t
 			  :json-name "type"
@@ -878,7 +878,7 @@
 	 :metadata (:sync t
 			  :json-name "padding"))
    (stroke :accessor stroke
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "")
 	 :metadata (:sync t
 			  :json-name "stroke"))
@@ -894,12 +894,12 @@
 			  :json-name "opacities"
 			  :display-name "Opacities"))
    (align :accessor align
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "center")
 	 :metadata (:sync t
 			  :json-name "align"))
    (orientation :accessor orientation
-		:type unicode
+		:type cljw:unicode
 		:validator %validate-orientation
 		:initform (cljw:unicode "vertical")
 		:metadata (:sync t
@@ -923,10 +923,10 @@
 
 (defclass bins(bars)
   ((name :initarg  :name :accessor name
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "Backend Histogram"))
    (icons :initarg :icons :accessor icons
-	  :type unicode
+	  :type cljw:unicode
 	  :initform (cljw:unicode "fa-signal"))
 
 					;for some reason icons creates a glitch of type invalid initialization argument so we're just commenting it out for now
@@ -954,7 +954,7 @@
 	:metadata (:sync t
 			 :json-name "max"))
    (density :initarg :density :accessor density
-	    :type :bool
+	    :type cljw:bool
 	    :initform :false
 	    :metadata (:sync t
 			     :json-name "density"))
@@ -975,10 +975,10 @@
 
 (defclass OHLC (mark)
   ((icon :accessor icon
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "fa-birthday-cake"))
    (name :accessor name
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "OHLC Chart"))
 
    (x :accessor x
@@ -1011,13 +1011,13 @@
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
    (marker :accessor marker
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "candle")
 	   :metadata (:sync t
 			    :json-name "marker"
 			    :display-name "Marker"))
    (stroke :accessor stroke
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "")
 	   :metadata (:sync t
 			    :json-name "stroke"
@@ -1029,19 +1029,19 @@
 			          :json-name "stroke_width"
 			          :display-name "Stroke Width"))
    (colors :accessor colors
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "")
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
    (opacities :accessor opacities
 	      :type list
-	      :initform (list (cons 'trait 1.0))
+	      :initform (list (cons "trait" 1.0))
 	      :metadata (:sync t
 			       :json-name "opacities"
 			       :display-name "Opacities"))
    (format-marks :accessor format-marks
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "ohcl")
 	   :metadata (:sync t
 			    :json-name "format"
@@ -1054,10 +1054,10 @@
 
 (defclass pie (mark)
    ((icon :accessor icon
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "fa-pie-chart"))
    (name :accessor name
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "Pie Chart"))
     ;;TODO DONT KNOW WHAT TO DO WITH THE VALID 
     (sizes :accessor sizes
@@ -1072,7 +1072,7 @@
 	   :type list
 	   :initform nil
 	   :metadata (:sync t
-			    :json-name color
+			    :json-name "color"
 			    :scaled t
 			    :rtype "Color"
 			    :atype "bqplot.ColorAxis"
@@ -1088,24 +1088,24 @@
 		     :metadata (:sync t
 				      :json-name "scales_metadata"))
     (sort-marks :accessor sort-marks
-	  :type :bool
+	  :type cljw:bool
 	  :initform :false
 	  :metadata (:sync t
 			   :json-name "sort"))
     (colors :accessor colors
 	    :type list
-	    :initform (list (cons 'trait (cljw:unicode ""))
-			    (cons 'default-value (cljw:unicode "#1f77b4")))
+	    :initform (list (cons "trait" (cljw:unicode ""))
+			    (cons "default-value" (cljw:unicode "#1f77b4")))
 	    :metadata (:sync t
 			     :json-name "Colors"))
     (stroke :accessor stroke
-	    :type unicode
+	    :type cljw:unicode
 	    :initform (cljw:unicode "")
 	    :metadata (:sync t
 			     :json-name "stroke"))
     (opacities :accessor opacities
 	       :type list
-	       :initform (list (cons 'trait 1.0))
+	       :initform (list (cons "trait" 1.0))
 	       :metadata (:sync t
 				:json-name "opacities"
 				:display-name "Opacities"))
@@ -1136,35 +1136,35 @@
     ;;how to handle the default options with enum.
     ;;is it plausibel to use a type list and a validator to chekc if users string is in the default choices 
     (display-labels :accessor diplay-labels
-		    :type unicode
+		    :type cljw:unicode
 		    :initform (cljw:unicode "inside")
 		    :metadata (:sync t
 				     :json-name "display_labels"))
 
     (display-values :accessor display-values
-		    :type :bool
+		    :type cljw:bool
 		    :initform :false
 		    :metadata (:sync t
 				     :json-name "display_values"))
     (values-format :accessor values-format
-		   :type unicode
+		   :type cljw:unicode
 		   :initform (cljw:unicode ".1f")
 		   :metadata (sync t
 				   :json-name "values_format"))
     (label-color :accessor label-color
-		 :type unicode
+		 :type cljw:unicode
 		 :initform (cljw:unicode "")
 		 :metadata (:sync t
 				  :json-name "label_color"))
     (font-size :accessor font-size
-	       :type unicode
+	       :type cljw:unicode
 	       :initform (cljw:unicode "10px")
 	       :metadata (:sync t
 				:json-name "font_size"))
 
     ;;handle the default options 
     (font-weight :accessor font-weight
-		 :type unicode
+		 :type cljw:unicode
 		 :initform (cljw:unicode "normal")
 		 :metadata (:sync t
 				  :json-name "font_weight")))
@@ -1172,17 +1172,17 @@
   ;;do topo-load method 
   
     (:default-initargs
-   :view-name (cljw:unicode "Pie")
+     :view-name (cljw:unicode "Pie")
       :model-name (cljw:unicode "PieModel"))
     
     (:metaclass traitlets:traitlet-class))
 
 (defclass map (mark)
   ((icon :accessor icon
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "fa-globe"))
    (name :accessor name
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "Map"))
 
    ;;check te scale and sync 
@@ -1201,7 +1201,7 @@
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
    (hover-highlight :accessor hover-highlight
-		    :type :bool
+		    :type cljw:bool
 		    :initform :true
 		    :metadata (:sync t
 				     :json-name "hover_highlight"))
@@ -1213,7 +1213,7 @@
 		 :metadata (:sync t
 				  :json-name "Hovered-styles"))
    (stroke-color :accessor stroke-color
-		 :type unicode
+		 :type cljw:unicode
 		 :initform (cljw:unicode "")
 		 :metadata (:sync t
 				  :json-name "stroke_color"))
@@ -1286,22 +1286,22 @@
 
    ;; need to add the default to row and colun 
    (row-align :initarg :row-align :accessor row-align
-	      :type unicode
+	      :type cljw:unicode
 	      :initform (cljw:unicode "start")
 	      :metadata (:sync t
 			       :json-name "row_align"))
    (column-align :initarg :column-align :accessor column-align
-	      :type unicode
+	      :type cljw:unicode
 	      :initform (cljw:unicode "start")
 	      :metadata (:sync t
 			       :json-name "column_align"))
    (null-color :initarg :null-color :accessor null-color
-	       :type unicode
+	       :type cljw:unicode
 	       :initform (cljw:unicode "black")
 	       :metadata (:sync t
 				:json-name "null_color"))
     (stroke :initarg :stroke :accessor stroke
-	       :type unicode
+	       :type cljw:unicode
 	       :initform (cljw:unicode "black")
 	       :metadata (:sync t
 				:json-name "Stroke"))
@@ -1364,7 +1364,7 @@
 		   :metadata (:sync t
 				    :json-name "scales_metadata"))
    (null-color :initarg :null-color :accessor null-color
-	       :type unicode
+	       :type cljw:unicode
 	       :initform (cljw:unicode "black")
 	       :metadata (:sync t
 				:json-name "null_color")))
@@ -1405,20 +1405,20 @@
 				 ;*array-serialization*
 				 ))
    (link-type :accessor link-type
-	      :type unicode
+	      :type cljw:unicode
 	      :initform (cljw:unicode "arc")
 	      :metadata(:sync t
 			      :json-name "link_type"))
    (directed :accessor directed
-	     :type :bool
+	     :type cljw:bool
 	     :initform :true
 	     :metadata (:sync t
 			      :json-name "directed"))
    ;;need to finisht this 
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))
-			   (cons 'default-value (cljw:unicode "#1f77b4")))
+	   :initform (list (cons "trait" (cljw:unicode ""))
+			   (cons "default-value" (cljw:unicode "#1f77b4")))
 	   :metadata (:sync t
 			    :json-name "colors"))
    (interactions :accessor interactions
@@ -1428,7 +1428,7 @@
 		 :metadata (:sync t
 				  :json-name "interactions"))
    (highlight-links :accessor highlight-links
-		    :type :bool
+		    :type cljw:bool
 		    :initform :true
 		    :metadata (:sync t
 				     :json-name "highlight_links"))
@@ -1507,7 +1507,7 @@
   ;;need to check the valid part 
   ((x :accessor x
 	:type list
-	:initform (list (cons 'default-value (list (cons 0 1))))
+	:initform (list (cons "default-value" (list (cons 0 1))))
 	:metadata (:sync t
 			 :scaled t
 			 :rtype "Number"
@@ -1516,7 +1516,7 @@
 			 ))
    (y :accessor y
 	:type list
-	:initform (list (cons 'default-value (list (cons 0 1))))
+	:initform (list (cons "default-value" (list (cons 0 1))))
 	:metadata (:sync t
 			 :scaled t
 			 :rtype "Number"

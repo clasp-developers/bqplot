@@ -368,8 +368,9 @@
                       (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
     (format t "~&MARK-TYPE: ~a~%" mark-type)
     (format t "~&KWARGS: ~a~%" kwargs)
-    ;(setf mark (apply #'make-instance mark-type (list* :scales-mark scales kwargs)))
-    (setf mark (apply #'make-instance mark-type (list :scales-mark scales kwargs)))
+                                        ;(setf mark (apply #'make-instance mark-type (list* :scales-mark scales kwargs)))
+    (setf kwargs (append kwargs (list :scales-mark scales))
+          mark (apply #'make-instance mark-type kwargs))
     (setf 
           (cdr (assoc "last_mark" %context :test #'string=)) mark
           (marks (cdr (assoc "1" fig :test #'string=))) (append (list (marks (cdr (assoc "1" fig :test #'string=)))) (list mark)))
@@ -656,7 +657,7 @@ draw-   (unless (member "count" scales)
   (remf kwargs :trait)
   (%create-selector (find-class 'lasso-selector) func trait kwargs))
 
-(defun clear ()
+(defun clear-figure ()
   (let ((fig (cdr (assoc "figure" %context :test #'string=))))
     (when fig 
       (setf (marks fig) nil

@@ -58,14 +58,13 @@
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "allow_zoom"))
-   (scales-interacts :initarg :scales :accessor scales-interacts
+   (scales-interacts :initarg :scales-interacts :accessor scales-interacts
 	   :type list
 	   :initform (make-instance 'scale)
          ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
 	   :metadata (:sync t
-			    :json-name "scales"
-					;,@cljw:*widget-serialization*
-			    )))
+			    :json-name "scales")))
+			    ;,@cljw:*widget-serialization*)))
    (:default-initargs
     :view-name (cljw:unicode "PanZoom")
     :model-name (cljw:unicode "PanZoomModel"))
