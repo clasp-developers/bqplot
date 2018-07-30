@@ -59,8 +59,8 @@
 	       :metadata (:sync t
 				:json-name "allow_zoom"))
    (scales-interacts :initarg :scales :accessor scales-interacts
-	   :type list
-	   :initform (make-instance 'scale)
+	   :type cljw::dict
+	   :initform nil
          ;;  (list (cons "trait" (cons "trait" (make-instance 'scale))))
 	   :metadata #.`(:sync t
 			    :json-name "scales"

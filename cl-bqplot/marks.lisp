@@ -13,12 +13,12 @@
                                         ;,@cljw:*widget-serialization*
                       ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
-		    :type list
+		    :type cljw:dict
 		    :initform nil
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
    (preserve-domain :initarg :preserve-domain :accessor preserve-domain
-		    :type list
+		    :type cljw:dict
 		    :initform nil
 		    :metadata (:sync t
 				     :json-name "preserve_domain"))
@@ -30,7 +30,7 @@
 				    :display-name "Display legend"))
    (labels-mark :initarg :labels :accessor labels-mark
 	   :type list
-	   :initform (list (cons "trait" (cljw:unicode "")))
+	   :initform nil
 	   :metadata (:sync t
 			    :json-name "labels"
 			    :display-name "Labels"))
@@ -45,12 +45,12 @@
 	    :metadata (:sync t
 			     :json-name "visible"))
    (selected-style :initarg :selected-style :accessor selected-style
-		   :type list
+		   :type cljw:dict
 		   :initform nil
 		   :metadata (:sync t
 				    :json-name "selected_style"))
    (unselected-style :initarg :unselected-style :accessor unselected-style
-		    :type list
+		    :type cljw:dict
 		    :initform nil
 		    :metadata (:sync t
 				     :json-name "unselected_style"))
@@ -72,17 +72,17 @@
                                         ;,@cljw:*widget-serialization*
                              ))
    (tooltip-style :initarg :tooltip-style :accessor tooltip-style
-		  :type list
+		  :type cljw:dict
 		  :initform (list (cons "opacity" 0.9))
 		  :metadata (:sync t
 				   :json-name "tooltip_style"))
    (interactions :initarg :interactions :accessor interactions
-		 :type list
+		 :type cljw:dict
 		 :initform (list (cons "hover" "tooltip"))
 		 :metadata (:sync t
 				  :json-name "interactions"))
    (tooltip-location :initarg :tooltip-location :accessor tooltip-location
-		     :type unicode
+		     :type unicode 
 		     :initform (cljw:unicode "mouse")
 		     :metadata (:sync t
 				      :json-name "tooltip_location")))
