@@ -29,8 +29,8 @@
 				    :json-name "display_legend"
 				    :display-name "Display legend"))
    (labels-mark :initarg :labels :accessor labels-mark
-	   :type list
-	   :initform (list (cons "trait" (cljw:unicode "")))
+	   :type vector
+	   :initform #()
 	   :metadata (:sync t
 			    :json-name "labels"
 			    :display-name "Labels"))
@@ -55,8 +55,8 @@
 		    :metadata (:sync t
 				     :json-name "unselected_style"))
    (selected :initarg :selected :accessor selected
-	     :type list
-	     :initform nil
+	     :type vector
+	     :initform #()
 	     :metadata (:sync t
 			      :json-name "selected"))
    (enable-hover :initarg :enable-hover :accessor enable-hover
@@ -66,7 +66,7 @@
 				  :json-name "enable_hover"))
 
    (tooltip :initarg :tooltip :accessor tooltip
-	    :initform (make-instance 'domwidget)
+	    :initform :null
 	    :metadata #.`(:sync t
 			     :json-name "tooltip"
                                         ;,@cljw:*widget-serialization*
@@ -195,7 +195,7 @@
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :accessor color
       :type list
-      :initform nil
+      :initform (list (cons "type" :null) (cons "values" :null))
       :metadata (:sync t
 		       :json-name "color"
 		       :scaled t
@@ -214,13 +214,13 @@
 		       :json-name "scales_metadata"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons "trait" (cljw:unicode ""))(cons "default-value" (cljw:unicode "#1f77b4")));this 
+	   :initform *CATEGORY10* 
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "colors"))
    (fill-colors :accessor fill-colors
-		:type list
-		:initform (list (cons "trait" (cljw:unicode "")))
+		:type vector
+		:initform #()
 		:metadata (:sync t
 				 :json-name "fill_colors"
 				 :display-name "Fill colors"))
@@ -237,8 +237,8 @@
 				       :json-name "labels_visibility"
 				       :display-name "Labels visibility"))
    (curves-subset :accessor curves-subset
-		  :type list
-		  :initform nil
+		  :type vector
+		  :initform #()
 		  :metadata (:sync t
 				   :json-name "curves_subset"))
    (line-style :accessor line-style
@@ -267,7 +267,7 @@
 			  :display-name "Fill"))
    (marker :accessor marker
 	   :type cljw:unicode
-	   :initform nil
+	   :initform (cljw:unicode "None")
 	   :metadata (:sync t
 			    :json-name "marker"
 			    :display-name "Marker"))
@@ -278,14 +278,14 @@
 				 :json-name "marker_size"
 				 :display-name "Default size"))
    (opacities :accessor opacities
-	      :type list
-	      :initform nil
+	      :type vector
+	      :initform #()
 	      :metadata (:sync t
 			       :json-name "opacities"
 			       :display-name "Opacity"))
    (fill-opacities :accessor fill-opacities
-		   :type list
-		   :initform nil
+		   :type vector 
+		   :initform #()
 		   :metadata (:sync t
 				    :json-name "fill_opacities"
 				    :display-name "Fill Opacity")))
@@ -494,7 +494,7 @@
 	   :type cljw:unicode
 	   :initform (cljw:unicode "fa-cloud"))
    (name :accessor name
-	   :type cljw:unciode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "Scatter"))
    (skew :accessor skew
 	 :type list
