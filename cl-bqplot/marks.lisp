@@ -1,6 +1,6 @@
 (in-package :bqplot)
 
-(defclass mark (cljw:widget)
+(defclass mark (widget)
   ((mark-type :initarg :mark-type :accessor mark-type
                :type cljw:dict
                :initform nil)
