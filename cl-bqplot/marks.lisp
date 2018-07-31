@@ -10,7 +10,7 @@
 	   ;:validator %validate-scales
 	   :metadata (:sync t
                       :json-name "scales"
-                                        ;,@cljw:*widget-serialization*
+                                        ;FIXME ,@cljw:*widget-serialization*
                       ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		    :type list
@@ -50,10 +50,10 @@
 		   :metadata (:sync t
 				    :json-name "selected_style"))
    (unselected-style :initarg :unselected-style :accessor unselected-style
-		    :type list
-		    :initform nil
-		    :metadata (:sync t
-				     :json-name "unselected_style"))
+		     :type list
+		     :initform nil
+		     :metadata (:sync t
+				      :json-name "unselected_style"))
    (selected :initarg :selected :accessor selected
 	     :type vector
 	     :initform #()
@@ -87,15 +87,14 @@
 		     :metadata (:sync t
 				      :json-name "tooltip_location")))
   (:default-initargs
-       :model-name (cljw:unicode "MarkModel")
-     :model-module (cljw:unicode "bqplot")
-     :view-module (cljw:unicode "bqplot")
-     :view-module-version *frontend-version*
-     :model-module-version *frontend-version*
-     ;:ipython-display nil
-     )
-
-    (:metaclass traitlets:traitlet-class))
+   :model-name (cljw:unicode "MarkModel")
+    :model-module (cljw:unicode "bqplot")
+    :view-module (cljw:unicode "bqplot")
+    :view-module-version *frontend-version*
+    :model-module-version *frontend-version*
+    ;;:ipython-display nil
+    )
+  (:metaclass traitlets:traitlet-class))
 
 (defmethod %get-dimension-scales ((self mark) dimension &key (preserve-domain nil))
   (let ((ret nil))
@@ -157,13 +156,7 @@
 					;TODO:
 					;def get-dimension-scales
 					;def validate-scales
-					;def on-hover             Callback
-					;def on-click             Callback
-					;def on-legend-click      Callback
-					;def on-legen-hover       Callback
-					;def on-element-click     Callback
-					;def on-background-click  Callback
-					;def handle-custom-msgs
+
 (defclass lines (mark)
   ((icon :accessor icon
 	:type string
@@ -179,7 +172,7 @@
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       ;*array-serialization*
+                       ;;*array-serialization*
 		       ))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :initarg :y :accessor y
@@ -268,7 +261,7 @@
 			  :display-name "Fill"))
    (marker :accessor marker
 	   :type cljw:unicode
-	   :initform (cljw:unicode "None")
+	   :initform :null
 	   :metadata (:sync t
 			    :json-name "marker"
 			    :display-name "Marker"))
@@ -294,6 +287,7 @@
        :view-name (cljw:unicode "Lines")
      :model-name (cljw:unicode "LinesModel"))
     (:metaclass traitlets:traitlet-class))
+
 
 (defclass flex-line (mark)
   ((x :accessor x
@@ -355,16 +349,17 @@
 				  :json-name "stroke_width"
 				  :display-name "Stroke width"))
    (colors :accessor colors
-	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))
-                           (cons 'default-value (cljw:unicode "#1f77b4")))
-           :metadata (:sync t
-			    :json-name "colors")))
+	   :type vector
+	   :initform *CATEGORY10* 
+	   :metadata (:sync t
+			    :json-name "colors"
+			    :display-name "colors")))
    (:default-initargs
     :view-name (cljw:unicode "FlexLine")
      :model-name (cljw:unicode "FlexLineModel"))
 
-    (:metaclass traitlets:traitlet-class))
+
+  (:metaclass traitlets:traitlet-class))
 
 (defclass %scatter-base (mark)
   ((x :initarg :x :accessor x
@@ -375,7 +370,7 @@
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       ;*array-serialization*
+		       ;;FIXME: *array-serialization*
 		       ))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :initarg :y :accessor y
@@ -386,7 +381,7 @@
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       ;*array-serialization*
+		       ;;FIXME: *array-serialization*
 		       ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :initarg :color :accessor color
@@ -397,7 +392,7 @@
 			   :scaled t
 			   :rtype "Color"
 			   :atype "bqplot.ColorAxis"
-			   ;*array-serialization*
+			   ;;FIXME: *array-serialization*
 			   ))
 					;TODO: .valid(array_squeeze)
     (opacity :initarg :opacity :accessor opacity
@@ -407,7 +402,7 @@
 			      :json-name "width"
 			      :scaled t
 			      :rtype "Number"
-			      ;*array-serialization*
+			      ;;FIXME: *array-serialization*
 			      ))
    (size :initarg :size :accessor size
 	 :type list
@@ -416,7 +411,7 @@
 			  :json-name "size"
 			  :scaled t
 			  :rtype "Number"
-			  ;*array-serialization*
+			  ;;FIXME: *array-serialization*
 			  ))
    (rotation :initarg :rotation :accessor rotation
 	     :type list
@@ -431,18 +426,16 @@
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		    :type list
 		    :initform (list (cons "x" (list (cons "orientation" "horizontal")
-						   (cons "dimension" "x")))
+						    (cons "dimension" "x")))
 				    (cons "y" (list (cons "orientation" "vertical")
-						   (cons "dimension" "y")))
-				    (cons "color" (list (cons "dimension" "color")))
-				    (cons "size" (list (cons "dimension" "size")))
-				    (cons "opacity" (list (cons "dimension" "opacity")))
-				    (cons "rotation" (list (cons "dimension" "rotation"))))
+						    (cons "dimension" "y")))
+				    (cons "color" (cons "dimension" "color"))
+				    (cons "size" (cons "dimension" "size"))
+				    (cons "opacity" (cons "dimension" "opacity"))
+				    (cons "rotation" (cons "dimension" "rotation")))
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
-   
 					;TODO: default-opacities
-   
    (hovered-style :initarg :hovered-style :accessor hovered-style
 		  :type list
 		  :initform nil
@@ -484,19 +477,19 @@
 		   :metadata (:sync t
 				    :json-name "update_on_move")))
   
-   (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
-   
-					;TODO: def methods
-					;3 callbacks, 1 handle custom messages
+
+;;TODO: def methods
+;;3 callbacks, 1 handle custom messages
 
 (defclass scatter (%scatter-base)
-   ((icon :accessor icon
-	   :type cljw:unicode
-	   :initform (cljw:unicode "fa-cloud"))
+  ((icon :accessor icon
+         :type cljw:unicode
+         :initform (cljw:unicode "fa-cloud"))
    (name :accessor name
-	   :type cljw:unicode
-	   :initform (cljw:unicode "Scatter"))
+         :type cljw:unicode
+         :initform (cljw:unicode "Scatter"))
    (skew :accessor skew
 	 :type list
 	 :initform nil
@@ -504,7 +497,7 @@
 			  :json-name "skew"
 			  :scaled t
 			  :rtype "Number"
-			  ;*array-serialization*
+			  ;;FIXME: *array-serialization*
 			  ))
 					;TODO: .valid stuff
    (marker :accessor marker
@@ -526,16 +519,14 @@
 						    (cons "dimension" "x")))
 				    (cons "y" (list (cons "orientation" "vertical")
 						    (cons "dimension" "y")))
-				    (cons "color" (list (cons "dimension" "color")))
-				    (cons "size" (list (cons "dimension" "size")))
-				    (cons "opacity" (list (cons "dimension" "opacity")))
-				    (cons "rotation" (list (cons "dimension" "rotation")))
-				    (cons "skew" (list (cons "dimension" "skew"))))
+				    (cons "color" (cons "dimension" "color"))
+				    (cons "size" (cons "dimension" "size"))
+				    (cons "opacity" (cons "dimension" "opacity"))
+				    (cons "rotation" (cons "dimension" "rotation"))
+				    (cons "skew" (cons "dimension" "skew")))
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
-
-;TODO: def some methods (default colors)
-   
+					;TODO: def some methods (default colors)
    (stroke :accessor stroke
 	   :type cljw:unicode
 	   :initform (cljw:unicode "")
@@ -549,56 +540,55 @@
 				  :json-name "stroke_width"
 				  :display-name "Stroke width"))
    (default-skew :accessor default-skew
-                 :type float
-		 :initform 0.5
+     :type float
+     :initform 0.5
 					;TODO min max validator
-		 :metadata (:sync t
-				  :json-name "default_skew"))
+     :metadata (:sync t
+		      :json-name "default_skew"))
    (default-size :accessor default-size
-                 :type integer
-		 :initform 64
-		 :metadata (:sync t
-				  :json-name "default_size"
-				  :display-name "Display names"))
+     :type int
+     :initform 64
+     :metadata (:sync t
+		      :json-name "default_size"
+		      :display-name "Display names"))
    (names :accessor names
 	  :type list
 	  :initform nil
 	  :metadata (:sync t
 			   :json-name "names"
-			   ;*array-serialization*
+                                        ;*array-serialization*
 			   ))
 					;TODO: .valid(array_squeeze)
    (display-names :accessor display-names
-	   :type cljw:bool
-	   :initform :true
-	   :metadata (:sync t
-			    :json-name "display_names"
-			    :display-name "Display names"))
+                  :type cljw:bool
+                  :initform :true
+                  :metadata (:sync t
+                                   :json-name "display_names"
+                                   :display-name "Display names"))
    (fill-marks :accessor fill-marks
-	 :type cljw:bool
-	 :initform :true
-	 :metadata (:sync t
-			  :json-name "fill"))
+               :type cljw:bool
+               :initform :true
+               :metadata (:sync t
+                                :json-name "fill"))
    (drag-color :accessor drag-color
-	   :type cljw:unicode
-	   :initform (cljw:unicode "")
-	   :metadata (:sync t
-			    :json-name "drag_color"))
+               :type cljw:unicode
+               :initform (cljw:unicode "")
+               :metadata (:sync t
+                                :json-name "drag_color"))
    (drag-size :accessor drag-size
-	   :type float
-	   :initform 5.0
-	   :metadata (:sync t
-			    :json-name "drag_size"))
+              :type float
+              :initform 5.0
+              :metadata (:sync t
+                               :json-name "drag_size"))
    (names-unique :accessor names-unique
-	   :type cljw:bool
-	   :initform :true
-	   :metadata (:sync t
-			    :json-name "names_unique")))
-   (:default-initargs
-       :view-name (cljw:unicode "Scatter")
-     :model-name (cljw:unicode "ScatterModel"))
-
-    (:metaclass traitlets:traitlet-class))
+                 :type cljw:bool
+                 :initform :true
+                 :metadata (:sync t
+                                  :json-name "names_unique")))
+  (:default-initargs
+   :view-name (cljw:unicode "Scatter")
+    :model-name (cljw:unicode "ScatterModel"))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass label (%scatter-base)
   ((icon :accessor icon
@@ -624,23 +614,23 @@
 			    :json-name "colors"
 			    :display-name "Colors"))
    (rotate-angle :accessor rotate-angle
-	   :type float
-	   :initform nil
-	   :metadata (:sync t
-			    :json-name "rotate_angle"))
+		 :type float
+		 :initform nil
+		 :metadata (:sync t
+				  :json-name "rotate_angle"))
    (text :accessor text
 	 :type list
 	 :initform nil
 	 :metadata (:sync t
 			  :json-name "text"
-			  ;*array-serialization*
+			  ;; FIXME *array-serialization*
 			  ))
-					;TODO: valid(array_squeeze)
+   ;;TODO: valid(array_squeeze)
    (default-size :accessor default-size
-                 :type float
-		 :initform 16.0
-		 :metadata (:sync t
-				  :json-name "default_size"))
+     :type float
+     :initform 16.0
+     :metadata (:sync t
+		      :json-name "default_size"))
    (drag-size :accessor drag-size
 	      :type float
 	      :initform 1.0
@@ -664,7 +654,6 @@
   (:default-initargs
    :view-name (cljw:unicode "Label")
     :model-name (cljw:unicode "LabelModel"))
-
   (:metaclass traitlets:traitlet-class))
 
 (defclass hist (mark)
@@ -716,11 +705,11 @@
 			  :json-name "bins"
 			  :display-name "Number of bins"))
    (midpoints :accessor midpoints
-	 :type list
-	 :initform nil ;look into this one
-	 :metadata (:sync t
-			  :json-name "midpoints"
-			  :display-name "Mid points"))
+	      :type list
+	      :initform nil ;look into this one
+	      :metadata (:sync t
+			       :json-name "midpoints"
+			       :display-name "Mid points"))
    (colors :accessor colors
 	 :type list
 	 :initform (list (cons "trait" (cljw:unicode ""))
@@ -743,7 +732,7 @@
        :view-name (cljw:unicode "Hist")
      :model-name (cljw:unicode "HistModel"))
 
-    (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass boxplot (mark)
   ((x :accessor x
@@ -754,9 +743,9 @@
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       ;*array-serialization*
+		       ;; FIXME*array-serialization*
 		       ))
-      	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
+   ;;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :accessor y
       :type list
       :initform nil
@@ -765,68 +754,67 @@
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       ;*array-serialization*
+		       ;;FIXME: *array-serialization*
 		       ))
-   	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
-  (scales-metadata :accessor scales-metadata
-      :type list
-      :initform (list (cons "x" (list (cons "orientation" "horizontal")
-				      (cons "dimension" "x")))
-		      (cons "y" (list (cons "orientation" "vertical")
-				      (cons "dimension" "y"))))
-      :metadata (:sync t
-		       :json-name "scales_metadata"))
+   ;;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
+   (scales-metadata :accessor scales-metadata
+                    :type list
+                    :initform (list (cons "x" (list (cons "orientation" "horizontal")
+                                                    (cons "dimension" "x")))
+                                    (cons "y" (list (cons "orientation" "vertical")
+                                                    (cons "dimension" "y"))))
+                    :metadata (:sync t
+                                     :json-name "scales_metadata"))
    (stroke :accessor stroke
-	 :type unicode
-	 :initform (cljw:unicode "")
-	 :metadata (:sync t
-			  :json-name "stroke"
-			  :display-name "Stroke color"))
+	   :type unicode
+	   :initform (cljw:unicode "")
+	   :metadata (:sync t
+			    :json-name "stroke"
+			    :display-name "Stroke color"))
    (box-fill-color :accessor box-fill-color
-	 :type unicode
-	 :initform (cljw:unicode "steelblue")
-	 :metadata (:sync t
-			  :json-name "box_fill_color"
-			  :display-name "Fill color for the box"))
+		   :type unicode
+		   :initform (cljw:unicode "steelblue")
+		   :metadata (:sync t
+				    :json-name "box_fill_color"
+				    :display-name "Fill color for the box"))
    (outlier-fill-color :accessor outlier-fill-color
-	 :type unicode
-	 :initform (cljw:unicode "gray")
-	 :metadata (:sync t
-			  :json-name "outlier_fill_color"
-			  :display-name "Outlier fill color"))
+		       :type unicode
+		       :initform (cljw:unicode "gray")
+		       :metadata (:sync t
+					:json-name "outlier_fill_color"
+					:display-name "Outlier fill color"))
    (opacities :accessor opacities
-	 :type list
-	 :initform (list (cons "trait" 1.0))
-	 :metadata (:sync t
-			  :json-name "opacities"
-			  :display-name "Opacities"))
+              :type list
+              :initform (list (cons "trait" 1.0))
+              :metadata (:sync t
+                               :json-name "opacities"
+                               :display-name "Opacities"))
    (box-width :accessor box-width
-	 :type int
-	 :initform 30
-	 :metadata (:sync t
-			  :json-name "box_width"
-			  :display-name "Box Width")))
-   (:default-initargs
-       :view-name (cljw:unicode "Boxplot")
-     :model-name (cljw:unicode "BoxplotModel"))
-
-    (:metaclass traitlets:traitlet-class))
+	      :type int
+	      :initform 30
+	      :metadata (:sync t
+			       :json-name "box_width"
+			       :display-name "Box Width")))
+  (:default-initargs
+   :view-name (cljw:unicode "Boxplot")
+    :model-name (cljw:unicode "BoxplotModel"))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass bars (mark)
   ((x :accessor x
-      :type list
-      :initform nil
+      :type vector
+      :initform #()
       :metadata (:sync t
 		       :json-name "x"
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       ;*array-serialization*
+		       ;; FIXME *array-serialization*
 		       ))
-      	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
+   ;;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :accessor y
-      :type list
-      :initform nil
+      :type vector
+      :initform #()
       :metadata (:sync t
 		       :json-name "y"
 		       :scaled t
@@ -867,16 +855,16 @@
 			  :json-name "type"
 			  :display-name "Type"))
    (colors :accessor colors
-	 :type list
-	 :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value "steelblue"))
-	 :metadata (:sync t
-			  :json-name "colors"
-			  :display-name "Colors"))
+	   :type list
+	   :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value "steelblue"))
+	   :metadata (:sync t
+			    :json-name "colors"
+			    :display-name "Colors"))
    (padding :accessor padding
-	 :type float
-	 :initform 0.05
-	 :metadata (:sync t
-			  :json-name "padding"))
+	    :type float
+	    :initform 0.05
+	    :metadata (:sync t
+			     :json-name "padding"))
    (stroke :accessor stroke
 	 :type cljw:unicode
 	 :initform (cljw:unicode "")
@@ -904,11 +892,11 @@
 		:initform (cljw:unicode "vertical")
 		:metadata (:sync t
 				 :json-name "orientation")))
-   (:default-initargs
-       :view-name (cljw:unicode "Bars")
-     :model-name (cljw:unicode "BarsModel"))
+  (:default-initargs
+   :view-name (cljw:unicode "Bars")
+    :model-name (cljw:unicode "BarsModel"))
 
-    (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defmethod %validate-orientation (object val)
   (if (equal val (cljw:unicode "vertical"))
@@ -928,9 +916,6 @@
    (icons :initarg :icons :accessor icons
 	  :type cljw:unicode
 	  :initform (cljw:unicode "fa-signal"))
-
-					;for some reason icons creates a glitch of type invalid initialization argument so we're just commenting it out for now
-   
    ;;TODO IS SAMPLES RIGHT 
    (sample :initarg :sample :accessor sample
 	   :type list
@@ -942,7 +927,6 @@
 			    :atype "bqplot.Axis"
 			    ;*array-serializaion*
 			    ))
-
    (min-marks :initarg :min-marks :accessor min-marks
 	:type float
 	:initform nil                       ;;can floats initform be nil??
@@ -960,17 +944,14 @@
 			     :json-name "density"))
 
 
-   ;; TODO FINISH BINS 
    (bins :initarg :bins :accessor bins
 	    :type integer
 	    :initform 10
 	    :metadata (:sync t
 			     :json-name "bins"
 			     :display-name "Number Of Bins")))
-
-   ;;TODO ADD THE METHODS
-
-   (:metaclass traitlets:traitlet-class))
+  ;;TODO ADD THE METHODS
+  (:metaclass traitlets:traitlet-class))
 
 
 (defclass OHLC (mark)
@@ -982,8 +963,8 @@
 	 :initform (cljw:unicode "OHLC Chart"))
 
    (x :accessor x
-      :type list
-      :initform nil
+      :type vector
+      :initform #()
       :metadata (:sync t
 		       :json-name "x"
 		       :scaled t
@@ -992,16 +973,15 @@
 		       ;*array-serialization*
 		       ))
    (y :accessor y
-      :type list
-      :initform nil
+      :type vector
+      :initform #()
       :metadata (:sync t
 		       :json-name "y"
 		       :scaled t
 		       :rtype "Number"
 		       :atype "bqplot.Axis"
-		       ;*array-serialization*
+		       ;; FIXME  *array-serialization*
 		       ))
-   
    (scales-metadata :accessor scales-metadata
 		    :type list
 		    :initform (list (cons "x" (list (cons "orientation" "horizontal")
@@ -1116,22 +1096,72 @@
 	    :initform 180.0
 	    :metadata (:sync t
 			     :json-name "radius"))
+   ;;TODO DONT KNOW WHAT TO DO WITH THE VALID 
+   (sizes :accessor sizes
+	  :type list
+	  :initform nil 
+	  :metadata (:sync t
+			   :json-name "sizes"
+			   :rtype "number"
+			   *array-serializaion*))
+   (color :accessor color
+	  :type list
+	  :initform nil
+	  :metadata (:sync t
+			   :json-name color
+			   :scaled t
+			   :rtype "Color"
+			   :atype = "bqplot.ColorAxis"
+			   *array-serializaion*))
+
+
+   ;;TODO ADD THE X AND Y FROM OTHER ATTRIBUTES
+   
+   (scales-metadata :accessor scales-metadata
+		    :type list
+		    :initform (list (cons "colors" (list (cons "dimension" "color"))))
+		    :metadata (:sync t
+				     :json-name "scales_metadata"))
+   (dsort :accessor dsort
+	  :type :bool
+	  :initform :false
+	  :metadata (:sync t
+			   :json-name "sort"))
+   (colors :accessor colors
+	   :type list
+	   :initform (list (cons 'trait (cljw:unicode ""))
+			   (cons 'default-value CATEGORY10))
+	   :metadata (:sync t
+			    :json-name "Colors"))
+   (stroke :accessor stroke
+	   :type unicode
+	   :initform (cljw:unicode "")
+	   :metadata (:sync t
+			    :json-name "stroke"))
+   (opacities :accessor opacities
+	      :type list
+	      :initform (list (cons 'trait 1.0))
+	      :metadata (:sync t
+			       :json-name "opacities"
+			       :display-name "Opacities"))
+   
+   ;;TODO HOW TO DEAL WITH THE RANGE
+   (radius :accessor radius
+	   :type float
+	   :initform 180.0
+	   :metadata (:sync t
+			    :json-name "radius"))
 
     (inner-radius :accessor inner-radius
-		  :type float
-		  :initform 0.1
-		  :metadata (:sync t
-				   :json-name "inner_radius"))
-    (start-angle :accessor start-angle
-		 :type float
-		 :initform 0.0
-		 :metadata (:sync t
-				  :json-name "start_angle"))
-     (end-angle :accessor end-angle
-		 :type float
-		 :initform 360.0
-		 :metadata (:sync t
-				  :json-name "end_angle"))
+                  :type float
+                  :initform 0.1
+                  :metadata (:sync t
+                                   :json-name "start_angle"))
+    (end-angle :accessor end-angle
+               :type float
+               :initform 360.0
+               :metadata (:sync t
+                                :json-name "end_angle"))
 
     ;;how to handle the default options with enum.
     ;;is it plausibel to use a type list and a validator to chekc if users string is in the default choices 
@@ -1146,7 +1176,7 @@
 		    :initform :false
 		    :metadata (:sync t
 				     :json-name "display_values"))
-    (values-format :accessor values-format
+    (values- :accessor values-format
 		   :type cljw:unicode
 		   :initform (cljw:unicode ".1f")
 		   :metadata (sync t
@@ -1168,16 +1198,15 @@
 		 :initform (cljw:unicode "normal")
 		 :metadata (:sync t
 				  :json-name "font_weight")))
-
   ;;do topo-load method 
+  (:default-initargs
+   :view-name (cljw:unicode "Pie")
+    :model-name (cljw:unicode "PieModel"))
   
-    (:default-initargs
-     :view-name (cljw:unicode "Pie")
-      :model-name (cljw:unicode "PieModel"))
-    
-    (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
-(defclass map (mark)
+;; cannot use the name "map" here
+(defclass mapp (mark)
   ((icon :accessor icon
 	 :type cljw:unicode
 	 :initform (cljw:unicode "fa-globe"))
@@ -1235,7 +1264,7 @@
 				    (cons "selected-stroke-width" 2.0))
 		    :metadata (:sync t
 				     :json-name "selected_styles")))
-   ;; TODO MAP DATA
+  ;; TODO MAP DATA
 
   (:default-initargs
    :view-name (cljw:unicode "Map")
@@ -1253,36 +1282,36 @@
 			 :scaled t
 			 :rtype "Number"
                          :atype "bqplot.Axis"
-                         ;*array-serialization*
+                                        ;*array-serialization*
 			 ))
    (column :initarg :column :accessor column
-	:type list
-	:initform nil
-	:metadata (:sync t
-			 :json-name "column"
-			 :scaled t
-			 :rtype "Number"
-                         :atype "bqplot.Axis"
-                         ;*array-serialization*
-			 ))
+           :type list
+           :initform nil
+           :metadata (:sync t
+                            :json-name "column"
+                            :scaled t
+                            :rtype "Number"
+                            :atype "bqplot.Axis"
+                                        ;*array-serialization*
+                            ))
    (color :initarg :color :accessor color
-	:type list
-	:initform nil
-	:metadata (:sync t
-			 :scaled t
-			 :rtype "Color"
-                         :atype "bqplot.ColorAxis"
-                         ;*array-serialization*
-			 ))
+          :type list
+          :initform nil
+          :metadata (:sync t
+                           :scaled t
+                           :rtype "Color"
+                           :atype "bqplot.ColorAxis"
+                                        ;*array-serialization*
+                           ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
-		   :type list
-		   :initform (list (cons "row" (list (cons "orientation" "vertical")
-						     (cons "dimension" "y")))
-				   (cons "column" (list (cons "orientation" "horizontal")
-						     (cons "dimension" "x")))
-				   (cons "color" (list (cons "dimension" "color"))))
-		   :metadata (:sync t
-				    :json-name "scales_metadata"))
+		    :type list
+		    :initform (list (cons "row" (list (cons "orientation" "vertical")
+						      (cons "dimension" "y")))
+				    (cons "column" (list (cons "orientation" "horizontal")
+							 (cons "dimension" "x")))
+				    (cons "color" (list (cons "dimension" "color"))))
+		    :metadata (:sync t
+				     :json-name "scales_metadata"))
 
    ;; need to add the default to row and colun 
    (row-align :initarg :row-align :accessor row-align
@@ -1291,10 +1320,10 @@
 	      :metadata (:sync t
 			       :json-name "row_align"))
    (column-align :initarg :column-align :accessor column-align
-	      :type cljw:unicode
-	      :initform (cljw:unicode "start")
-	      :metadata (:sync t
-			       :json-name "column_align"))
+                 :type cljw:unicode
+                 :initform (cljw:unicode "start")
+                 :metadata (:sync t
+                                  :json-name "column_align"))
    (null-color :initarg :null-color :accessor null-color
 	       :type cljw:unicode
 	       :initform (cljw:unicode "black")
@@ -1316,17 +1345,17 @@
 		 :initform  (list (cons "fill" "white") (cons "stroke" "blue"))
 		 :metadata (:sync t
 				  :json-name "anchor_style")))
-   
- (:default-initargs
+  
+  (:default-initargs
    :view-name (cljw:unicode "GridHeatMap")
     :model-name (cljw:unicode "GridHeatMapModel"))
- (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass heat-map (mark)
-   ;; TODO row col and color need the .valid to be looked at 
+  ;; TODO row col and color need the .valid to be looked at 
   ((x :initarg :x :accessor x
-	:type list
-	:initform nil
+	:type vector
+	:initform #()
 	:metadata (:sync t
 			 :json-name "x"
 			 :scaled t
@@ -1335,8 +1364,8 @@
                          ;*array-serialization*
 			 ))
    (y :initarg :y :accessor y
-	:type list
-	:initform nil
+	:type vector
+	:initform #()
 	:metadata (:sync t
 			 :json-name "y"
 			 :scaled t
@@ -1355,25 +1384,25 @@
                          ;*array-serialization*
 			 ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
-		   :type list
-		   :initform (list (cons "x" (list (cons "orientation" "horizontal")
-						     (cons "dimension" "x")))
-				   (cons "y" (list (cons "orientation" "vertical")
-						     (cons "dimension" "y")))
-				   (cons "color" (list (cons "dimension" "color"))))
-		   :metadata (:sync t
-				    :json-name "scales_metadata"))
+		    :type list
+		    :initform (list (cons "x" (list (cons "orientation" "horizontal")
+						    (cons "dimension" "x")))
+				    (cons "y" (list (cons "orientation" "vertical")
+						    (cons "dimension" "y")))
+				    (cons "color" (list (cons "dimension" "color"))))
+		    :metadata (:sync t
+				     :json-name "scales_metadata"))
    (null-color :initarg :null-color :accessor null-color
 	       :type cljw:unicode
 	       :initform (cljw:unicode "black")
 	       :metadata (:sync t
 				:json-name "null_color")))
-   ;;TODO THE INIT ARG
+  ;;TODO THE INIT ARG
 
-    (:default-initargs
+  (:default-initargs
    :view-name (cljw:unicode "HeatMap")
     :model-name (cljw:unicode "HeatMapModel"))
-    (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass graph (mark)
   ((charge :accessor charge
@@ -1391,11 +1420,11 @@
 	      :initform nil
 	      :metadata (:sync t
 			       :json-name "node_data"))
-    (link-data :accessor link-data
-	       :type list
-	       :initform nil
-	       :metadata (:sync t
-				:json-name "link_data"))
+   (link-data :accessor link-data
+	      :type list
+	      :initform nil
+	      :metadata (:sync t
+			       :json-name "link_data"))
    (link-matrix :accessor link-matrix
 		:type list
 		:initform nil
@@ -1434,8 +1463,8 @@
 				     :json-name "highlight_links"))
     ;; TODO row col and color linkcolor  need the .valid to be looked at 
   (x :accessor x
-	:type list
-	:initform nil
+	:type vector
+	:initform #()
 	:metadata (:sync t
 			 :json-name "x"
 			 :scaled t
@@ -1444,8 +1473,8 @@
                          ;*array-serialization*
 			 ))
    (y :accessor y
-	:type list
-	:initform nil
+	:type vector
+	:initform #()
 	:metadata (:sync t
 			 :json-name "y"
 			 :scaled t
@@ -1473,35 +1502,35 @@
 				;*array-serialization*
 				))
    (hovered-style :accessor hovered-style
-		:type list
-		:initform nil
-		:metadata (:sync t
-				 :json-name "hovered_style"))
-    (unhovered-style :accessor unhovered-style
-		:type list
-		:initform nil
-		:metadata (:sync t
-				 :json-name "unhovered_style"))
+		  :type list
+		  :initform nil
+		  :metadata (:sync t
+				   :json-name "hovered_style"))
+   (unhovered-style :accessor unhovered-style
+		    :type list
+		    :initform nil
+		    :metadata (:sync t
+				     :json-name "unhovered_style"))
    (hovered-point :accessor hovered-point
-		:type int
-		:initform nil 
-		:metadata (:sync t
-				 :json-name "hovered_point"))
+		  :type int
+		  :initform nil 
+		  :metadata (:sync t
+				   :json-name "hovered_point"))
    (scales-metadata :accessor scales-metadata
-		   :type list
-		   :initform (list (cons "x" (list (cons "orientation" "horizontal")
-						   (cons "dimension" "x")))
-				   (cons "y" (list (cons "orientation" "vertical")
-						   (cons "dimension" "y")))
-				   (cons "color" (list (cons "dimension" "color")))
-				   (cons "link-color" (list (cons "dimension" "link-color"))))
-		   :metadata (:sync t
-				    :json-name "scales_metadata")))
-   
-    (:default-initargs
+		    :type list
+		    :initform (list (cons "x" (list (cons "orientation" "horizontal")
+						    (cons "dimension" "x")))
+				    (cons "y" (list (cons "orientation" "vertical")
+						    (cons "dimension" "y")))
+				    (cons "color" (list (cons "dimension" "color")))
+				    (cons "link-color" (list (cons "dimension" "link-color"))))
+		    :metadata (:sync t
+				     :json-name "scales_metadata")))
+  
+  (:default-initargs
    :view-name (cljw:unicode "GraphModel")
     :model-name (cljw:unicode "Graph"))
-    (:metaclass traitlets:traitlet-class))
+  (:metaclass traitlets:traitlet-class))
 
 (defclass image (mark)
   ;;need to check the valid part 
@@ -1532,32 +1561,7 @@
 		   :metadata (:sync t
 				    :json-name "scales_metadata"))) 
    ;;need to add the image slot 
-  
   (:default-initargs
    :view-name (cljw:unicode "Image")
     :model-name (cljw:unicode "ImageModel"))
     (:metaclass traitlets:traitlet-class))
-
-
-
-
-
-
-
-
-
-
-
-
-		
-				       
-
-
-
-
-
-			     
-	       
-				     
-		    
-	      

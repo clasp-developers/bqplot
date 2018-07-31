@@ -45,7 +45,7 @@
 	  :initform (make-instance 'scale)
 	  :metadata (:sync t
 			   :json-name "scale"
-                                        ;,@cljw:*widget-serialization*
+                                        ;FIXME ,@cljw:*widget-serialization*
                            ))
    (num-ticks :accessor num-ticks
 	      :type integer
@@ -57,14 +57,14 @@
 		:initform nil
 		:metadata (:sync t
 				 :json-name "tick_values"
-				 ;*array-serialization*
+				 ;; FIXME *array-serialization*
 				 ))
    (offset :accessor offset
 	   :type list
 	   :initform ()
 	   :metadata (:sync t
 			    :json-name "offset"
-			    ;*array-serialization*
+			    ;; FIXME *array-serialization*
 			    ))
    (label-location :accessor label-location
 		   :type unicode 
