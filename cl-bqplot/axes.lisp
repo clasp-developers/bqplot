@@ -23,7 +23,7 @@
 				 :json-name "orientation"))   
    (side :initarg :side :accessor side
 	 :type unicode
-	 :initform (cljw:unicode "")
+	 :initform :null
 	 :metadata (:sync t
 			  :json-name "side"))
    (label-axes :accessor label-axes
@@ -38,30 +38,30 @@
 				:json-name "grid_lines"))
    (tick-format :accessor tick-format
 		:type unicode
-		:initform (cljw:unicode "")
+		:initform :null
 		:metadata (:sync t
 				 :jsone-name "tick_format"))
    (scale :initarg :scale :accessor scale
 	  :initform (make-instance 'scale)
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "scale"
                                         ;,@cljw:*widget-serialization*
                            ))
    (num-ticks :accessor num-ticks
 	      :type integer
-	      :initform nil
+	      :initform :null
 	      :metadata (:sync t
 			       :json-name "num_ticks"))
    (tick-values :accessor tick-values
 		:type list
-		:initform nil
+		:initform (list (cons "type" :null)(cons "values" :null))
 		:metadata (:sync t
 				 :json-name "tick_values"
 				 ;*array-serialization*
 				 ))
    (offset :accessor offset
 	   :type list
-	   :initform ()
+	   :initform nil
 	   :metadata (:sync t
 			    :json-name "offset"
 			    ;*array-serialization*
@@ -73,22 +73,22 @@
 				    :json-name "label_location"))
    (label-color :accessor label-color
 		:type unicode
-		:initform (cljw:unicode "")
+		:initform :null
 		:metadata (:sync t
 				 :json-name "label_color"))
    (grid-color :accessor grid-color
 	       :type unicode
-	       :initform (cljw:unicode "")
+	       :initform :null
 	       :metadata (:sync t
 				:json-name "grid_color"))
    (color :accessor color
 	  :type unicode
-	  :initform (cljw:unicode "")
+	  :initform :null
 	  :metadata (:sync t
 			   :json-name "color"))
    (label-offset :accessor label-offset
 		 :type unicode
-		 :initform (cljw:unicode "")
+		 :initform :null
 		 :metadata (:sync t
 				  :json-name "label_offset"))
    (visible :accessor visible
@@ -127,7 +127,7 @@
 			   :json-name "label"))
    (scale :accessor scale
 	  :initform (make-instance 'scale)
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "scale"
 					;,@cljw:*widget-serialization*
 			   )))
