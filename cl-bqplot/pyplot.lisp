@@ -335,12 +335,12 @@
 ;;;In python, the lambda list is def _mark_type(mark_type, options={}, axes_options={}, **kwargs.
 ;;;I'm going to get rid of the option optionals and just have a kwargs containing all the information.
 
-(defun %draw-mark (mark-type kwargs)
+(defun %draw-mark (mark-type &rest kwargs &key (options nil) (axes-options nil) &allow-other-keys)
   (let ((fig (getf kwargs :figure (current-figure)))
         (scales (getf kwargs :scales))
         (update-context (getf kwargs :update-context t))
         (cmap (getf kwargs :cmap))
-        (Options (getf kwargs :options))
+        (options (getf kwargs :options))
         (axes-options (getf kwargs :axes-options))
         (mark nil))
     (remf kwargs :fig)
@@ -352,7 +352,7 @@
       (if (assoc "color" options :test #'string=)
           (setf (cdr (assoc "color" options :test #'string=)) (list (cons 
     |#
-    (loop for name in (list "x" "y" "z")
+    (loop for name in (list "x" "y") ;removed "z" from the list
        do
          (let ((dimension (%get-attribute-dimension name (make-instance mark-type))))
            (cond ((not (getf kwargs (intern name "KEYWORD")))
@@ -364,8 +364,10 @@
                  ;;;Need to address (elif dimension not in _context['scales']: ...What is dimension here?
                  (t
                   (if (assoc name scales :test #'string=)
-                      (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
-                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
+                      (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=)))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales)))))
+         ;(setf scales (append (cons name (make-instance 'linear-scale)))
+         )
     (format t "~&MARK-TYPE: ~a~%" mark-type)
     (format t "~&KWARGS: ~a~%" kwargs)
                                         ;(setf mark (apply #'make-instance mark-type (list* :scales-mark scales kwargs)))
