@@ -352,7 +352,7 @@
       (if (assoc "color" options :test #'string=)
           (setf (cdr (assoc "color" options :test #'string=)) (list (cons 
     |#
-    (loop for name in (list "x" "y" "z")
+    (loop for name in (list "x" "y")
        do
          (let ((dimension (%get-attribute-dimension name (make-instance mark-type))))
            (cond ((not (getf kwargs (intern name "KEYWORD")))
