@@ -1,27 +1,27 @@
 (in-package :bqplot)
 
-(defclass market-map (domwidget)
+(defclass market-map (cljw:domwidget)
   ((names :initarg :name :accessor names
 	  :type list
-	  :initform nil
+	  :initform (list (cons "type" "float") (cons "values" #()))
 	  :metadata (:sync t
 			   :json-name "names"
 			   *array-serialization*))
    (groups :initarg :groups :accessor groups
 	   :type list
-	   :initform nil
+	   :initform (list (cons "type" "float") (cons "values" #()))
 	   :metadata (:sync t
 			    :json-name "groups"
 			    *array-serialization*))
    (display-text :initarg :display-text :accessor display-text
 		 :type list
-		 :initform nil
+		 :initform (list (cons "type" :null) (cons "values" :null))
 		 :metadata (:sync t
 				  :json-name "display_text"
 				  *array-serialization*))
    (ref-data :initarg :ref-data :accessor ref-data
-	     :type list
-	     :initform nil
+	    ; :type list
+	     :initform :null
 	     :metadata (:sync t
 			      :json-name "ref_data"
 			      *dataframe-serialization*))
@@ -31,13 +31,13 @@
 	  :metadata (:sync t
 			   :json-name "title"))
    (tooltip-fields :initarg :tooltip-fields :accessor tooltip-fields
-		   :type list
-		   :initform nil
+		   :type vector
+		   :initform #()
 		   :metadata (:sync t
 				    :json-name "tooltip_fields"))
    (tooltip-formats :initarg :tooltip-formats :accessor tooltip-formats
-		    :type list
-		    :initform nil
+		    :type vector 
+		    :initform #()
 		    :metadata (:sync t
 				     :json-name "tooltip_formats"))
    (show-groups :initarg :show-groups :accessor show-groups
@@ -47,12 +47,12 @@
 				 :json-name "show_groups"))
    (cols :initarg :cols :accessor cols
 	 :type integer
-	 :initform nil
+	 :initform 0
 	 :metadata (:sync t
 			  :json-name "cols"))
    (rows :initarg :rows :accessor rows
 	 :type integer
-	 :initform nil
+	 :initform 0
 	 :metadata (:sync t
 			  :json-name "row"))
    (row-groups :initarg :row-groups :accessor row-groups
@@ -72,14 +72,14 @@
 			   :json-name "scales"))
 			   ;,@cljw:*widget-serialization*))
    (marketmap-axes :initarg :marketmap-axes :accessor marketmap-axes
-	 :type list
-	 :initform nil
+	 :type vector
+	 :initform #()
 	 :metadata (:sync t
 			  :json-name "axes"))
 			  ;,@cljw:*widget-serialization*))
    (color :initarg :color :accessor color
 	  :type list
-	  :initform nil
+	  :initform  (list (cons "type" "float") (cons "values" #()))
 	  :metadata (:sync t
 			   :json-name "color"
 					;,@cljw:*widget-serialization*
@@ -123,7 +123,7 @@
 		    :type unicode
 		    :initform (cljw:unicode "dodgerblue")
 		    :metadata (:sync t
-				     :json-name "slected_stroke"))
+				     :json-name "selected_stroke"))
    (hovered-stroke :initarg :hovered-stroke :accessor hovered-stroke
 		   :type unicode
 		   :initform (cljw:unicode "orangered")
@@ -140,8 +140,8 @@
 		:metadata (:sync t
 			         :json-name "title_style"))
    (selected :initarg :selected :accessor selected
-	     :type list
-	     :initform nil
+	     :type vector 
+	     :initform #()
 	     :metadata (:sync t
 			      :json-name "selected"))
    (enable-hover :initarg :enable-hover :accessor enable-hover
@@ -155,7 +155,7 @@
 		  :metadata (:sync t
 				  :json-name "enable_select"))
    (tooltip-widget :initarg :tooltip-widget :accessor tooltip-widget
-		   :initform (make-instance 'domwidget)
+		   :initform :null
 		   :metadata (:sync t
 				    :json-name "tooltip_widget")))
 				    ;,@cljw:*widget-serialization*)))
@@ -172,8 +172,6 @@
 ;TODO def on_hover def _handle_custom_msgs def _compare
 
 
-
-;;;is this (cons "top" 50) to same as top = 50 
 (defclass square-market-map (market-map)
   ((margin :accessor margin
 	   :type list
