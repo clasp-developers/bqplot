@@ -839,8 +839,7 @@ def scatter(x, y, **kwargs):
 
 @_process_data()
 def hist(sample, options={}, **kwargs):
-    """Draw a histogram in the current context figure.
-
+    """Draw a histogram in the current context figur
     Parameters
     ----------
     sample: numpy.ndarray, 1d
