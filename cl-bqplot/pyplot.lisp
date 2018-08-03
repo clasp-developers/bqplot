@@ -335,7 +335,7 @@
 ;;;In python, the lambda list is def _mark_type(mark_type, options={}, axes_options={}, **kwargs.
 ;;;I'm going to get rid of the option optionals and just have a kwargs containing all the information.
 
-(defun %draw-mark (mark-type kwargs)
+(defun %draw-mark (mark-type &rest kwargs &key &allow-other-keys)
   (let ((fig (getf kwargs :figure (current-figure)))
         (scales (getf kwargs :scales))
         (update-context (getf kwargs :update-context t))

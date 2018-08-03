@@ -1,6 +1,6 @@
 (in-package :bqplot)
 
-(defclass scale (widget)
+(defclass scale (cljw:widget)
   ((scale-types :accessor scale-types
                 :initform (list (cons "bqplot.mercator" (find-class 'mercator))
 				(cons "bqplot.albers" (find-class 'albers))

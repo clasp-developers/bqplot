@@ -1,6 +1,6 @@
 (in-package :bqplot)
 
-(defclass tooltip (domwidget)
+(defclass tooltip (cljw:domwidget)
   ((fields :accessor fields
 	   :type list
 	   :initform nil
@@ -20,7 +20,8 @@
 	   :type list
 	   :initform nil
 	   :metadata (:sync t
-			    :json-name "labels")))
+                      :json-name "labels")))
+  
    (:default-initargs
     :view-name (cljw:unicode "Tooltip")
      :model-name (cljw:unicode "TooltipModel")
@@ -29,5 +30,3 @@
      :view-module-version *frontend-version*
      :model-module-version *frontend-version*)
    (:metaclass traitlets:traitlet-class))
-
-		

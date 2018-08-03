@@ -1,6 +1,6 @@
 (in-package :bqplot)
 
-(defclass market-map (domwidget)
+(defclass market-map (cljw:domwidget)
   ((names :initarg :name :accessor names
 	  :type list
 	  :initform nil
@@ -155,7 +155,7 @@
 		  :metadata (:sync t
 				  :json-name "enable_select"))
    (tooltip-widget :initarg :tooltip-widget :accessor tooltip-widget
-		   :initform (make-instance 'domwidget)
+		   :initform (make-instance 'cljw:domwidget)
 		   :metadata (:sync t
 				    :json-name "tooltip_widget")))
 				    ;,@cljw:*widget-serialization*)))

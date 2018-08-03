@@ -2,7 +2,7 @@
 
 ;TODO: def register_interaction and def wrap
 
-(defclass interaction (widget)
+(defclass interaction (cljw:widget)
   ((types :accessor types
 	  :type list
 	  :initform nil))
@@ -60,7 +60,8 @@
 				:json-name "allow_zoom"))
    (scales-interacts :initarg :scales-interacts :accessor scales-interacts
 	   :type list
-	   :initform (make-instance 'scale)
+           :initform nil
+         ;;  (make-instance 'scale)
          ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
 	   :metadata (:sync t
 			    :json-name "scales")))
