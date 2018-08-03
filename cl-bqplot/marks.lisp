@@ -266,11 +266,7 @@
 			  :json-name "fill"
 			  :display-name "Fill"))
    (marker :accessor marker
-<<<<<<< HEAD
 	   :type cljw:unicode
-=======
-	   :type cljw:unicode
->>>>>>> 051673a528856c08ef5db84bde4fe47aba5b3505
 	   :initform :null
 	   :metadata (:sync t
 			    :json-name "marker"
