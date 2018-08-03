@@ -1,13 +1,12 @@
 (in-package :bqplot)
 
-(defclass mark (cljw:widget)
+(defclass mark (widget)
   ((mark-type :initarg :mark-type :accessor mark-type
                :type cljw:dict
                :initform nil)
    (scales-mark :initarg :scales-mark :accessor scales-mark
 	  ;; :type cljw:dict
-	   :initform nil ; Contents have to be of type 'scale
-	   ;:validator %validate-scales
+	   :initform (list (cons "x" (make-instance 'linear-scale :allow-padding nil :max 1.0 :min 0.0))(cons "y" (make-instance 'linear-scale :allow-padding nil :max 1.0 :min 0.0)))
 	   :metadata (:sync t
                       :json-name "scales"
                                         ;,@cljw:*widget-serialization*
@@ -267,7 +266,11 @@
 			  :json-name "fill"
 			  :display-name "Fill"))
    (marker :accessor marker
+<<<<<<< HEAD
 	   :type cljw:unicode
+=======
+	   :type cljw:unicode
+>>>>>>> 051673a528856c08ef5db84bde4fe47aba5b3505
 	   :initform :null
 	   :metadata (:sync t
 			    :json-name "marker"
@@ -391,7 +394,7 @@
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :initarg :color :accessor color
 	  :type list
-	  :initform nil
+	  :initform  (list (cons "type" :null) (cons "values" :null))
 	  :metadata (:sync t
 			   :json-name "color"
 			   :scaled t
@@ -411,7 +414,7 @@
 			      ))
    (size :initarg :size :accessor size
 	 :type list
-	 :initform nil
+	 :initform  (list (cons "type" :null) (cons "values" :null))
 	 :metadata (:sync t
 			  :json-name "size"
 			  :scaled t
@@ -499,7 +502,7 @@
 	   :initform (cljw:unicode "Scatter"))
    (skew :accessor skew
 	 :type list
-	 :initform nil
+	 :initform  (list (cons "type" :null) (cons "values" :null))
 	 :metadata (:sync t
 			  :json-name "skew"
 			  :scaled t
@@ -537,8 +540,8 @@
 ;TODO: def some methods (default colors)
    
    (stroke :accessor stroke
-	   :type cljw:unicode
-	   :initform (cljw:unicode "")
+	 ;  :type cljw:unicode
+	   :initform :null
 	   :metadata (:sync t
 			    :json-name "stroke"
 			    :display-name "Stroke color"))
@@ -562,7 +565,7 @@
 				  :display-name "Display names"))
    (names :accessor names
 	  :type list
-	  :initform nil
+	  :initform  (list (cons "type" :null) (cons "values" :null))
 	  :metadata (:sync t
 			   :json-name "names"
 			   ;*array-serialization*
