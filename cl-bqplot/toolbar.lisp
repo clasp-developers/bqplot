@@ -10,11 +10,11 @@
 			    ))
    (%panning :accessor panning
 	     :type bool
-	     :initform :true
+	     :initform :false ;;this was intially true but changed to false to match json 
 	     :metadata (:sync t
 			      :json-name "_panning"))
    (%panzoom :accessor panzoom
-	     :initform (make-instance 'pan-zoom)
+	     :initform :null 
 	     :metadata (:sync t
 			      :json-name "_panzoom"
 					;*widget serialization*

@@ -367,7 +367,7 @@
                   (if (assoc name scales :test #'string=)
                       (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=)))
                       (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales)))))
-         ;(setf scales (append (cons name (make-instance 'linear-scale)))
+         ;(setf scales (cons name (make-instance 'linear-scale)))
          )
     (format t "~&MARK-TYPE: ~a~%" mark-type)
     (format t "~&KWARGS: ~a~%" kwargs)
