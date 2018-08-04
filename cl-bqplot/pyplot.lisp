@@ -163,7 +163,7 @@
                ;(%apply-properties axis (getf options name nil)) THIS NEEDS TO WORK
                (push (cons name axis) axes))
              (progn
-               (setf key (traitlets:traitlet-metadata (find-class 'mark) (intern name "KEYWORD") :atype))
+               (setf key (traitlets:traitlet-metadata 'mark (intern name "KEYWORD") :atype))
                (when key
                  (setf axis-type (cdr (assoc key (axis-types (make-instance 'axes) :test #'string=)))
                        axis (axis-type :scale (cdr (assoc name scales :test #'string=)) axis-args) ;;;How to handle **Axis_args
@@ -352,23 +352,38 @@
       (if (assoc "color" options :test #'string=)
           (setf (cdr (assoc "color" options :test #'string=)) (list (cons 
     |#
-    (loop for name in (list "x" "y")
+    ;;;This loop is mimicking Python's mark_type.class_trait_names(scaled=True):
+    (loop for (name . symbol)  in (list (cons "x" 'bqplot::x) (cons "y" 'bqplot::y) (cons "color" 'bqplot::color))
        do
          (let ((dimension (%get-attribute-dimension name (make-instance mark-type))))
+           ;;;This cond is the entire body of the loop. It consists of 3 conditions, and then a final 'else':
+           ;;;First, we check to see if name is not contained in kwargs.
+           ;;;If it is not (it is likely that color will not be in kwargs, for instance), then we do nothing.
+           ;;;If name is in kwargs, then we check to see if name is in scales (scales is the value of :scales in kwargs, or nil if not present
+           ;;;If name is not in scales, then we check to see if dimension is not in %context['scales']. 
            (cond ((not (getf kwargs (intern name "KEYWORD")))
                   (values))
                  ((getf scales (intern name "KEYWORD"))
                   (when update-context
                     (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=))))
-                  (print "name not in kwargs,  name is in scales and update-context exist"))
-                 ;;;Need to address (elif dimension not in _context['scales']: ...What is dimension here?
+                 ((not (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))
+                  (let* ((traitlet (symbol mark-type))
+                         (rtype (traitlets:traitlet-metadata mark-type symbol :rtype))
+                         ;;(dtype (validate the datatype is correct)
+                         (dummy-scale (make-instance 'scale))
+                         (compat-scale-types (loop for (str . instance) in (scale-types dummy-scale) when (string= rtype (rtype instance) collect instance)))
+                         (sorted-scales (stable-sort compat-scale-types #'(lambda (x y) (< (precedence x) (precedence y))))))
+                    (if (assoc name scales :test #'string=)
+                        (setf (cdr (assoc name scales :test #'string=) (last sorted-scales)))
+                        (push (cons name (last sorted-scales)) scales))
+                    (when update-context
+                      (if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
+                          (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string)))
+                          (push (cons dimension (cdr (assoc name scales :test #'string=))) (cdr (assoc "scales" %context :test #'string=)))))))
                  (t
                   (if (assoc name scales :test #'string=)
                       (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
-                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
-    (format t "~&MARK-TYPE: ~a~%" mark-type)
-    (format t "~&KWARGS: ~a~%" kwargs)
-                                        ;(setf mark (apply #'make-instance mark-type (list* :scales-mark scales kwargs)))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales)))))))
     (setf kwargs (append kwargs (list :scales-mark scales))
           mark (apply #'make-instance mark-type kwargs))
     (setf 
@@ -376,6 +391,9 @@
           (marks (cdr (assoc "1" fig :test #'string=))) (append (list (marks (cdr (assoc "1" fig :test #'string=)))) (list mark)))
     (format t "~&MARK: ~a~%" mark)
     (format t "~&AXES-OPTIONS: ~a~%" axes-options)
+    (if (assoc "last-mark" %context :test #'string=)
+        (setf (cdr (assoc "last-mark" %context :test #'string=)) mark)
+        (push (cons "last-mark" mark) %context))
     (axes :mark mark :options axes-options)
     (print "Done with %draw-mark")
     mark))
