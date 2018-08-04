@@ -2,7 +2,7 @@
 
 (defclass scale (widget)
   ((scale-types :accessor scale-types
-                :initform (list (cons "bqplot.mercator" (find-class 'mercator))
+                :initform #|(list (cons "bqplot.mercator" (find-class 'mercator))
 				(cons "bqplot.albers" (find-class 'albers))
 				(cons "bqplot.albers-usa" (find-class 'albers-usa))
 				(cons "bqplot.equi-rectangular" (find-class 'equi-rectangular))
@@ -16,8 +16,24 @@
 				(cons "bqplot.color-scale" (find-class 'color-scale))
 				(cons "bqplot.date-color-scale" (find-class 'date-color-scale))
 				(cons "bqplot.ordinal-color-scale" (find-class 'ordinal-color-scale))
-				) ;;;TODO: Fill in class names
-                )
+                )|#
+                (list (cons "bqplot.mercator" (make-instance 'mercator))
+                      (cons "bqplot.albers" (make-instance 'albers))
+                      (cons "bqplot.albers-usa" (make-instance 'albers-usa))
+                      (cons "bqplot.equi-rectangular" (make-instance 'equi-rectangular))
+                      (cons "bqplot.orthographic" (make-instance 'orthographic))
+                      (cons "bqplot.gnomonic" (make-instance 'gnomonic))
+                      (cons "bqplot.stereographic" (make-instance 'stereographic))
+                      (cons "bqplot.linear-scale" (make-instance 'linear-scale))
+                      (cons "bqplot.log-scale" (make-instance 'log-scale))
+                      (cons "bqplot.date-scale" (make-instance 'date-scale))
+                      (cons "bqplot.ordinal-scale" (make-instance 'ordinal-scale))
+                      (cons "bqplot.color-scale" (make-instance 'color-scale))
+                      (cons "bqplot.date-color-scale" (make-instance 'date-color-scale))
+                      (cons "bqplot.ordinal-color-scale" (make-instance 'ordinal-color-scale))
+                      )
+				 ;;;TODO: Fill in class names
+                      )
    (precedence :accessor precedence
                :type integer
 	       :initform 1)
