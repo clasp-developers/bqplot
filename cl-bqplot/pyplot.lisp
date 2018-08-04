@@ -365,14 +365,14 @@
                   (values))
                  ((getf scales (intern name "KEYWORD"))
                   (when update-context
-                    (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=))))
+                    (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=)))))
                  ((not (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))
                   (let* ((traitlet (symbol mark-type))
                          (rtype (traitlets:traitlet-metadata mark-type symbol :rtype))
                          ;;(dtype (validate the datatype is correct)
                          (dummy-scale (make-instance 'scale))
                          (compat-scale-types (loop for (str . instance) in (scale-types dummy-scale) when (string= rtype (rtype instance) collect instance)))
-                         (sorted-scales (stable-sort compat-scale-types #'(lambda (x y) (< (precedence x) (precedence y))))))
+                         (sorted-scales (stable-sort compat-scale-types #'< :key #'precedence)))
                     (if (assoc name scales :test #'string=)
                         (setf (cdr (assoc name scales :test #'string=) (last sorted-scales)))
                         (push (cons name (last sorted-scales)) scales))
@@ -480,7 +480,7 @@
   (let ((marker-str (getf kwargs :marker-str)))
     (unless x
       (setf x (%infer-x-for-line y)))
-    (setf kwargs (append kwargs (list :x x :y y)))
+    ;(setf kwargs (append kwargs (list :x x :y y)))
     (if  marker-str
          (progn
            (strip marker-str)
