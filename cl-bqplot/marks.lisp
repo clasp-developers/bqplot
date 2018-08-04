@@ -1111,7 +1111,7 @@
 			   :json-name color
 			   :scaled t
 			   :rtype "Color"
-			   :atype = "bqplot.ColorAxis"
+			   :atype  "bqplot.ColorAxis"
 			   *array-serializaion*))
 
 
