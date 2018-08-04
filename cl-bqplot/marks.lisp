@@ -1045,7 +1045,7 @@
 	   :initform nil 
 	   :metadata (:sync t
 			    :json-name "sizes"
-			    :rtype "number"
+			    :rtype "Number"
 			    ;*array-serializaion*
 			    ))
     (color :accessor color
@@ -1102,7 +1102,7 @@
 	  :initform nil 
 	  :metadata (:sync t
 			   :json-name "sizes"
-			   :rtype "number"
+			   :rtype "Number"
 			   *array-serializaion*))
    (color :accessor color
 	  :type list
@@ -1379,8 +1379,8 @@
 	:metadata (:sync t
 			 :json-name color
 			 :scaled t
-			 :rtype="Color"
-                         :atype="bqplot.ColorAxis"
+			 :rtype "Color"
+                         :atype "bqplot.ColorAxis"
                          ;*array-serialization*
 			 ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
