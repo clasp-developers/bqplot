@@ -371,10 +371,10 @@
                          (rtype (traitlets:traitlet-metadata mark-type symbol :rtype))
                          ;;(dtype (validate the datatype is correct)
                          (dummy-scale (make-instance 'scale))
-                         (compat-scale-types (loop for (str . instance) in (scale-types dummy-scale) when (string= rtype (rtype instance) collect instance)))
+                         (compat-scale-types (loop for (str . instance) in (scale-types dummy-scale) when (string= rtype (rtype instance)) collect instance))
                          (sorted-scales (stable-sort compat-scale-types #'< :key #'precedence)))
                     (if (assoc name scales :test #'string=)
-                        (setf (cdr (assoc name scales :test #'string=) (last sorted-scales)))
+                        (setf (cdr (assoc name scales :test #'string=)) (last sorted-scales))
                         (push (cons name (last sorted-scales)) scales))
                     (when update-context
                       (if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
@@ -383,7 +383,7 @@
                  (t
                   (if (assoc name scales :test #'string=)
                       (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
-                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales)))))))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
     (setf kwargs (append kwargs (list :scales-mark scales))
           mark (apply #'make-instance mark-type kwargs))
     (if (assoc "last-mark" %context :test #'string=)
