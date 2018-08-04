@@ -3,7 +3,7 @@
 
 ;; FIXME -widget-register
 (defclass toolbar (cljw:domwidget)
-  ((figure :accessor figure
+  ((toolbar-figure :accessor toolbar-figure
 	   :initform (make-instance 'figure)
 	   :metadata (:sync t
 			       :json-name "figure"
