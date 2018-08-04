@@ -386,14 +386,10 @@
                       (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales)))))))
     (setf kwargs (append kwargs (list :scales-mark scales))
           mark (apply #'make-instance mark-type kwargs))
-    (setf 
-          (cdr (assoc "last_mark" %context :test #'string=)) mark
-          (marks (cdr (assoc "1" fig :test #'string=))) (append (list (marks (cdr (assoc "1" fig :test #'string=)))) (list mark)))
-    (format t "~&MARK: ~a~%" mark)
-    (format t "~&AXES-OPTIONS: ~a~%" axes-options)
     (if (assoc "last-mark" %context :test #'string=)
         (setf (cdr (assoc "last-mark" %context :test #'string=)) mark)
         (push (cons "last-mark" mark) %context))
+    (setf (marks fig) (append (marks fig) (list mark)))
     (axes :mark mark :options axes-options)
     (print "Done with %draw-mark")
     mark))
