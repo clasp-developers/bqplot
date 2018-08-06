@@ -1,6 +1,6 @@
 (in-package :bqplot)
 
-(defclass mark (widget)
+(defclass mark (cljw:widget)
   ((mark-type :initarg :mark-type :accessor mark-type
                :type cljw:dict
                :initform nil)
@@ -23,7 +23,7 @@
 		    :metadata (:sync t
 				     :json-name "preserve_domain"))
    (display-legend :initarg :display-legend :accessor display-legend
-		   :type bool
+		   :type cljw:bool
 		   :initform :false
 		   :metadata (:sync t
 				    :json-name "display_legend"
@@ -35,12 +35,12 @@
 			    :json-name "labels"
 			    :display-name "Labels"))
    (apply-clip :initarg :apply-clip :accessor apply-clip
-	       :type bool
+	       :type cljw:bool
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "apply_clip"))
    (visible :initarg :visible :accessor visible
-	    :type bool
+	    :type cljw:bool
 	    :initform :true
 	    :metadata (:sync t
 			     :json-name "visible"))
@@ -60,7 +60,7 @@
 	     :metadata (:sync t
 			      :json-name "selected"))
    (enable-hover :initarg :enable-hover :accessor enable-hover
-		 :type bool
+		 :type cljw:bool
 		 :initform :true
 		 :metadata (:sync t
 				  :json-name "enable_hover"))
@@ -166,7 +166,7 @@
 	:initform "Lines")
   (x :initarg :x :accessor x
       :type vector
-      :initform nil
+      :initform #()
       :metadata (:sync t
 		       :json-name "x"
 		       :scaled t
@@ -177,7 +177,7 @@
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :initarg :y :accessor y
       :type vector
-      :initform nil
+      :initform #()
       :metadata (:sync t
 		       :json-name "y"
 		       :scaled t
@@ -429,10 +429,10 @@
 						    (cons "dimension" "x")))
 				    (cons "y" (list (cons "orientation" "vertical")
 						    (cons "dimension" "y")))
-				    (cons "color" (cons "dimension" "color"))
-				    (cons "size" (cons "dimension" "size"))
-				    (cons "opacity" (cons "dimension" "opacity"))
-				    (cons "rotation" (cons "dimension" "rotation")))
+				    (cons "color" (list (cons "dimension" "color")))
+				    (cons "size" (list (cons "dimension" "size")))
+				    (cons "opacity" (list (cons "dimension" "opacity")))
+				    (cons "rotation" (list (cons "dimension" "rotation"))))
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
 					;TODO: default-opacities
@@ -447,7 +447,7 @@
 		    :metadata (:sync t
 				     :json-name "unhovered_style"))
    (hovered-point :initarg :hovered-point :accessor hovered-point
-		  :type int
+		  :type integer
 		  :initform nil
 		  :metadata (:sync t
 				   :json-name "hovered_point"))
@@ -519,11 +519,11 @@
 						    (cons "dimension" "x")))
 				    (cons "y" (list (cons "orientation" "vertical")
 						    (cons "dimension" "y")))
-				    (cons "color" (cons "dimension" "color"))
-				    (cons "size" (cons "dimension" "size"))
-				    (cons "opacity" (cons "dimension" "opacity"))
-				    (cons "rotation" (cons "dimension" "rotation"))
-				    (cons "skew" (cons "dimension" "skew")))
+				    (cons "color" (list (cons "dimension" "color")))
+				    (cons "size" (list (cons "dimension" "size")))
+				    (cons "opacity" (list (cons "dimension" "opacity")))
+				    (cons "rotation" (list (cons "dimension" "rotation")))
+				    (cons "skew" (list (cons "dimension" "skew"))))
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
 					;TODO: def some methods (default colors)
