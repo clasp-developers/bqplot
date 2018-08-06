@@ -6,7 +6,7 @@
                :initform nil)
    (scales-mark :initarg :scales-mark :accessor scales-mark
 	  ;; :type cljw:dict
-	   :initform (list (cons "x" (make-instance 'linear-scale :allow-padding nil :max 1.0 :min 0.0))(cons "y" (make-instance 'linear-scale :allow-padding nil :max 1.0 :min 0.0)))
+	   :initform :null 
 	   :metadata (:sync t
                       :json-name "scales"
                                         ;,@cljw:*widget-serialization*
