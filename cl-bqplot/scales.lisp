@@ -2,7 +2,7 @@
 
 (defclass scale (widget)
   ((scale-types :accessor scale-types
-                :initform #|(list (cons "bqplot.mercator" (find-class 'mercator))
+                :initform (list (cons "bqplot.mercator" (find-class 'mercator))
 				(cons "bqplot.albers" (find-class 'albers))
 				(cons "bqplot.albers-usa" (find-class 'albers-usa))
 				(cons "bqplot.equi-rectangular" (find-class 'equi-rectangular))
@@ -15,38 +15,21 @@
 				(cons "bqplot.ordinal-scale" (find-class 'ordinal-scale))
 				(cons "bqplot.color-scale" (find-class 'color-scale))
 				(cons "bqplot.date-color-scale" (find-class 'date-color-scale))
-				(cons "bqplot.ordinal-color-scale" (find-class 'ordinal-color-scale))
-                )|#
-                (list (cons "bqplot.mercator" (make-instance 'mercator))
-                      (cons "bqplot.albers" (make-instance 'albers))
-                      (cons "bqplot.albers-usa" (make-instance 'albers-usa))
-                      (cons "bqplot.equi-rectangular" (make-instance 'equi-rectangular))
-                      (cons "bqplot.orthographic" (make-instance 'orthographic))
-                      (cons "bqplot.gnomonic" (make-instance 'gnomonic))
-                      (cons "bqplot.stereographic" (make-instance 'stereographic))
-                      (cons "bqplot.linear-scale" (make-instance 'linear-scale))
-                      (cons "bqplot.log-scale" (make-instance 'log-scale))
-                      (cons "bqplot.date-scale" (make-instance 'date-scale))
-                      (cons "bqplot.ordinal-scale" (make-instance 'ordinal-scale))
-                      (cons "bqplot.color-scale" (make-instance 'color-scale))
-                      (cons "bqplot.date-color-scale" (make-instance 'date-color-scale))
-                      (cons "bqplot.ordinal-color-scale" (make-instance 'ordinal-color-scale))
-                      )
-				 ;;;TODO: Fill in class names
-                      )
+				(cons "bqplot.ordinal-color-scale" (find-class 'ordinal-color-scale)))
+                :allocation :class)            
    (precedence :accessor precedence
                :type integer
 	       :initform 1)
    (domain-class :accessor domain-class
                  :type float
-                 :initform nil)
+                 :initform 0.0)
    (reverse-scales :accessor reverse-scales
-            :type bool
+            :type cljw:bool
             :initform :false
             :metadata (:sync t
                              :json-name "reverse"))
    (allow-padding :initarg :allow-padding :accessor allow-padding
-		  :type bool
+		  :type cljw:bool
 		  :initform :true
 		  :metadata (:sync t
 				   :json-name "allow_padding")))
@@ -85,10 +68,12 @@
 	   :metadata (:sync t
 			    :json-name "rotate"))
    (r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "(Number, Number)"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "(Number, Number)")
+           ;;;:allocation :class
+           )
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	   :initform (cljw:unicode "numpy.number")) ;;;;TODO kevin has no idea whats going on 
   )
   (:default-initargs
@@ -123,10 +108,11 @@
 	       :metadata (:sync t
 				:json-name "precision"))
    (r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "(Number, Number)"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "(Number, Number)")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	   :initform (cljw:unicode "numpy.number")) ;;;;TODO kevin has no idea whats going on 
     )
   (:default-initargs
@@ -148,10 +134,11 @@
 				  :json-name "translate"))
   
    (r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "(Number, Number)"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "(Number, Number)")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	   :initform (cljw:unicode "numpy.number")) ;;;;TODO kevin has no idea whats going on 
    )
   
@@ -173,10 +160,11 @@
 	   :metadata (:sync t
 			    :json-name "center")) 
   (r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "(Number, Number)"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "(Number, Number)")
+           :allocation :class)
   (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
    (:default-initargs
    :view-name (cljw:unicode "EquiRectangular")
@@ -213,10 +201,11 @@
 	      :metadata (:sync t
 			       :json-name "precision"))
    (r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "(Number, Number)"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "(Number, Number)")
+           :allocation :class)
    (d-type :accessor d-type
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
   (:default-initargs
    :view-name (cljw:unicode "Orthographic")
@@ -254,10 +243,11 @@
 	       :metadata (:sync t
 				:json-name "precision"))
    (r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "(Number, Number)"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "(Number, Number)")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on 
  (:default-initargs
    :view-name (cljw:unicode "Gnomonic")
@@ -294,10 +284,11 @@
 	       :metadata (:sync t
 				:json-name "precision"))
    (r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "(Number, Number)"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "(Number, Number)")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	   :initform (cljw:unicode "numpy.number"))) ;;;;TODO kevin has no idea whats going on
  (:default-initargs
    :view-name (cljw:unicode "Stereographic")
@@ -307,13 +298,14 @@
 
 (defclass linear-scale (scale)
   ((precedence :accessor precedence
-               :type int
+               :type integer
 	       :initform 2)   
    (r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "Number"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "Number")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	    :initform (cljw:unicode "numpy.number"))
    (min :initarg :min :accessor min
 	:initform :null              
@@ -324,7 +316,7 @@
 	:metadata (:sync t
 			 :json-name "max"))
    (stabilized :accessor stabilized
-	       :type bool
+	       :type cljw:bool
 	       :initform :false
 	       :metadata (:sync t
 				:json-name "stabilized"))
@@ -343,7 +335,6 @@
    (:default-initargs
    :view-name (cljw:unicode "LinearScale")
      :model-name (cljw:unicode "LinearScaleModel"))
-   
   (:metaclass traitlets:traitlet-class))
 
 ;;;;Validator for min-range making sure its between [0,1]
@@ -364,10 +355,11 @@
 
 (defclass log-scale (scale) 
    ((r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "Number"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "Number")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	    :initform (cljw:unicode "numpy.number"))
    (min :accessor min
 	:type float  
@@ -378,32 +370,31 @@
 	:type float
 	:initform 1              ;;;;tentative 
 	:metadata (:sync t
-    :json-name "max")))
+                         :json-name "max")))
  (:default-initargs
    :view-name (cljw:unicode "LogScale")
    :model-name (cljw:unicode "LogScaleModel"))
- 
  (:metaclass traitlets:traitlet-class))
 
 
 (defclass date-scale (scale)
   ((r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "Number"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "Number")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	    :initform (cljw:unicode "numpy.datetime64"));;;;TODO is this right?
    (min :accessor min
-	:type date                                 ;;;;Not sure what to put for type 
+	;:type date                                 ;;;;Not sure what to put for type 
 	:initform nil
 	:metadata (:sync t
 			 :json-name "min"))
    (max :accessor max
-	:type date                                  ;;;Not sure what to put for type 
+	;:type date                                  ;;;Not sure what to put for type 
 	:initform nil
 	:metadata (:sync t
 			 :json-name "max")))
-
  (:default-initargs
    :view-name (cljw:unicode "DataScale")
     :model-name (cljw:unicode "DataScaleModel"))
@@ -411,10 +402,11 @@
 
 (defclass ordinal-scale (scale)
   ((r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "Number"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "Number")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	    :initform (cljw:unicode "numpy.str"))
    (domain :accessor domain
 	   :type list
@@ -429,13 +421,14 @@
 
 (defclass color-scale (scale)
   ((r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "Color"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "Color")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	    :initform (cljw:unicode "numpy.number"))
    (scale-type :accessor scale-type
-	       :type unicode
+	       :type cljw:unicode
 	       :initform (cljw:unicode "linear")
 	       :metadata (:sync t
 				:json-name "scale_type"))
@@ -460,23 +453,23 @@
 	:metadata (:sync t
 			 :json-name "mid"))
    (scheme :accessor scheme
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "RdYlGn")
 	   :metadata (:sync t
 			    :json-name "scheme")))
-    (:default-initargs
+  (:default-initargs
    :view-name (cljw:unicode "ColorScale")
-      :model-name (cljw:unicode "ColorScaleModel"))
+    :model-name (cljw:unicode "ColorScaleModel"))
     
     (:metaclass traitlets:traitlet-class))
 
 (defclass date-color-scale (color-scale)
   ((d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	    :initform (cljw:unicode "numpy.datetime64")) 
    ;;;;not sure about the domain-class
    (domain-class :accessor domain-class
-		 :type date
+		 ;:type date
 		 :initform nil) 
    (min :accessor min
 	:type float        
@@ -493,26 +486,25 @@
 	:initform .5     
 	:metadata (:sync t
 			 :json-name "mid")))
-   (:default-initargs
+  (:default-initargs
    :view-name (cljw:unicode "DateColorScale")
      :model-name (cljw:unicode "DataColorScaleModel"))
-   
    (:metaclass traitlets:traitlet-class))
 
 (defclass ordinal-color-scale (color-scale)
   ((r-type :accessor r-type
-	   :type unicode
-	   :initform (cljw:unicode "Color"))
+	   :type cljw:unicode
+	   :initform (cljw:unicode "Color")
+           :allocation :class)
    (d-type :accessor d-type
-	    :type unicode
+	    :type cljw:unicode
 	    :initform (cljw:unicode "numpy.str"))
    (domain :accessor domain
 	   :type list         
 	   :initform nil
 	   :metadata (:sync t
 			    :json-name "domain")))
-    (:default-initargs
+  (:default-initargs
    :view-name (cljw:unicode "DateColorScale")
-      :model-name (cljw:unicode "DataColorScaleModel"))
-    
-   (:metaclass traitlets:traitlet-class))
+    :model-name (cljw:unicode "DataColorScaleModel"))
+  (:metaclass traitlets:traitlet-class))
