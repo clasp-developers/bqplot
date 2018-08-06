@@ -357,8 +357,6 @@
    (:default-initargs
     :view-name (cljw:unicode "FlexLine")
      :model-name (cljw:unicode "FlexLineModel"))
-
-
   (:metaclass traitlets:traitlet-class))
 
 (defclass %scatter-base (mark)
@@ -476,7 +474,6 @@
 		   :initform :false
 		   :metadata (:sync t
 				    :json-name "update_on_move")))
-  
   (:metaclass traitlets:traitlet-class))
 
 
@@ -546,7 +543,7 @@
      :metadata (:sync t
 		      :json-name "default_skew"))
    (default-size :accessor default-size
-     :type int
+     :type integer
      :initform 64
      :metadata (:sync t
 		      :json-name "default_size"
@@ -609,7 +606,8 @@
 			      :json-name "y_offset"))
    (colors :accessor colors
 	   :type list
-	   :initform (list (cons "trait" (cljw:unicode ""))(cons "default-value" (cljw:unicode "#1f77b4")))
+	   :initform (list (cons "trait" (cljw:unicode ""))
+                           (cons "default-value" (cljw:unicode "#1f77b4")))
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
@@ -724,14 +722,13 @@
 			  :json-name "stroke"))
    (opacities :accessor opacities
 	 :type list
-	 :initform (list (cons "trait" 1.0))
+	 :initform (list (cons "trait" "1.0"))
 	 :metadata (:sync t
 			  :json-name "opacities"
 			  :display-name "Opacities")))
    (:default-initargs
        :view-name (cljw:unicode "Hist")
      :model-name (cljw:unicode "HistModel"))
-
   (:metaclass traitlets:traitlet-class))
 
 (defclass boxplot (mark)
@@ -766,31 +763,31 @@
                     :metadata (:sync t
                                      :json-name "scales_metadata"))
    (stroke :accessor stroke
-	   :type unicode
+	   :type cljw:unicode
 	   :initform (cljw:unicode "")
 	   :metadata (:sync t
 			    :json-name "stroke"
 			    :display-name "Stroke color"))
    (box-fill-color :accessor box-fill-color
-		   :type unicode
+		   :type cljw:unicode
 		   :initform (cljw:unicode "steelblue")
 		   :metadata (:sync t
 				    :json-name "box_fill_color"
 				    :display-name "Fill color for the box"))
    (outlier-fill-color :accessor outlier-fill-color
-		       :type unicode
+		       :type cljw:unicode
 		       :initform (cljw:unicode "gray")
 		       :metadata (:sync t
 					:json-name "outlier_fill_color"
 					:display-name "Outlier fill color"))
    (opacities :accessor opacities
               :type list
-              :initform (list (cons "trait" 1.0))
+              :initform (list (cons "trait" "1.0"))
               :metadata (:sync t
                                :json-name "opacities"
                                :display-name "Opacities"))
    (box-width :accessor box-width
-	      :type int
+	      :type integer
 	      :initform 30
 	      :metadata (:sync t
 			       :json-name "box_width"
@@ -877,7 +874,7 @@
 			  :json-name "base"))
    (opacities :accessor opacities
 	 :type list
-	 :initform (list (cons "trait" 1.0))
+	 :initform (list (cons "trait" "1.0"))
 	 :metadata (:sync t
 			  :json-name "opacities"
 			  :display-name "Opacities"))
@@ -895,7 +892,6 @@
   (:default-initargs
    :view-name (cljw:unicode "Bars")
     :model-name (cljw:unicode "BarsModel"))
-
   (:metaclass traitlets:traitlet-class))
 
 (defmethod %validate-orientation (object val)
@@ -920,7 +916,7 @@
    (sample :initarg :sample :accessor sample
 	   :type list
 	   :initform nil 
-	   :metadata (:sync f
+	   :metadata (:sync t
 			    :json-name "sample"
 			    :display-name "Sample"
 			    :rtype "Number"
@@ -961,7 +957,6 @@
    (name :accessor name
 	 :type cljw:unicode
 	 :initform (cljw:unicode "OHLC Chart"))
-
    (x :accessor x
       :type vector
       :initform #()
@@ -1016,7 +1011,7 @@
 			    :display-name "Colors"))
    (opacities :accessor opacities
 	      :type list
-	      :initform (list (cons "trait" 1.0))
+	      :initform (list (cons "trait" "1.0"))
 	      :metadata (:sync t
 			       :json-name "opacities"
 			       :display-name "Opacities"))
@@ -1032,7 +1027,7 @@
     :model-name (cljw:unicode "OHLCModel"))
   (:metaclass traitlets:traitlet-class))
 
-(defclass pie (mark)
+#|(defclass pie (mark)
    ((icon :accessor icon
 	   :type cljw:unicode
 	   :initform (cljw:unicode "fa-pie-chart"))
@@ -1058,10 +1053,7 @@
 			    :atype "bqplot.ColorAxis"
 			    ;*array-serializaion*
 			    ))
-
-
     ;;TODO ADD THE X AND Y FROM OTHER ATTRIBUTES
-    
     (scales-metadata :accessor scales-metadata
 		     :type list
 		     :initform (list (cons "colors" (list (cons "dimension" "color"))))
@@ -1085,7 +1077,7 @@
 			     :json-name "stroke"))
     (opacities :accessor opacities
 	       :type list
-	       :initform (list (cons "trait" 1.0))
+	       :initform (list (cons "trait" "1.0"))
 	       :metadata (:sync t
 				:json-name "opacities"
 				:display-name "Opacities"))
@@ -1096,62 +1088,6 @@
 	    :initform 180.0
 	    :metadata (:sync t
 			     :json-name "radius"))
-   ;;TODO DONT KNOW WHAT TO DO WITH THE VALID 
-   (sizes :accessor sizes
-	  :type list
-	  :initform nil 
-	  :metadata (:sync t
-			   :json-name "sizes"
-			   :rtype "Number"
-			   *array-serializaion*))
-   (color :accessor color
-	  :type list
-	  :initform nil
-	  :metadata (:sync t
-			   :json-name color
-			   :scaled t
-			   :rtype "Color"
-			   :atype  "bqplot.ColorAxis"
-			   *array-serializaion*))
-
-
-   ;;TODO ADD THE X AND Y FROM OTHER ATTRIBUTES
-   
-   (scales-metadata :accessor scales-metadata
-		    :type list
-		    :initform (list (cons "colors" (list (cons "dimension" "color"))))
-		    :metadata (:sync t
-				     :json-name "scales_metadata"))
-   (dsort :accessor dsort
-	  :type :bool
-	  :initform :false
-	  :metadata (:sync t
-			   :json-name "sort"))
-   (colors :accessor colors
-	   :type list
-	   :initform (list (cons 'trait (cljw:unicode ""))
-			   (cons 'default-value CATEGORY10))
-	   :metadata (:sync t
-			    :json-name "Colors"))
-   (stroke :accessor stroke
-	   :type unicode
-	   :initform (cljw:unicode "")
-	   :metadata (:sync t
-			    :json-name "stroke"))
-   (opacities :accessor opacities
-	      :type list
-	      :initform (list (cons 'trait 1.0))
-	      :metadata (:sync t
-			       :json-name "opacities"
-			       :display-name "Opacities"))
-   
-   ;;TODO HOW TO DEAL WITH THE RANGE
-   (radius :accessor radius
-	   :type float
-	   :initform 180.0
-	   :metadata (:sync t
-			    :json-name "radius"))
-
     (inner-radius :accessor inner-radius
                   :type float
                   :initform 0.1
@@ -1162,7 +1098,6 @@
                :initform 360.0
                :metadata (:sync t
                                 :json-name "end_angle"))
-
     ;;how to handle the default options with enum.
     ;;is it plausibel to use a type list and a validator to chekc if users string is in the default choices 
     (display-labels :accessor diplay-labels
@@ -1170,13 +1105,12 @@
 		    :initform (cljw:unicode "inside")
 		    :metadata (:sync t
 				     :json-name "display_labels"))
-
     (display-values :accessor display-values
 		    :type cljw:bool
 		    :initform :false
 		    :metadata (:sync t
 				     :json-name "display_values"))
-    (values- :accessor values-format
+    (values-format :accessor values-format
 		   :type cljw:unicode
 		   :initform (cljw:unicode ".1f")
 		   :metadata (sync t
@@ -1191,7 +1125,6 @@
 	       :initform (cljw:unicode "10px")
 	       :metadata (:sync t
 				:json-name "font_size"))
-
     ;;handle the default options 
     (font-weight :accessor font-weight
 		 :type cljw:unicode
@@ -1202,9 +1135,8 @@
   (:default-initargs
    :view-name (cljw:unicode "Pie")
     :model-name (cljw:unicode "PieModel"))
-  
   (:metaclass traitlets:traitlet-class))
-
+|#
 ;; cannot use the name "map" here
 (defclass mapp (mark)
   ((icon :accessor icon
