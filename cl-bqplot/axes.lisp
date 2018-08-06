@@ -7,7 +7,7 @@
                                (cons "bqplot.ColorAxis" "ColorAxis"))))
    (:default-initargs
     :view-module (cljw:unicode "Bqplot")
-     :Model-module (cljw:unicode "bqplot")
+     :model-module (cljw:unicode "bqplot")
      :view-module-version *frontend-version*
      :model-module-version *frontend-version*)
    (:metaclass traitlets:traitlet-class))
