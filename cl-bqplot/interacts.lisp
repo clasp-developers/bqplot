@@ -46,7 +46,7 @@
    
   (:metaclass traitlets:traitlet-class))
 
-;;;This class had a @register decorator that I removed (should be defclass-wigdet-register)
+;; -widget-register 
 (defclass pan-zoom (interaction)
   ((allow-pan :accessor allow-pan
 	      :type bool
@@ -60,12 +60,10 @@
 				:json-name "allow_zoom"))
    (scales-interacts :initarg :scales-interacts :accessor scales-interacts
 	   :type list
-           :initform nil
-         ;;  (make-instance 'scale)
-         ;;  (list (cons 'trait (cons 'trait (make-instance 'scale))))
+	   :initform (make-instance 'scale)
 	   :metadata (:sync t
 			    :json-name "scales")))
-			    ;,@cljw:*widget-serialization*)))
+			    ;FIXME ,@cljw:*widget-serialization*)))
    (:default-initargs
     :view-name (cljw:unicode "PanZoom")
     :model-name (cljw:unicode "PanZoomModel"))

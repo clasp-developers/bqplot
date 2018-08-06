@@ -18,7 +18,6 @@
 		  :type list
 		  :initform nil)
    (marks :initarg :marks :accessor marks
-
           :type vector
           :initform #()
           :metadata (:sync t
