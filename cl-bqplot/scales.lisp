@@ -1,23 +1,9 @@
 (in-package :bqplot)
 
-(defclass scale (widget)
-  ((scale-types :accessor scale-types
-                :initform (list (cons "bqplot.mercator" (find-class 'mercator))
-				(cons "bqplot.albers" (find-class 'albers))
-				(cons "bqplot.albers-usa" (find-class 'albers-usa))
-				(cons "bqplot.equi-rectangular" (find-class 'equi-rectangular))
-				(cons "bqplot.orthographic" (find-class 'orthographic))
-				(cons "bqplot.gnomonic" (find-class 'gnomonic))
-				(cons "bqplot.stereographic" (find-class 'stereographic))
-				(cons "bqplot.linear-scale" (find-class 'linear-scale))
-				(cons "bqplot.log-scale" (find-class 'log-scale))
-				(cons "bqplot.date-scale" (find-class 'date-scale))
-				(cons "bqplot.ordinal-scale" (find-class 'ordinal-scale))
-				(cons "bqplot.color-scale" (find-class 'color-scale))
-				(cons "bqplot.date-color-scale" (find-class 'date-color-scale))
-				(cons "bqplot.ordinal-color-scale" (find-class 'ordinal-color-scale)))
-                :allocation :class)            
-   (precedence :accessor precedence
+
+
+(defclass scale (cljw:widget)    
+   ((precedence :accessor precedence
                :type integer
 	       :initform 1)
    (domain-class :accessor domain-class
@@ -59,18 +45,18 @@
 				  :json-name "scale_factor"))
    (center :accessor center
 	   :type list
-	   :initform (list (cons 0 60)) 
+	   :initform (list (cons "0" "60")) 
 	   :metadata (:sync t
 			    :json-name "center"))
    (rotate :accessor rotate
 	   :type list
-	   :initform (list (cons 0 0))
+	   :initform (list (cons "0" "0"))
 	   :metadata (:sync t
 			    :json-name "rotate"))
    (r-type :accessor r-type
 	   :type cljw:unicode
 	   :initform (cljw:unicode "(Number, Number)")
-           ;;;:allocation :class
+           :allocation :class
            )
    (d-type :accessor d-type
 	    :type cljw:unicode
@@ -89,17 +75,17 @@
 				  :json-name "scale_factor"))
     (rotate :accessor rotate
 	   :type list
-	   :initform (list (cons 96 0))
+	   :initform (list (cons "96" "0"))
 	   :metadata (:sync t
 			    :json-name "rotate"))
    (center :accessor center
 	   :type list
-	   :initform (list (cons 0 60)) 
+	   :initform (list (cons "0" "60")) 
 	   :metadata (:sync t
 			    :json-name "center"))
    (parallels :accessor parallels
 	   :type list
-	   :initform (list  (cons 29.5 45.5))
+	   :initform (list  (cons "29.5" "45.5"))
 	   :metadata (:sync t
 			    :json-name "parallels"))
    (precision :accessor precision
@@ -129,7 +115,7 @@
 				  :json-name "scale_factor"))
    (translate :accessor translate
 		 :type list
-		 :initform (list (cons 600 490))
+		 :initform (list (cons "600" "490"))
 		 :metadata (:sync t
 				  :json-name "translate"))
   
@@ -156,7 +142,7 @@
 				  :json-name "scale_factor"))
    (center :accessor center 
 	   :type list
-	   :initform (list (cons 0 60)) 
+	   :initform (list (cons "0" "60")) 
 	   :metadata (:sync t
 			    :json-name "center")) 
   (r-type :accessor r-type
@@ -181,12 +167,12 @@
 				  :json-name "scale_factor"))
    (center :accessor center 
 	   :type list
-	   :initform (list (cons 0 60)) 
+	   :initform (list (cons "0" "60")) 
 	   :metadata (:sync t
 			    :json-name "center"))
    (rotate :accessor rotate
 	   :type list
-	   :initform (list (cons 0 0))
+	   :initform (list (cons "0" "0"))
 	   :metadata (:sync t
 			    :json-name "rotate"))
    (clip-angle :accessor clip-angle
@@ -228,7 +214,7 @@
 				  :json-name "scale_factor"))
    (center :accessor center 
 	   :type list
-	   :initform (list (cons 0 60))
+	   :initform (list (cons "0" "60"))
 	   :metadata (:sync t
 			    :json-name "center"))
    (clip-angle :accessor clip-angle
@@ -264,12 +250,12 @@
 				  :json-name "scale_factor"))
    (center :accessor center 
 	   :type list
-	   :initform (list (cons 0 60)) 
+	   :initform (list (cons "0" "60")) 
 	   :metadata (:sync t
 			    :json-name "center"))
    (rotate :accessor rotate
 	   :type list
-	   :initform (list (cons 96 0 ))
+	   :initform (list (cons "96" "0"))
 	   :metadata (:sync t
 			    :json-name "rotate"))
    (clip-angle :accessor clip-angle
@@ -508,3 +494,19 @@
    :view-name (cljw:unicode "DateColorScale")
     :model-name (cljw:unicode "DataColorScaleModel"))
   (:metaclass traitlets:traitlet-class))
+
+
+(defparameter *scale-types* (list (cons "bqplot.mercator" (find-class 'mercator))
+				(cons "bqplot.albers" (find-class 'albers))
+				(cons "bqplot.albers-usa" (find-class 'albers-usa))
+				(cons "bqplot.equi-rectangular" (find-class 'equi-rectangular))
+				(cons "bqplot.orthographic" (find-class 'orthographic))
+				(cons "bqplot.gnomonic" (find-class 'gnomonic))
+				(cons "bqplot.stereographic" (find-class 'stereographic))
+				(cons "bqplot.linear-scale" (find-class 'linear-scale))
+				(cons "bqplot.log-scale" (find-class 'log-scale))
+				(cons "bqplot.date-scale" (find-class 'date-scale))
+				(cons "bqplot.ordinal-scale" (find-class 'ordinal-scale))
+				(cons "bqplot.color-scale" (find-class 'color-scale))
+				(cons "bqplot.date-color-scale" (find-class 'date-color-scale))
+				(cons "bqplot.ordinal-color-scale" (find-class 'ordinal-color-scale))))  
