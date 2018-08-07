@@ -1,7 +1,7 @@
 (in-package :bqplot)
 
 (defparameter %context (list (cons "figure" nil)
-			     (cons "figure-registry" nil)
+			     (cons "figure_registry" nil)
 			     (cons "scales" nil)
 			     (cons "scale_registry" nil)
 			     (cons "last_mark" nil)
@@ -32,7 +32,7 @@
 
 (defun reset-context (&key &allow-other-keys)
     (defparameter %context (list (cons "figure" nil)
-			     (cons "figure-registry" nil)
+			     (cons "figure_registry" nil)
 			     (cons "scales" nil)
 			     (cons "scale_registry" nil)
 			     (cons "last_mark" nil)
@@ -41,7 +41,7 @@
 (defun show (&key (key nil) (display-toolbar t))
   (let ((figure nil))
     (if key
-	(setf figure (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)) :test #'string=)))
+	(setf figure (cdr (assoc key (cdr (assoc "figure_registry" %context :test #'string=)) :test #'string=)))
 	(setf figure (cdr (assoc "1" (current-figure) :test #'string=))))
 	;(setf figure (make-instance 'figure :title "Example")))
     (if display-toolbar
@@ -53,42 +53,52 @@
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
   ;;;We don't want key and fig to actually be in the kwargs plist
+  (print "Entered figure function")
   (remf kwargs :key)
   (remf kwargs :fig)
+  (print "About to enter first let")
   ;;;Now begins the translation of python code.
   (let ((scales-arg (getf kwargs :scales)))
     (remf kwargs :scales)
+    (print "checking for current_key in context")
     (if (assoc "current_key" %context :test #'string=)
 	(setf (cdr (assoc "current_key" %context :test #'string=)) key)
 	(setf %context (append %context (cons "current_key" key))))
+    (format t "Checking fig... ~% FIG: ~a~%" fig)
     (if fig
 	(progn
 	  (setf (cdr (assoc "figure" %context :test #'string=)) (list fig))
 	  (when key
-	    (setf (nth key (cdr (assoc "figure-registry" %context :test #'string=))) fig))
+	    (setf (nth key (cdr (assoc "figure_registry" %context :test #'string=))) fig))
 	  (loop for arg in kwargs do
 	       (unless (assoc arg (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
 		 (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=))))))))
 	(progn
+          (print "In progn sequence where fig is NIL")
+          (format t "KEY: ~a ~%" key)
 	  (if (not key)
-              (setf (cdr (assoc "figure" %context :test #'string=))(list (cons "1" (make-instance 'figure))));(make-instance 'figure)) ;kwargs are supposed to be added after the make-instance but doing so raised error
+              (progn
+                (print "in progn where key is NIL")
+                (setf (cdr (assoc "figure" %context :test #'string=)) (make-instance 'figure)))
 	      (progn
-                (unless (assoc key (assoc "figure-registry" %context :test #'string=))
+                (print "In progn where key is not nil")
+                (unless (assoc key (assoc "figure_registry" %context :test #'string=))
                   (unless (getf kwargs :title)
                     (push (concatenate 'string "Figure" " " key) kwargs)
                     (push :title kwargs))
-                  (setf (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=))))(list (cons "1" (make-instance 'figure)))))
-                (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure-registry" %context :test #'string=)))))
+                  (setf (cdr (assoc key (cdr (assoc "figure_registry" %context :test #'string=))))(list (cons "1" (make-instance 'figure)))))
+                (setf (cdr (assoc "figure" %context :test #'string=)) (cdr (assoc key (cdr (assoc "figure_registry" %context :test #'string=)))))
                 (warn "How to Add a slot for each argument in kwargs")
    ;;;(scales key :scales scales-arg)
 		(loop for arg in kwargs do
 		     (unless (assoc arg (cdr (assoc "figure" %context :test #'string=)) :test #'string=)
 		       (setf (cdr (assoc "figure" %context :test #'string=))(append (cdr (assoc "figure" %context :test #'string=))(cons arg (cdr (assoc arg kwargs :test #'string=)))))))
 		))))
+    (print "After fig IF statement, about to return (cdr (assoc \"figure\" %context :test #'string=")
     (cdr (assoc "figure" %context :test #'string=))))
         
 (defun close (key)
-  (let ((figure-registry (cdr (assoc "figure-registry" %context)))
+  (let ((figure-registry (cdr (assoc "figure_registry" %context)))
         (fig nil))
     (unless (member key figure-registry)
       (return-from close))
@@ -112,8 +122,8 @@
 	;No key is provided
 	(setf (cdr (assoc "scales" %context :test #'string=))(cdr (assoc (%get-attribute-dimension scales) old-ctxt :test #'string=)))
 	;A key is provided
-	(unless (assoc "scale-registry" %context :test #'string=) ;how does one search for a key within scale registry
-		 (setf (cdr (assoc "scale-registry" %context :test #'string=))(%get-attribute-dimension scales))))
+	(unless (assoc "scale_registry" %context :test #'string=) ;how does one search for a key within scale registry
+		 (setf (cdr (assoc "scale_registry" %context :test #'string=))(%get-attribute-dimension scales))))
     (setf (cdr (assoc "scales" %context :test #'string=)) (nth key (cdr (assoc "figure_registry" %context :test #'string=))))))
 
 ;TODO
@@ -135,7 +145,7 @@
   (remf kwargs :mark)
   (remf kwargs :options)
   (unless mark
-    (let ((new_mark (cdr (assoc "last_mark" axes%context :test #'string=))))
+    (let ((new_mark (cdr (assoc "last_mark" %context :test #'string=))))
       (if new_mark
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
@@ -336,11 +346,14 @@
 ;;;I'm going to get rid of the option optionals and just have a kwargs containing all the information.
 
 (defun %draw-mark (mark-type kwargs)
+  (print "Before first let")
+  (format t "Mark-type: ~a~%" mark-type)
+  (format t "kwargs: ~a~%" kwargs)
   (let ((fig (getf kwargs :figure (current-figure)))
         (scales (getf kwargs :scales))
         (update-context (getf kwargs :update-context t))
         (cmap (getf kwargs :cmap))
-        (Options (getf kwargs :options))
+        (options (getf kwargs :options))
         (axes-options (getf kwargs :axes-options))
         (mark nil))
     (remf kwargs :fig)
@@ -353,43 +366,53 @@
           (setf (cdr (assoc "color" options :test #'string=)) (list (cons 
     |#
     ;;;This loop is mimicking Python's mark_type.class_trait_names(scaled=True):
-    (loop for (name . symbol)  in (list (cons "x" 'bqplot::x) (cons "y" 'bqplot::y) (cons "color" 'bqplot::color))
+    (print "Going into first loop")
+    (loop for (name . symb)  in (list (cons "x" 'bqplot::x) (cons "y" 'bqplot::y) (cons "color" 'bqplot::color))
        do
          (let ((dimension (%get-attribute-dimension name (make-instance mark-type))))
            ;;;This cond is the entire body of the loop. It consists of 3 conditions, and then a final 'else':
            ;;;First, we check to see if name is not contained in kwargs.
            ;;;If it is not (it is likely that color will not be in kwargs, for instance), then we do nothing.
            ;;;If name is in kwargs, then we check to see if name is in scales (scales is the value of :scales in kwargs, or nil if not present
-           ;;;If name is not in scales, then we check to see if dimension is not in %context['scales']. 
-           (cond ((not (getf kwargs (intern name "KEYWORD")))
+           ;;;If name is not in scales, then we check to see if dimension is not in %context['scales'].
+           (format t "DIMENSION: ~a~%" dimension)
+           (cond ((not (getf kwargs (intern (string-upcase name) "KEYWORD")))
+                  (format t "Not getf kwargs name is true. name is ~a and kwargs is ~a~%" name kwargs)
                   (values))
                  ((getf scales (intern name "KEYWORD"))
+                  (format t "getf scales name is true. name is ~a and scales is ~a~%" name scales)
                   (when update-context
                     (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string=)))))
                  ((not (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))
-                  (let* ((traitlet (symbol mark-type))
-                         (rtype (traitlets:traitlet-metadata mark-type symbol :rtype))
+                  (format t "not assoc dimension cdr assoc \"scales\" %context is true. dimension is ~a and %context is ~a~%" dimension %context)
+                  (let* ((r-type (traitlets:traitlet-metadata mark-type symb :rtype))
+                         ;;(traitlet mark_type.class_traits[name]
                          ;;(dtype (validate the datatype is correct)
-                         (dummy-scale (make-instance 'scale))
-                         (compat-scale-types (loop for (str . instance) in (scale-types dummy-scale) when (string= rtype (rtype instance)) collect instance))
-                         (sorted-scales (stable-sort compat-scale-types #'< :key #'precedence)))
+                         (compat-scale-types (loop for (str . class) in *scale-types* when (string= r-type (r-type (clos:class-prototype class))) collect class))
+                         (sorted-scales (stable-sort compat-scale-types #'(lambda (x y) (< (precedence (clos:class-prototype x)) (precedence (clos:class-prototype y)))))))
                     (if (assoc name scales :test #'string=)
-                        (setf (cdr (assoc name scales :test #'string=)) (last sorted-scales))
-                        (push (cons name (last sorted-scales)) scales))
+                        (setf (cdr (assoc name scales :test #'string=)) (make-instance (last sorted-scales)))
+                        (push (cons name (apply #'make-instance (last sorted-scales))) scales))
                     (when update-context
                       (if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
                           (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string)))
                           (push (cons dimension (cdr (assoc name scales :test #'string=))) (cdr (assoc "scales" %context :test #'string=)))))))
                  (t
+                  (format t "NOTHING IS TRUE!!! Dimension is ~a~%" dimension)
                   (if (assoc name scales :test #'string=)
                       (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
-                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
-    (setf kwargs (append kwargs (list :scales-mark scales))
-          mark (apply #'make-instance mark-type kwargs))
-    (if (assoc "last-mark" %context :test #'string=)
-        (setf (cdr (assoc "last-mark" %context :test #'string=)) mark)
-        (push (cons "last-mark" mark) %context))
-    (setf (marks fig) (append (marks fig) (list mark)))
+                      (push (cons (write-to-string name) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
+    (format t "We made it out of the loop!!!! ~% Scales is ~a and mark is ~a~%" scales mark)
+    (setf kwargs (append kwargs (list :scales-mark scales)))
+    (format t "Updated kwargs. It is now ~a~%" kwargs)
+    (setf mark (apply #'make-instance mark-type (list :scales-mark scales)))
+    (format t "After updating kwargs and mark.~% kwargs is now ~a and mark is ~a~%" kwargs mark)
+    (if (assoc "last_mark" %context :test #'string=)
+        (setf (cdr (assoc "last_mark" %context :test #'string=)) mark)
+        (push (cons "last_mark" mark) %context))
+    (format t "After if assoc last_mark %context~% %context is now ~a~%" %context)
+    (format t "Marks fig is ~a~% and mark is ~a~%" (marks fig) mark)
+    (setf (marks fig) (concatenate 'vector (marks fig) (list mark)))
     (axes :mark mark :options axes-options)
     (print "Done with %draw-mark")
     mark))
@@ -678,14 +701,15 @@ draw-   (unless (member "count" scales)
 	    (axes fig) nil
 	    ;("axis-registry" fig) nil) ;; did i handle setattr right?
 	    (cdr (assoc "scales" %context :test #'string=)) nil)
-      (let ((key (cdr (assoc "current-key" %context :test #'string=))))
+      (let ((key (cdr (assoc "current_key" %context :test #'string=))))
 	(when key
-	  (setf  (cdr (assoc key (cdr (assoc "scale-registry" %context :test #'string=)))) nil ))))))
+	  (setf  (cdr (assoc key (cdr (assoc "scale_registry" %context :test #'string=)))) nil ))))))
 
 ;;needs to be checked 
 (defun current-figure ()
+  (print "Inside current-figure")
   (unless (cdr (assoc "figure" %context :test #'string=))
-    (figure)) ;;is the is the proper way to call the func
+    (figure)) 
   (cdr (assoc "figure" %context :test #'string=)))
 
 
