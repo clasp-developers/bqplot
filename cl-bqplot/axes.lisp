@@ -1,12 +1,9 @@
 (in-package :bqplot)
 
 (defclass base-axis (cljw:widget)
-  ((axis-types :initarg :axis-types :accessor axis-types
-           :type list
-           :initform (list (cons "bqplot.Axis" "Axis")
-                               (cons "bqplot.ColorAxis" "ColorAxis"))))
+  ()
    (:default-initargs
-    :view-module (cljw:unicode "Bqplot")
+    :view-module (cljw:unicode "bqplot")
      :model-module (cljw:unicode "bqplot")
      :view-module-version *frontend-version*
      :model-module-version *frontend-version*)
@@ -14,30 +11,30 @@
 
 (defclass axis (base-axis)
   ((icon :accessor icon
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "fa-arrows"))	 
    (orientation :initarg :orientation :accessor orientation
-		:type unicode
+		:type cljw:unicode
 		:initform (cljw:unicode "horizontal")
 		:metadata (:sync t
 				 :json-name "orientation"))   
    (side :initarg :side :accessor side
-	 :type unicode
+;	 :type cljw:unicode
 	 :initform :null
 	 :metadata (:sync t
 			  :json-name "side"))
    (label-axes :accessor label-axes
-	  :type unicode
+	  :type cljw:unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
 			   :json-name "label"))
    (grid-lines :accessor grid-lines
-	       :type unicode
+	       :type cljw:unicode
 	       :initform (cljw:unicode "solid")
 	       :metadata (:sync t
 				:json-name "grid_lines"))
    (tick-format :accessor tick-format
-		:type unicode
+	;	:type cljw:unicode
 		:initform :null
 		:metadata (:sync t
 				 :jsone-name "tick_format"))
@@ -67,32 +64,32 @@
 			    ;; FIXME *array-serialization*
 			    ))
    (label-location :accessor label-location
-		   :type unicode 
+		   :type cljw:unicode 
 		   :initform (cljw:unicode "middle")
 		   :metadata (:sync t
 				    :json-name "label_location"))
    (label-color :accessor label-color
-		:type unicode
+	;	:type cljw:unicode
 		:initform :null
 		:metadata (:sync t
 				 :json-name "label_color"))
    (grid-color :accessor grid-color
-	       :type unicode
+	      ; :type cljw:unicode
 	       :initform :null
 	       :metadata (:sync t
 				:json-name "grid_color"))
    (color :accessor color
-	  :type unicode
-	  :initform :null
+	 ; :type cljw:unicode
+	  :initform :nil
 	  :metadata (:sync t
 			   :json-name "color"))
    (label-offset :accessor label-offset
-		 :type unicode
+		; :type cljw:unicode
 		 :initform :null
 		 :metadata (:sync t
 				  :json-name "label_offset"))
    (visible :accessor visible
-	    :type bool
+	    :type cljw:bool
 	    :initform :true
 	    :metadata (:sync t
 			     :json-name "visible"))
@@ -111,7 +108,7 @@
 
 (defclass color-axis (axis)
   ((orientation :accessor orientation
-		:type unicode
+		:type cljw:unicode
 		:initform (cljw:unicode "horizontal")
 		:metadata (:sync t
 				 :json-name "orientation"))
@@ -121,7 +118,7 @@
 	 :metadata (:sync t
 			 :json-name "side"))
    (label-axes :accessor label-axes
-	  :type unicode
+	  :type cljw:unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
 			   :json-name "label"))
@@ -134,8 +131,11 @@
    (:default-initargs
        :view-name (cljw:unicode "ColorAxis")
      :model-name (cljw:unicode "ColorAxisModel"))
-
   (:metaclass traitlets:traitlet-class))
      
 (defmethod widget-slot-value ((w widget) slot-name)
   (slot-value w slot-name))
+
+
+(defparameter *axis-types* (list (cons "bqplot.Axis" (find-class 'axis))
+                               (cons "bqplot.ColorAxis" (find-class 'color-axis))))

@@ -361,8 +361,8 @@
 
 (defclass %scatter-base (mark)
   ((x :initarg :x :accessor x
-      :type list
-      :initform nil
+      :type vector
+      :initform #()
       :metadata (:sync t
 		       :json-name "x"
 		       :scaled t
@@ -372,8 +372,8 @@
 		       ))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :initarg :y :accessor y
-      :type list
-      :initform nil
+      :type vector
+      :initform #()
       :metadata (:sync t
 		       :json-name "y"
 		       :scaled t
