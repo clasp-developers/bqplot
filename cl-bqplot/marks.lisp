@@ -504,9 +504,8 @@
 			    :json-name "colors"
 			    :display-name "Marker"))
    (colors :accessor colors
-	   :type list
-	   :initform (list (cons "trait" (cljw:unicode ""))
-			   (cons "default-value" "steelblue"))
+	   :type vector
+	   :initform (vector "steelblue")
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
