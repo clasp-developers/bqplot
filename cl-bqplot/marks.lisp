@@ -433,7 +433,12 @@
 				    (cons "rotation" (list (cons "dimension" "rotation"))))
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
-					;TODO: default-opacities
+   (default-opactities :initarg :default-opacities :accessor default-opacities
+                       :initform (list 1)
+                       :type list
+                       :metadata (:sync t
+                                        :json-name "default_opacities"
+                                        :display-name "Opacities"))
    (hovered-style :initarg :hovered-style :accessor hovered-style
 		  :type list
 		  :initform nil
@@ -445,8 +450,7 @@
 		    :metadata (:sync t
 				     :json-name "unhovered_style"))
    (hovered-point :initarg :hovered-point :accessor hovered-point
-		  :type integer
-		  :initform nil
+		  :initform :null
 		  :metadata (:sync t
 				   :json-name "hovered_point"))
    (enable-move :initarg :enable-move :accessor enable-move
@@ -498,7 +502,7 @@
 			  ))
 					;TODO: .valid stuff
    (marker :accessor marker
-	   :type list
+	   :type cljw:unicode
 	   :initform (cljw:unicode "circle")
 	   :metadata (:sync t
 			    :json-name "colors"
@@ -567,8 +571,7 @@
                :metadata (:sync t
                                 :json-name "fill"))
    (drag-color :accessor drag-color
-               :type cljw:unicode
-               :initform (cljw:unicode "")
+               :initform :null
                :metadata (:sync t
                                 :json-name "drag_color"))
    (drag-size :accessor drag-size
