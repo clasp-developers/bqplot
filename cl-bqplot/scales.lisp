@@ -5,7 +5,8 @@
 (defclass scale (cljw:widget)    
    ((precedence :accessor precedence
                :type integer
-	       :initform 1)
+	       :initform 1
+               :allocation :class)
    (domain-class :accessor domain-class
                  :type float
                  :initform 0.0)
@@ -285,7 +286,8 @@
 (defclass linear-scale (scale)
   ((precedence :accessor precedence
                :type integer
-	       :initform 2)   
+	       :initform 2
+               :allocation :class)   
    (r-type :accessor r-type
 	   :type cljw:unicode
 	   :initform (cljw:unicode "Number")
