@@ -397,7 +397,6 @@
     (print "Done with %draw-mark")
     mark))
 
-;;;%infer-x-for-line just needs to be completly rewritten
 
 #|
 
