@@ -415,7 +415,7 @@
     (format t "After if assoc last_mark %context~% %context is now ~a~%" %context)
     (format t "Marks fig is ~a~% and mark is ~a~%" (marks fig) mark)
     (setf (marks fig) (concatenate 'vector (marks fig) (list mark)))
-    (axes :mark mark :options axes-options)
+    ;(axes :mark mark :options axes-options)
     (print "Done with %draw-mark")
     mark))
 
