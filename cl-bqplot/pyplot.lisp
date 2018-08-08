@@ -144,42 +144,61 @@
   ;;;Remove mark and options from kwargs
   (remf kwargs :mark)
   (remf kwargs :options)
+  (format t "Inside axes. kwargs is ~a~% mark is ~a~% options is ~a~%" kwargs mark options)
   (unless mark
     (let ((new_mark (cdr (assoc "last_mark" %context :test #'string=))))
       (if new_mark
           (setf mark (cdr (assoc "last_mark" %context :test #'string=)))
           (return-from axes nil))))
   (let* ((fig (getf kwargs :figure (current-figure)))
-        (scales (scales-mark mark))
-        (fig-axes (axes-figure (cdr (assoc "1" fig :test #'string=))))
-        (axes nil)
-        (scale-metadata nil)
-        (dimension nil)
-        (axis-args nil)
-        (axis nil)
-        (key nil)
-	(axis-type nil))
-    (loop for name in scales
+         (scales (scales-mark mark))
+         (fig-axes (loop for axes-instance across (axes-figure fig) collect axes-instance))
+         (axes nil)
+         (scale-metadata nil)
+         (dimension nil)
+         (axis-args nil)
+         (axis nil)
+         (key nil)
+         (axis-type nil))
+    (format t "Outside current-figure~%. About to enter loop, scales is ~a~%" scales)
+    (loop for (name . instance) in scales
        do
-	 ;missing the function that checks to see if the scale is even needed (if name not in mark.class_trait_names(scaled=True):)
-         (setf name (car name)
-	       scale-metadata (cdr (assoc name (scales-metadata (car mark)) :test #'string=))
-               dimension (if (cdr (assoc "dimension" scale-metadata :test #'string=))(cdr (assoc "dimension" scale-metadata :test #'string=))(cdr (assoc (intern name "KEYWORD") scales :test #'string=)))
-               axis-args (list scale-metadata))
-               ;axis (%fetch-axis fig dimension (cdr (assoc name scales :test #'string=))) removing the ability to access an already existing set of axes from axis registry
-         (warn "How to handle **(options.get(name, {}))")
+       ;;missing the function that checks to see if the scale is even needed (if name not in mark.class_trait_names(scaled=True):)
+       ;;mark.class_trait_names(scaled=True) returns a list of all slots that have metadata with an rtype field.
+         (format t "Inside the loop. ~% Name is ~a Scales-metadata mark is ~a~% scales is ~a~%" name (scales-metadata mark) scales)
+         (setf scale-metadata (cdr (assoc name (scales-metadata mark) :test #'string=))
+               dimension (if (cdr (assoc "dimension" scale-metadata :test #'string=))
+                             (cdr (assoc "dimension" scale-metadata :test #'string=))
+                             (cdr (assoc name scales :test #'string=)))
+               axis-args (if options
+                             (progn
+                               (warn "How to handle **(options.get(name, {})")
+                               (list scale-metadata));;;Plus options.get(name)
+                             scale-metadata)
+               axis (%fetch-axis fig dimension (cdr (assoc name scales :test #'string=)))
+               )
+         (format t "After first setf in loop: ~% scale-metadata is ~a~% dimension is ~a~% axis-args is ~a~%" scale-metadata dimension axis-args)
+         (format t "At if axis. Axis is ~a~%" axis)
          (if axis
              (progn
-               ;(%apply-properties axis (getf options name nil)) THIS NEEDS TO WORK
-               (push (cons name axis) axes))
+               (format t "Inside the part where axis is t~%")
+               ;;(%apply-properties axis (getf options name nil)) THIS NEEDS TO WORK
+               (if (assoc name axes :test #'string=)
+                   (push (cons name axis) axes)
+                   (setf (cdr (assoc name axes :test #'string=)) (axes))))   
              (progn
-               (setf key (traitlets:traitlet-metadata 'mark (intern name "KEYWORD") :atype))
+               (format t "Inside the part where axis is NIL~%")
+               (setf key (traitlets:traitlet-metadata (class-of mark) (intern (string-upcase name) "BQPLOT") :atype))
                (when key
-                 (setf axis-type (cdr (assoc key (axis-types (make-instance 'axes) :test #'string=)))
-                       axis (axis-type :scale (cdr (assoc name scales :test #'string=)) axis-args) ;;;How to handle **Axis_args
+                 (format t "Inside the part were key is t. Key is ~a~% axis-args is ~a~%" key axis-args)
+                 (format t "(list (intern (car axis-args) KEYWORD) (cdr (car axis-args)) ~a~%" (list (intern (caar axis-args) "KEYWORD") (cdar axis-args)))
+                 (setf axis-type (cdr (assoc key *axis-types* :test #'string=)))
+                       axis (apply #'make-instance axis-type :scale (cdr (assoc name scales :test #'string=)) (list (intern (string-upcase (caar axis-args)) "KEYWORD") (cdar axis-args))) ;;;How to handle **Axis_args
                        fig-axes (append fig-axes (list axis)))
-                 (%update-fig-axis-registry fig dimension (cdr (assoc name scales :test #'string=)) axis)))))
-    (setf (axes-figure (cdr (assoc "1" fig :test #'string=))) fig-axes)
+               (format t "Passed the when key part. Woohoo~%")
+               (%update-fig-axis-registry fig dimension (cdr (assoc name scales :test #'string=)) axis))))
+    (format t "Passed %update-fig-axis-registry")
+    (setf (axes-figure figure) fig-axes)
     (print "Done with axes")
     axes))
 
@@ -293,55 +312,6 @@
                          or a list of colors, but a value of {} was given")))
     option))
 
-#|
-(defun %draw-mark (mark-type &rest kwargs &key (options nil) (axes-options nil) &allow-other-keys)
-  (setf kwargs (remove options kwargs)
-        kwargs (remove :options kwargs)
-        kwargs (remove axes-options kwargs)
-        kwargs (remove :axes-options kwargs))
-  (let ((fig (getf kwargs :figure (current-figure)))
-	(scales (getf kwargs :scales))
-	(update-context (getf kwargs :update-context t))
-	(cmap (getf kwargs :cmap)))
-    (remf kwargs :figure)
-    (remf kwargs :scales)
-    (remf kwargs :update-context)
-    (remf kwargs :cmap)
-    (when cmap
-      (setf (cdr (assoc "color" options :test #'string=)) (list (cons (getf options "color")(%process-cmap cmap)))))
-    (loop for name in (class-trait-names mark-type) do
-	 (let ((dimension (%get-attribute-dimension name mark-type)))
-	   (when (assoc name kwargs :test #'string=)
-	     (loop-finish))
-	   (if (assoc name scales :test #'string=)
-	       (when update-context
-		 (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=))) :test #'string=) (cdr (assoc name scales :test #'string=))))
-	       (if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
-		   (setf (cdr (assoc name scales :test #'string=))(cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
-		   (let* ((traitlet)
-			  ;(rtype)
-			  ;(dtype)
-			  ;(compat-scale-types)
-			  ;(sorted-scales)
-			  ;(scales)))))
-	   ))))      
-
-
-	 ;(let ((scales-arg (getf kwargs :scales)))
-    ;;Make getf an effective pop of the (:scales value)
-    ;(remove ':scales kwargs)
-    ;(remove scales-arg kwargs)))
-
-(defun %infer-x-for-line (y)
-  (let ((array-shape (array-dimensions y)))
-       (when (= (length array-shape) 0) nil)
-       (when (= (length array-shape) 1)
-	 (array (cdr (assoc 0 array-shape :test #'equalp=))))
-  pretty sure arange is a numpy function that we can't call because we haven't  
-       (when (> (length array-shape) 1)
-					(array (cdr (assoc 1 array-shape :test #'equalp=))))))
-	   )))) |#
-
 ;;;In python, the lambda list is def _mark_type(mark_type, options={}, axes_options={}, **kwargs.
 ;;;I'm going to get rid of the option optionals and just have a kwargs containing all the information.
 
@@ -391,8 +361,12 @@
                          (compat-scale-types (loop for (str . class) in *scale-types* when (string= r-type (r-type (clos:class-prototype class))) collect class))
                          (sorted-scales (stable-sort compat-scale-types #'(lambda (x y) (< (precedence (clos:class-prototype x)) (precedence (clos:class-prototype y)))))))
                     (if (assoc name scales :test #'string=)
-                        (setf (cdr (assoc name scales :test #'string=)) (make-instance (last sorted-scales)))
+                        (setf (cdr (assoc name scales :test #'string=)) (apply #'make-instance (last sorted-scales)))
                         (push (cons name (apply #'make-instance (last sorted-scales))) scales))
+                    (warn "Did I handle scales[name] = sorted_scales[-1](**options.get(name, {}))?")
+                    (warn "You didn't, fool")
+                    (warn "Hold on now, maybe you did")
+                    (warn "Alright I ruined it")
                     (when update-context
                       (if (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)
                           (setf (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)) (cdr (assoc name scales :test #'string)))
@@ -401,7 +375,7 @@
                   (format t "NOTHING IS TRUE!!! Dimension is ~a~%" dimension)
                   (if (assoc name scales :test #'string=)
                       (setf (cdr (assoc name scales :test #'string=)) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=)))
-                      (push (cons (write-to-string name) (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
+                      (push (cons name (cdr (assoc dimension (cdr (assoc "scales" %context :test #'string=)) :test #'string=))) scales))))))
     (format t "We made it out of the loop!!!! ~% Scales is ~a and mark is ~a~%" scales mark)
     (setf kwargs (append kwargs (list :scales-mark scales)))
     (format t "Updated kwargs. It is now ~a~%" kwargs)
@@ -413,7 +387,9 @@
     (format t "After if assoc last_mark %context~% %context is now ~a~%" %context)
     (format t "Marks fig is ~a~% and mark is ~a~%" (marks fig) mark)
     (setf (marks fig) (concatenate 'vector (marks fig) (list mark)))
-    (axes :mark mark :options axes-options)
+    (format t "Calling axes with :mark ~a :options ~a~%" mark axes-options)
+    (when (getf kwargs :axes t)
+        (axes :mark mark :options axes-options))
     (print "Done with %draw-mark")
     mark))
 
@@ -719,16 +695,25 @@ draw-   (unless (member "count" scales)
 
 
 (defun %fetch-axis (fig dimension scale)
-  (let* ((axis-registry (cdr (assoc  "axis-registry" fig :test #'string=)))
-	 (dimension-data (getf axis-registry dimension nil))
-	 (dimension-scales (loop for dim in dimension-data collect (cdr (assoc "scale" dim :test #'string=))))
-	 (dimension-axes (loop for dim in dimension-data collect (cdr (assoc "axis" dim :test #'string=)))))
-     ))
+  ;(return-from %fetch-axis nil)
+  (format t "inside %fetch-axis~%")
+  (let* ((axis-registry (axis-registry fig)))
+    (format t "axis-registry is ~a~%" axis-registry)
+    (unless axis-registry
+      (return-from %fetch-axis nil))
+    (let*
+       ((dimension-data (cdr (assoc dimension axis-registry :test #'string=)))
+        (dimension-scales (loop for dim in dimension-data collect (cdr (assoc "scale" dim :test #'string=))))
+        (dimension-axes (loop for dim in dimension-data collect (cdr (assoc "axis" dim :test #'string=)))))
+    (format t "Out of let*. dimension data is ~a~% dimension-scales is ~a~% dimension axes is ~a~%" dimension-data dimension-scales dimension-axes)
+    (nth (position scale dimension-scales) dimension-axes))))
 
 (defun %update-fig-axis-registry (fig dimension scale axis)
+  (format t "In %update-fig-axis-registry.~% fig is ~a~% dimension is ~a~% scale is ~a~% axis is ~a~%" fig dimension scale axis)
   (let* ((axis-registry (axis-registry fig))
 	 (dimension-scales (cdr (assoc dimension axis-registry :test #'string=))))
     (setf dimension-scales (append dimension-scales (list (cons "scale" scale) (cons "axis" axis))))
+    (format t "Entering first if statement. axis-registry is ~a~%" axis-registry)
     (if (cdr (assoc dimension axis-registry :test #'string=))
 	(setf (cdr (assoc dimension axis-registry :test #'string=)) dimension-scales)
 	(if axis-registry
@@ -749,6 +734,7 @@ draw-   (unless (member "count" scales)
 					;(setf (slot-value widget key) value))))
 
 (defun %get-attribute-dimension (trait-name &optional mark-type)
+  (format t "In %get-attribute-dimension~% trait-name is ~a~% mark-type is ~a~%" trait-name mark-type)
   (unless mark-type
     (return-from %get-attribute-dimension trait-name))
   (let ((scale-metadata (scales-metadata mark-type)))

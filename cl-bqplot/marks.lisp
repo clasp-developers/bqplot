@@ -413,7 +413,7 @@
 			  ))
    (rotation :initarg :rotation :accessor rotation
 	     :type list
-	     :initform nil
+	     :initform (list (cons "type" :null) (cons "values" :null))
 	     :metadata (:sync t
 			      :json-name "rotation"
 			      :scaled t
@@ -434,8 +434,8 @@
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
    (default-opactities :initarg :default-opacities :accessor default-opacities
-                       :initform (list 1)
-                       :type list
+                       :initform 1
+                       :type float
                        :metadata (:sync t
                                         :json-name "default_opacities"
                                         :display-name "Opacities"))

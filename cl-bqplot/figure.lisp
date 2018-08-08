@@ -15,8 +15,8 @@
                                         ;,@cljw:*widget-serialization*
 					))
    (axis-registry :initarg :axis-registry :accessor axis-registry
-		  :type vector
-		  :initform #())
+		  :type list
+		  :initform nil)
    (marks :initarg :marks :accessor marks
           :type vector
           :initform #()
