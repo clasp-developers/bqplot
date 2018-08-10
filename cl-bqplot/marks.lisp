@@ -395,11 +395,12 @@
 					;TODO: .valid(array_squeeze)
     (opacity :initarg :opacity :accessor opacity
 	     :type list
-	     :initform nil
+	     :initform  (list (cons "type" :null) (cons "values" :null))
 	     :metadata (:sync t
-			      :json-name "width"
+			      :json-name "opacity"
 			      :scaled t
-			      :rtype "Number"
+			      :rtype "Color"
+                              :atype "bqplot.ColorAxis"
 			      ;;FIXME: *array-serialization*
 			      ))
    (size :initarg :size :accessor size
@@ -505,7 +506,7 @@
 	   :type cljw:unicode
 	   :initform (cljw:unicode "circle")
 	   :metadata (:sync t
-			    :json-name "colors"
+			    :json-name "marker"
 			    :display-name "Marker"))
    (colors :accessor colors
 	   :type vector
