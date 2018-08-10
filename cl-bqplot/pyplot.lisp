@@ -340,7 +340,7 @@
     ;(print "Going into first loop")
     (loop for (name . symb)  in (list (cons "x" 'bqplot::x) (cons "y" 'bqplot::y) (cons "color" 'bqplot::color))
        do
-         (let ((dimension (%get-attribute-dimension name (make-instance mark-type))))
+         (let ((dimension (%get-attribute-dimension name  (make-instance mark-type))))
            ;;;This cond is the entire body of the loop. It consists of 3 conditions, and then a final 'else':
            ;;;First, we check to see if name is not contained in kwargs.
            ;;;If it is not (it is likely that color will not be in kwargs, for instance), then we do nothing.
@@ -539,7 +539,7 @@
  (setf kwargs (append kwargs (list :sample sample)))
  (let ((scales (getf kwargs ':scales))(dimension))
    (remf kwargs ':scales)
-draw-   (unless (member "count" scales)
+   (unless (member "count" scales)
      (setf dimension (%get-attribute-dimension "count" (find-class 'Hist)))
      (if (member dimension (cdr (assoc "scales" %context :test #'string=)))
 	 (setf scales (append scales (list :count (nth dimension (cdr (assoc "scales" %context :test #'string=))))))
@@ -744,7 +744,7 @@ draw-   (unless (member "count" scales)
   (format t "In %get-attribute-dimension~% trait-name is ~a~% mark-type is ~a~%" trait-name mark-type)
   (unless mark-type
     (return-from %get-attribute-dimension trait-name))
-  (let ((scale-metadata (scales-metadata mark-type)))
+  (let ((scale-metadata (scales-metadata  mark-type)))
     (cdr (assoc "dimension" (cdr (assoc trait-name scale-metadata :test #'string=)) :test #'string=)))) 
 
 (defun %get-line-styles (marker-str)
