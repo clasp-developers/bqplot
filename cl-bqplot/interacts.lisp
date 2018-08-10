@@ -20,24 +20,24 @@
 
 (defclass hand-draw (interaction)
   ((lines :accessor lines
-	  :initform (make-instance 'lines)
-	  :metadata #.`(:sync t
+	  :initform :null;(make-instance 'lines)
+	  :metadata (:sync t
 			   :json-name "lines"
 					;,@cljw:*widget-serialization*
 			   ))
    (line-index :accessor line-index
 	       :type integer
-	       :initform nil
+	       :initform 0
 	       :metadata (:sync t
 				:json-name "line_index"))
    (min-x :accessor min-x
-	  :type float
-	  :initform nil
+	  :type cljw:bool
+	  :initform :null
 	  :metadata (:sync t
 			   :json-name "min_x"))
    (max-x :accessor max-x
-	  :type float
-	  :initform nil
+	  :type cljw:bool
+	  :initform :null
 	  :metadata (:sync t
 			   :json-name "max_x")))
    (:default-initargs
@@ -46,7 +46,7 @@
    
   (:metaclass traitlets:traitlet-class))
 
-;;;This class had a @register decorator that I removed (should be defclass-wigdet-register)
+;; -widget-register FIXME
 (defclass pan-zoom (interaction)
   ((allow-pan :accessor allow-pan
 	      :type bool
@@ -58,26 +58,24 @@
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "allow_zoom"))
-   (scales-interacts :initarg :scales :accessor scales-interacts
-	   :type cljw::dict
-	   :initform nil
-         ;;  (list (cons "trait" (cons "trait" (make-instance 'scale))))
-	   :metadata #.`(:sync t
-			    :json-name "scales"
-					;,@cljw:*widget-serialization*
-			    )))
+   (scales-interacts :initarg :scales-interacts :accessor scales-interacts
+	   :type list
+	   :initform (make-instance 'scale)
+	   :metadata (:sync t
+			    :json-name "scales")))
+			    ;FIXME ,@cljw:*widget-serialization*)))
    (:default-initargs
     :view-name (cljw:unicode "PanZoom")
     :model-name (cljw:unicode "PanZoomModel"))
 
   (:metaclass traitlets:traitlet-class))
 
-					;TODO def panzoom
+;;TODO def panzoom
 (defclass selector (interaction)
   ((marks :accessor marks
 	  :type list
 	  :initform nil
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "marks"
 					;,@cljw:*widget-serialization*
 			   )))
@@ -91,7 +89,7 @@
 (defclass one-d-selector (selector)
   ((scale :accessor scale
 	  :initform (make-instance 'scale)
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "one-d-selector"
 			   :dimension "x"
 					;,@cljw:*widget-serialization*
@@ -104,14 +102,14 @@
 (defclass two-d-selector (selector)
   ((x-scale :accessor x-scale
 	    :initform (make-instance 'scale)
-	    :metadata #.`(:sync t
+	    :metadata (:sync t
 			     :json-name "x_scale"
 			     :dimension "x"
 					;,@cljw:*widget-serialization*
 			     ))
    (y-scale :accessor y-scale
 	    :initform (make-instance 'scale)
-	    :metadata #.`(:sync t
+	    :metadata (:sync t
 			     :json-name "y_scale"
 			     :dimension "y"
 					;,@cljw:*widget-serialization*

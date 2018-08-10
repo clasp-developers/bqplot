@@ -25,7 +25,7 @@
 	     :metadata (:sync t
 			      :json-name "ref_data"
 			      *dataframe-serialization*))
-   (title-map :initarg :title :accessor title-map
+   (marketmap-title :initarg :marketmap-title :accessor marketmap-title
 	  :type unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
@@ -40,7 +40,7 @@
 		    :initform nil
 		    :metadata (:sync t
 				     :json-name "tooltip_formats"))
-   (show-groups :initarg :showgroups :accessor show-groups
+   (show-groups :initarg :show-groups :accessor show-groups
 		:type bool
 		:initform :false
 		:metadata (:sync t
@@ -65,28 +65,25 @@
 	   :initform *CATEGORY10*
 	   :metadata (:sync t
 			    :json-name "colors"))
-   (scales-map :initarg :scales :accessor scales-map
+   (marketmap-scales :initarg :marketmap-scales :accessor marketmap-scales
 	   :type list
 	   :initform nil
-	   :metadata #.`(:sync t
-			   :json-name "scales"
-					;,@cljw:*widget-serialization*
-			   ))
-   (axes-map :initarg :axes :accessor axes-map
+           :metadata (:sync t
+			   :json-name "scales"))
+			   ;,@cljw:*widget-serialization*))
+   (marketmap-axes :initarg :marketmap-axes :accessor marketmap-axes
 	 :type list
 	 :initform nil
-	 :metadata #.`(:sync t
-			  :json-name "axes"
-					;,@cljw:*widget-serialization*
-			  ))
+	 :metadata (:sync t
+			  :json-name "axes"))
+			  ;,@cljw:*widget-serialization*))
    (color :initarg :color :accessor color
 	  :type list
 	  :initform nil
-	  :metadata #.`(:sync t
+	  :metadata (:sync t
 			   :json-name "color"
 					;,@cljw:*widget-serialization*
 			   ))
-
    ;;;;checked if cons "top" 50 is the same as top = 50 
    (map-margin :initarg :map-margin :accessor map-margin
 	       :type list
@@ -99,10 +96,9 @@
    (layout :initarg :layout :accessor layout
 	   :type list
 	   :initform (list (cons "min_width" "125px"))
-	   :metadata #.`(:sync t
-			    :json-name "layout"
-					;,@cljw:*widget-serialization*
-			    ))
+	   :metadata (:sync t
+			    :json-name "layout"))
+			    ;,@cljw:*widget-serialization*))
    (min-aspect-ratio :initarg :min-aspect-ratio :accessor min-aspect-ratio
 		     :type float
 		     :initform 1.0
@@ -160,10 +156,9 @@
 				  :json-name "enable_select"))
    (tooltip-widget :initarg :tooltip-widget :accessor tooltip-widget
 		   :initform (make-instance 'domwidget)
-		   :metadata #.`(:sync t
-				    :json-name "tooltip_widget"
-					;,@cljw:*widget-serialization*
-				    )))
+		   :metadata (:sync t
+				    :json-name "tooltip_widget")))
+				    ;,@cljw:*widget-serialization*)))
    (:default-initargs
     :view-name (cljw:unicode "MarketMap")
     :model-name (cljw:unicode "MarketMapModel")

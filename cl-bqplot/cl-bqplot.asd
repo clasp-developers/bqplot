@@ -1,5 +1,5 @@
 (asdf:defsystem #:cl-bqplot
-    :description "The ngl widget for cl-jupyter with widgets"
+    :description "A widget library for graphing, based on Bloomberg's BQPLOT."
     :version "0.1"
     :author "Kevin Esslinger"
     :license "LGPL2. See LICENSE."
@@ -9,14 +9,15 @@
     :components (
                  (:file "packages")
                  (:file "frontend")
+                 (:file "colorschemes")
                  (:file "figure")
                  (:file "marks")
                  (:file "pyplot")
                  (:file "scales")
+                 (:file "axes")
+                 (:file "default_tooltip")
                  (:file "toolbar")
-		 (:file "axes")
-		 (:file "default_tooltip")
-		 (:file "interacts")
-		 (:file "market_map")
-		 ))
+                 (:file "market_map")
+                 (:file "interacts")
+                 ))
 

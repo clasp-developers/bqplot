@@ -3,48 +3,48 @@
 (defclass figure (cljw:domwidget)
   ((title-figure :initarg :title :accessor title-figure
           :type cljw:unicode
-          :initform nil
+          :initform (cljw:unicode "")
           :metadata (:sync t
                            :json-name "title"))
-   ;;does display_name "Title" Matter??))xb
+                           ;;does display_name "Title" Matter??))
    (axes-figure :initarg :axes-figure :accessor axes-figure
-         :type list
-         :initform nil ;(make-instance 'axis)
-         :metadata #.`(:sync t
+         :type vector
+         :initform #()
+         :metadata (:sync t
                           :json-name "axes"
-                                        ,@cljw:*widget-serialization*
+                                        ;,@cljw:*widget-serialization*
 					))
    (axis-registry :initarg :axis-registry :accessor axis-registry
 		  :type list
 		  :initform nil)
    (marks :initarg :marks :accessor marks
-          :type Mark
-          :initform (make-instance 'Mark)
-          :metadata #.`(:sync t
+          :type vector
+          :initform #()
+          :metadata (:sync t
                            :json-name "marks"
-                                        ,@cljw:*widget-serialization*
+                                        ;,@cljw:*widget-serialization*
                            ))
    (interaction :initarg :interaction :accessor interaction
-                :initform (make-instance 'Interaction)
-                :metadata #.`(:sync t
+                :initform :null 
+                :metadata (:sync t
                                  :json-name "interaction"
-                                        ,@cljw:*widget-serialization*
+                                        ;,@cljw:*widget-serialization*
                                  ))
    (scale-x :initarg :scale-x :accessor scale-x
-            :initform (make-instance 'Scale)
-            :metadata #.`(:sync t
+            :initform (make-instance 'Linear-Scale :min 0.0 :max 1.0 :allow-padding :false)
+            :metadata (:sync t
                              :json-name "scale_x"
-                                        ,@cljw:*widget-serialization*
+                                        ;,@cljw:*widget-serialization*
                              ))
    (scale-y :initarg :scale-y :accessor scale-y
-            :initform (make-instance 'Scale)
-            :metadata #.`(:sync t
+            :initform (make-instance 'Linear-Scale :min 0.0 :max 1.0 :allow-padding :false)
+            :metadata (:sync t
                              :json-name "scale_y"
-                                        ,@cljw:*widget-serialization*
+                                        ;,@cljw:*widget-serialization*
                              ))
    (title-style :initarg :title-style :accessor title-style
                 :type cljw:dict
-                :initform (list (cons "trait" (cljw:unicode "")))
+                :initform nil 
                 :metadata (:sync t
                                  :json-name "title_style"))
    (background-style :initarg :background-style :accessor background-style
@@ -65,7 +65,7 @@
    (layout :initarg :layout :accessor layout
            ;:initform (make-instance 'LayoutTraitType :kw (list (cons "min-width" "125px")))
 	   :initform (make-instance 'cljw::layout :min-width "125px")
-           :metadata #.`(:sync t
+           :metadata (:sync t
                             :json-name "layout"
                                         ;,@cljw:*widget-serialization*
                             ))
