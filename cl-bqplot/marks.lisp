@@ -413,7 +413,7 @@
 			  ))
    (rotation :initarg :rotation :accessor rotation
 	     :type list
-	     :initform nil
+	     :initform (list (cons "type" :null) (cons "values" :null))
 	     :metadata (:sync t
 			      :json-name "rotation"
 			      :scaled t
@@ -433,7 +433,12 @@
 				    (cons "rotation" (list (cons "dimension" "rotation"))))
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
-					;TODO: default-opacities
+   (default-opacities :initarg :default-opacities :accessor default-opacities
+                      :type vector 
+                       :initform #()
+                       :metadata (:sync t
+                                        :json-name "default_opacities"
+                                        :display-name "Opacities"))
    (hovered-style :initarg :hovered-style :accessor hovered-style
 		  :type list
 		  :initform nil
@@ -445,8 +450,7 @@
 		    :metadata (:sync t
 				     :json-name "unhovered_style"))
    (hovered-point :initarg :hovered-point :accessor hovered-point
-		  :type integer
-		  :initform nil
+		  :initform :null
 		  :metadata (:sync t
 				   :json-name "hovered_point"))
    (enable-move :initarg :enable-move :accessor enable-move
@@ -498,15 +502,14 @@
 			  ))
 					;TODO: .valid stuff
    (marker :accessor marker
-	   :type list
+	   :type cljw:unicode
 	   :initform (cljw:unicode "circle")
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Marker"))
    (colors :accessor colors
-	   :type list
-	   :initform (list (cons "trait" (cljw:unicode ""))
-			   (cons "default-value" "steelblue"))
+	   :type vector
+	   :initform (vector "steelblue")
 	   :metadata (:sync t
 			    :json-name "colors"
 			    :display-name "Colors"))
@@ -568,8 +571,7 @@
                :metadata (:sync t
                                 :json-name "fill"))
    (drag-color :accessor drag-color
-               :type cljw:unicode
-               :initform (cljw:unicode "")
+               :initform :null
                :metadata (:sync t
                                 :json-name "drag_color"))
    (drag-size :accessor drag-size
@@ -624,7 +626,6 @@
 			  ;; FIXME *array-serialization*
 			  ))
    ;;TODO: valid(array_squeeze)
->>>>>>> merger
    (default-size :accessor default-size
                  :type float
 		 :initform 16.0
