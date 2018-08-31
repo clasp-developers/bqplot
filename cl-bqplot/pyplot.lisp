@@ -188,17 +188,17 @@
                    (push (cons name axis) axes)
                    (setf (cdr (assoc name axes :test #'string=)) (axes))))   
              (progn
-               ;(format t "Inside the part where axis is NIL~%")
+               (format t "Inside the part where axis is NIL~%")
                (setf key (traitlets:traitlet-metadata (class-of mark) (intern (string-upcase name) "BQPLOT") :atype))
                (when key
-                 ;(format t "Inside the part were key is t. Key is ~a~% axis-args is ~a~%" key axis-args)
-                 ;(format t "(list (intern (car axis-args) KEYWORD) (cdr (car axis-args)) ~a~%" (list (intern (caar axis-args) "KEYWORD") (cdar axis-args)))
+                 (format t "Inside the part were key is t. Key is ~a~% axis-args is ~a~%" key axis-args)
+                 (format t "(list (intern (car axis-args) KEYWORD) (cdr (car axis-args)) ~a~%" (list (intern (caar axis-args) "KEYWORD") (cdar axis-args)))
                  (setf axis-type (cdr (assoc key *axis-types* :test #'string=)))
                        axis (apply #'make-instance axis-type :scale (cdr (assoc name scales :test #'string=)) (list (intern (string-upcase (caar axis-args)) "KEYWORD") (cdar axis-args))) ;;;How to handle **Axis_args
                        fig-axes (append fig-axes (list axis)))
-               ;(format t "Passed the when key part. Woohoo~%")
+               (format t "Passed the when key part. Woohoo~%")
                (%update-fig-axis-registry fig dimension (cdr (assoc name scales :test #'string=)) axis))))
-    ;(format t "Passed %update-fig-axis-registry")
+    (format t "Passed %update-fig-axis-registry")
     (setf (axes-figure fig) fig-axes)
     ;(print "Done with axes")
     axes))
@@ -342,7 +342,7 @@
     ;(print "Going into first loop")
     (loop for (name . symb)  in (list (cons "x" 'bqplot::x) (cons "y" 'bqplot::y) (cons "color" 'bqplot::color))
        do
-         (let ((dimension (%get-attribute-dimension name (make-instance mark-type))))
+         (let ((dimension (%get-attribute-dimension name  (make-instance mark-type))))
            ;;;This cond is the entire body of the loop. It consists of 3 conditions, and then a final 'else':
            ;;;First, we check to see if name is not contained in kwargs.
            ;;;If it is not (it is likely that color will not be in kwargs, for instance), then we do nothing.
@@ -391,8 +391,8 @@
     ;(format t "Marks fig is ~a~% and mark is ~a~%" (marks fig) mark)
     (setf (marks fig) (concatenate 'vector (marks fig) (list mark)))
     ;(format t "Calling axes with :mark ~a :options ~a~%" mark axes-options)
-    (when (getf kwargs :axes t)
-        (axes :mark mark :options axes-options))
+  ;;  (when (getf kwargs :axes t)
+     ;;   (axes :mark mark :options axes-options))
     ;(print "Done with %draw-mark")
     mark))
 
@@ -710,7 +710,8 @@ draw-   (unless (member "count" scales)
                              ;(loop for dim in dimension-data collect (cdr (assoc "scale" dim :test #'string=)))))
          (dimension-axes (cdr (assoc "axis" dimension-data :test #'string=))))
                                         ;(loop for dim in dimension-data collect (cdr (assoc "axis" dim :test #'string=)))))
-      ;(format t "Out of let*. dimension data is ~a~% dimension-scales is ~a~% dimension axes is ~a~%" dimension-data dimension-scales dimension-axes)
+                                        ;(format t "Out of let*. dimension data is ~a~% dimension-scales is ~a~% dimension axes is ~a~%" dimension-data dimension-scales dimension-axes)
+      ;(print "Leaving %fetch-axis")
       (if dimension-scales
           dimension-scales
           nil))))

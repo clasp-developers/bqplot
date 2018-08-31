@@ -525,6 +525,7 @@
 				    (cons "opacity" (list (cons "dimension" "opacity")))
 				    (cons "rotation" (list (cons "dimension" "rotation")))
 				    (cons "skew" (list (cons "dimension" "skew"))))
+                    :allocation :class
 		    :metadata (:sync t
 				     :json-name "scales_metadata"))
 					;TODO: def some methods (default colors)
