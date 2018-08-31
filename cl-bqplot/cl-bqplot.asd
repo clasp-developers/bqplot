@@ -4,7 +4,7 @@
     :author "Kevin Esslinger"
     :license "LGPL2. See LICENSE."
   :depends-on (:cl-jupyter
-               :cl-jupyter-widgets)
+               :cl-ipywidgets)
     :serial t
     :components (
                  (:file "packages")
