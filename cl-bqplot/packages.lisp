@@ -5,6 +5,7 @@
         :cl-ipywidgets)
   (:import-from :fredokun-utilities #:[] #:[]-contains)
   (:export
+   #:Keep
    )
   (:documentation "Implements the bqplot package"))
 
