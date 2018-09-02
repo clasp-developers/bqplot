@@ -8,6 +8,7 @@
     :serial t
     :components (
                  (:file "packages")
+                 (:file "traits")
                  (:file "frontend")
                  (:file "colorschemes")
                  (:file "figure")

@@ -52,17 +52,17 @@
    (tick-values :accessor tick-values
 		:type list
 		:initform (list (cons "type" :null)(cons "values" :null))
-		:metadata (:sync t
-				 :json-name "tick_values"
-				 ;; FIXME *array-serialization*
-				 ))
+		:metadata #.`(:sync t
+			      :json-name "tick_values"
+			      ,@*array-serialization*
+			      ))
    (offset :accessor offset
 	   :type list
 	   :initform nil
-	   :metadata (:sync t
-			    :json-name "offset"
-			    ;; FIXME *array-serialization*
-			    ))
+	   :metadata #.`(:sync t
+			 :json-name "offset"
+			 ,@*array-serialization*
+			 ))
    (label-location :accessor label-location
 		   :type cljw:unicode 
 		   :initform (cljw:unicode "middle")
@@ -80,7 +80,7 @@
 				:json-name "grid_color"))
    (color :accessor color
 	 ; :type cljw:unicode
-	  :initform :nil
+	  :initform :null
 	  :metadata (:sync t
 			   :json-name "color"))
    (label-offset :accessor label-offset

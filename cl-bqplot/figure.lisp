@@ -22,7 +22,7 @@
           :initform #()
           :metadata (:sync t
                            :json-name "marks"
-                                        ;,@cljw:*widget-serialization*
+                                        ;,@cljw::*widget-serialization*
                            ))
    (interaction :initarg :interaction :accessor interaction
                 :initform :null 

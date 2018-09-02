@@ -167,35 +167,35 @@
   (x :initarg :x :accessor x
       :type vector
       :initform #()
-      :metadata (:sync t
-		       :json-name "x"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-                       ;;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "x"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+                    ,@*array-serialization*
+		    ))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :initarg :y :accessor y
       :type vector
       :initform #()
-      :metadata (:sync t
-		       :json-name "y"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "y"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :accessor color
       :type list
       :initform (list (cons "type" :null) (cons "values" :null))
-      :metadata (:sync t
-		       :json-name "color"
-		       :scaled t
-		       :rtype "Color"
-		       :atype "bqplot.ColorAxis"
-		       ;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "color"
+		    :scaled t
+		    :rtype "Color"
+		    :atype "bqplot.ColorAxis"
+		    ,@*array-serialization*
+		    ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
   (scales-metadata :accessor scales-metadata
       :type list
@@ -293,45 +293,45 @@
   ((x :accessor x
       :type list
       :initform nil
-      :metadata (:sync t
-		       :json-name "x"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "x"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :accessor y
       :type list
       :initform nil
-      :metadata (:sync t
-		       :json-name "y"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "y"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :accessor color
       :type list
       :initform nil
-      :metadata (:sync t
-		       :json-name "color"
-		       :scaled t
-		       :rtype "Color"
-		       :atype "bqplot.ColorAxis"
-		       ;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "color"
+		    :scaled t
+		    :rtype "Color"
+		    :atype "bqplot.ColorAxis"
+		    ,@*array-serialization*
+		    ))
 					;TODO: .valid(array_squeeze)
     (width :accessor width
 	   :type list
 	   :initform nil
-	   :metadata (:sync t
-			    :json-name "width"
-			    :scaled t
-			    :rtype "Number"
-			    ;*array-serialization*
-			    ))
+	   :metadata #.`(:sync t
+			 :json-name "width"
+			 :scaled t
+			 :rtype "Number"
+			 ,@*array-serialization*
+			 ))
    	;TODO: .valid(array_squeeze)
   (scales-metadata :accessor scales-metadata
 		   :type list
@@ -363,64 +363,64 @@
   ((x :initarg :x :accessor x
       :type vector
       :initform #()
-      :metadata (:sync t
-		       :json-name "x"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;;FIXME: *array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "x"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
       	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :initarg :y :accessor y
       :type vector
       :initform #()
-      :metadata (:sync t
-		       :json-name "y"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;;FIXME: *array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "y"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :initarg :color :accessor color
 	  :type list
 	  :initform  (list (cons "type" :null) (cons "values" :null))
-	  :metadata (:sync t
-			   :json-name "color"
-			   :scaled t
-			   :rtype "Color"
-			   :atype "bqplot.ColorAxis"
-			   ;;FIXME: *array-serialization*
-			   ))
+	  :metadata #.`(:sync t
+			:json-name "color"
+			:scaled t
+			:rtype "Color"
+			:atype "bqplot.ColorAxis"
+			,@*array-serialization*
+			))
 					;TODO: .valid(array_squeeze)
     (opacity :initarg :opacity :accessor opacity
 	     :type list
 	     :initform  (list (cons "type" :null) (cons "values" :null))
-	     :metadata (:sync t
-			      :json-name "opacity"
-			      :scaled t
-			      :rtype "Color"
-                              :atype "bqplot.ColorAxis"
-			      ;;FIXME: *array-serialization*
-			      ))
+	     :metadata #.`(:sync t
+			   :json-name "opacity"
+			   :scaled t
+			   :rtype "Color"
+                           :atype "bqplot.ColorAxis"
+			   ,@*array-serialization*
+			   ))
    (size :initarg :size :accessor size
 	 :type list
 	 :initform  (list (cons "type" :null) (cons "values" :null))
-	 :metadata (:sync t
-			  :json-name "size"
-			  :scaled t
-			  :rtype "Number"
-			  ;;FIXME: *array-serialization*
-			  ))
+	 :metadata #.`(:sync t
+		       :json-name "size"
+		       :scaled t
+		       :rtype "Number"
+		       ,@*array-serialization*
+		       ))
    (rotation :initarg :rotation :accessor rotation
 	     :type list
 	     :initform (list (cons "type" :null) (cons "values" :null))
-	     :metadata (:sync t
-			      :json-name "rotation"
-			      :scaled t
-			      :rtype "Number"
-			      ;*array-serialization*
-			      ))
+	     :metadata #.`(:sync t
+			   :json-name "rotation"
+			   :scaled t
+			   :rtype "Number"
+			   ,@*array-serialization*
+			   ))
    	;TODO: .valid(array_squeeze)
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		    :type list
@@ -495,12 +495,12 @@
    (skew :accessor skew
 	 :type list
 	 :initform  (list (cons "type" :null) (cons "values" :null))
-	 :metadata (:sync t
-			  :json-name "skew"
-			  :scaled t
-			  :rtype "Number"
-			  ;;FIXME: *array-serialization*
-			  ))
+	 :metadata #.`(:sync t
+		       :json-name "skew"
+		       :scaled t
+		       :rtype "Number"
+		       ,@*array-serialization*
+		       ))
 					;TODO: .valid stuff
    (marker :accessor marker
 	   :type cljw:unicode
@@ -556,10 +556,10 @@
    (names :accessor names
 	  :type list
 	  :initform  (list (cons "type" :null) (cons "values" :null))
-	  :metadata (:sync t
-			   :json-name "names"
-                                        ;*array-serialization*
-			   ))
+	  :metadata #.`(:sync t
+			:json-name "names"
+                        ,@*array-serialization*
+			))
 					;TODO: .valid(array_squeeze)
    (display-names :accessor display-names
                   :type cljw:bool
@@ -623,10 +623,10 @@
    (text :accessor text
 	 :type list
 	 :initform nil
-	 :metadata (:sync t
-			  :json-name "text"
-			  ;; FIXME *array-serialization*
-			  ))
+	 :metadata #.`(:sync t
+		       :json-name "text"
+		       ,@*array-serialization*
+		       ))
    ;;TODO: valid(array_squeeze)
    (default-size :accessor default-size
                  :type float
@@ -668,14 +668,14 @@
    (sample :accessor sample
 	   :type list
 	   :initform nil
-	   :metadata (:sync t
-			    :json-name "sample"
-			    :display-name "Sample"
-			    :scaled t
-			    :rtype "Number"
-			    :atype "bqplot.Axis"
-			    ;*array-serialization*
-			    ))
+	   :metadata #.`(:sync t
+			 :json-name "sample"
+			 :display-name "Sample"
+			 :scaled t
+			 :rtype "Number"
+			 :atype "bqplot.Axis"
+			 ,@*array-serialization*
+			 ))
 					;TODO: .valid stuff
    (count-marks :accessor count-marks
 	  :type list
@@ -739,24 +739,24 @@
   ((x :accessor x
       :type list
       :initform nil
-      :metadata (:sync t
-		       :json-name "x"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;; FIXME*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "x"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    ;;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :accessor y
       :type list
       :initform nil
-      :metadata (:sync t
-		       :json-name "y"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;;FIXME: *array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "y"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    ;;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (scales-metadata :accessor scales-metadata
                     :type list
@@ -805,35 +805,35 @@
   ((x :accessor x
       :type vector
       :initform #()
-      :metadata (:sync t
-		       :json-name "x"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;; FIXME *array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "x"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    ;;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (y :accessor y
       :type vector
       :initform #()
-      :metadata (:sync t
-		       :json-name "y"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "y"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :accessor color
       :type list
       :initform nil
-      :metadata (:sync t
-		       :json-name "color"
-		       :scaled t
-		       :rtype "Color"
-		       :atype "bqplot.ColorAxis"
-		       ;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "color"
+		    :scaled t
+		    :rtype "Color"
+		    :atype "bqplot.ColorAxis"
+		    ,@*array-serialization*
+		    ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
   (scales-metadata :accessor scales-metadata
       :type list
@@ -961,23 +961,23 @@
    (x :accessor x
       :type vector
       :initform #()
-      :metadata (:sync t
-		       :json-name "x"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;*array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "x"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    (y :accessor y
       :type vector
       :initform #()
-      :metadata (:sync t
-		       :json-name "y"
-		       :scaled t
-		       :rtype "Number"
-		       :atype "bqplot.Axis"
-		       ;; FIXME  *array-serialization*
-		       ))
+      :metadata #.`(:sync t
+		    :json-name "y"
+		    :scaled t
+		    :rtype "Number"
+		    :atype "bqplot.Axis"
+		    ,@*array-serialization*
+		    ))
    (scales-metadata :accessor scales-metadata
 		    :type list
 		    :initform (list (cons "x" (list (cons "orientation" "horizontal")
@@ -1211,32 +1211,32 @@
   ((row :initarg :row :accessor row
 	:type list
 	:initform nil
-	:metadata (:sync t
-			 :json-name "row"
-			 :scaled t
-			 :rtype "Number"
-                         :atype "bqplot.Axis"
-                                        ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :json-name "row"
+		      :scaled t
+		      :rtype "Number"
+                      :atype "bqplot.Axis"
+                      ,@*array-serialization*
+		      ))
    (column :initarg :column :accessor column
            :type list
            :initform nil
-           :metadata (:sync t
-                            :json-name "column"
-                            :scaled t
-                            :rtype "Number"
-                            :atype "bqplot.Axis"
-                                        ;*array-serialization*
-                            ))
+           :metadata #.`(:sync t
+                         :json-name "column"
+                         :scaled t
+                         :rtype "Number"
+                         :atype "bqplot.Axis"
+                         ,@*array-serialization*
+                         ))
    (color :initarg :color :accessor color
           :type list
           :initform nil
-          :metadata (:sync t
-                           :scaled t
-                           :rtype "Color"
-                           :atype "bqplot.ColorAxis"
-                                        ;*array-serialization*
-                           ))
+          :metadata #.`(:sync t
+                        :scaled t
+                        :rtype "Color"
+                        :atype "bqplot.ColorAxis"
+                        ,@*array-serialization*
+                        ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		   :type list
 		   :initform (list (cons "row" (list (cons "orientation" "vertical")
@@ -1290,33 +1290,33 @@
   ((x :initarg :x :accessor x
 	:type vector
 	:initform #()
-	:metadata (:sync t
-			 :json-name "x"
-			 :scaled t
-			 :rtype "Number"
-                         :atype "bqplot.Axis"
-                         ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :json-name "x"
+		      :scaled t
+		      :rtype "Number"
+                      :atype "bqplot.Axis"
+                      ,@*array-serialization*
+		      ))
    (y :initarg :y :accessor y
 	:type vector
 	:initform #()
-	:metadata (:sync t
-			 :json-name "y"
-			 :scaled t
-			 :rtype "Number"
-                         :atype "bqplot.Axis"
-                         ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :json-name "y"
+		      :scaled t
+		      :rtype "Number"
+                      :atype "bqplot.Axis"
+                      ,@*array-serialization*
+		      ))
    (color :initarg :color :accessor color
 	:type list
 	:initform nil
-	:metadata (:sync t
-			 :json-name color
-			 :scaled t
-			 :rtype "Color"
-                         :atype "bqplot.ColorAxis"
-                         ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :json-name color
+		      :scaled t
+		      :rtype "Color"
+                      :atype "bqplot.ColorAxis"
+                      ,@*array-serialization*
+		      ))
    (scales-metadata :initarg :scales-metadata :accessor scales-metadata
 		   :type list
 		   :initform (list (cons "x" (list (cons "orientation" "horizontal")
@@ -1362,11 +1362,11 @@
    (link-matrix :accessor link-matrix
 		:type list
 		:initform nil
-		:metadata (:sync t
-				 :json-name "link_matrix"
-				 :rtype "Number"
-				 ;*array-serialization*
-				 ))
+		:metadata #.`(:sync t
+			      :json-name "link_matrix"
+			      :rtype "Number"
+			      ,@*array-serialization*
+			      ))
    (link-type :accessor link-type
 	      :type cljw:unicode
 	      :initform (cljw:unicode "arc")
@@ -1399,42 +1399,42 @@
   (x :accessor x
 	:type vector
 	:initform #()
-	:metadata (:sync t
-			 :json-name "x"
-			 :scaled t
-			 :rtype "Number"
-                         :atype "bqplot.Axis"
-                         ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :json-name "x"
+		      :scaled t
+		      :rtype "Number"
+                      :atype "bqplot.Axis"
+                      ,@*array-serialization*
+		      ))
    (y :accessor y
 	:type vector
 	:initform #()
-	:metadata (:sync t
-			 :json-name "y"
-			 :scaled t
-			 :rtype "Number"
-                         :atype "bqplot.Axis"
-                         ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :json-name "y"
+		      :scaled t
+		      :rtype "Number"
+                      :atype "bqplot.Axis"
+                      ,@*array-serialization*
+		      ))
    (color :accessor color
 	:type list
 	:initform nil
-	:metadata (:sync t
-			 :json-name "color"
-			 :scaled t
-			 :rtype "Color"
-                         :atype "bqplot.ColorAxis"
-                         ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :json-name "color"
+		      :scaled t
+		      :rtype "Color"
+                      :atype "bqplot.ColorAxis"
+                      ,@*array-serialization*
+		      ))
    (link-color :accessor link-color
 	       :type list
 	       :initform nil
-	       :metadata (:sync t
-				:json-name "link_color"
-				:rtype "Color"
-				:atype "bqplot.ColorAxis"
-				;*array-serialization*
-				))
+	       :metadata #.`(:sync t
+			     :json-name "link_color"
+			     :rtype "Color"
+			     :atype "bqplot.ColorAxis"
+			     ,@*array-serialization*
+			     ))
    (hovered-style :accessor hovered-style
 		:type list
 		:initform nil
@@ -1471,21 +1471,21 @@
   ((x :accessor x
 	:type list
 	:initform (list (cons "default-value" (list (cons 0 1))))
-	:metadata (:sync t
-			 :scaled t
-			 :rtype "Number"
-                         :atype "bqplot.Axis"
-                         ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :scaled t
+		      :rtype "Number"
+                      :atype "bqplot.Axis"
+                      ,@*array-serialization*
+		      ))
    (y :accessor y
 	:type list
 	:initform (list (cons "default-value" (list (cons 0 1))))
-	:metadata (:sync t
-			 :scaled t
-			 :rtype "Number"
-                         :atype "bqplot.Axis"
-                         ;*array-serialization*
-			 ))
+	:metadata #.`(:sync t
+		      :scaled t
+		      :rtype "Number"
+                      :atype "bqplot.Axis"
+                      ,@*array-serialization*
+		      ))
      (scales-metadata :accessor scales-metadata
 		   :type list
 		   :initform (list (cons "x" (list (cons "orientation" "horizontal")

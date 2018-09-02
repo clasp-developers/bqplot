@@ -123,9 +123,9 @@
   ((selected :accessor selected
 	     :type list
 	     :initform nil
-	     :metadata (:sync t
-			      :json-name "selected"
-			      *array-serialization*))
+	     :metadata #.`(:sync t
+			   :json-name "selected"
+			   ,@*array-serialization*))
    (color :accessor color
 	  :type unicode
 	  :initform (cljw:unicode "")
@@ -146,9 +146,9 @@
   ((selected :accessor selected
 	     :type list
 	     :initform nil
-	     :metadata (:sync t
-			      :json-name "selected"
-			      *array-serialization*))
+	     :metadata #.`(:sync t
+			   :json-name "selected"
+			   ,@*array-serialization*))
    (line-width :accessor line-width
 	       :type integer
 	       :initform 2
@@ -174,9 +174,9 @@
    (selected :accessor selected
 	     :type list
 	     :initform nil
-	     :metadata (:sync t
-			      :json-name "selected"
-			      *array-serialization*))
+	     :metadata #.`(:sync t
+			   :json-name "selected"
+			   ,@*array-serialization*))
    (orientation :accessor orientation
 		:type unicode
 		:initform (cljw:unicode "horizontal")

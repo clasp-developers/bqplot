@@ -4,21 +4,21 @@
   ((names :initarg :name :accessor names
 	  :type list
 	  :initform (list (cons "type" "float") (cons "values" #()))
-	  :metadata (:sync t
-			   :json-name "names"
-			   *array-serialization*))
+	  :metadata #.`(:sync t
+			:json-name "names"
+			,@*array-serialization*))
    (groups :initarg :groups :accessor groups
 	   :type list
 	   :initform (list (cons "type" "float") (cons "values" #()))
-	   :metadata (:sync t
-			    :json-name "groups"
-			    *array-serialization*))
+	   :metadata #.`(:sync t
+			 :json-name "groups"
+			 ,@*array-serialization*))
    (display-text :initarg :display-text :accessor display-text
 		 :type list
 		 :initform (list (cons "type" :null) (cons "values" :null))
-		 :metadata (:sync t
-				  :json-name "display_text"
-				  *array-serialization*))
+		 :metadata #.`(:sync t
+			       :json-name "display_text"
+			       ,@*array-serialization*))
    (ref-data :initarg :ref-data :accessor ref-data
 	    ; :type list
 	     :initform :null
