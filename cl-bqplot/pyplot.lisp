@@ -55,7 +55,6 @@
 
 (defun figure (&rest kwargs &key (key nil) (fig nil) &allow-other-keys)
 ;;;We don't want key and fig to actually be in the kwargs plist
-  (print "Entered figure function")
   (remf kwargs :key)
   (remf kwargs :fig)
                                         ;(print "About to enter first let")
@@ -64,7 +63,7 @@
     (remf kwargs :scales)
                                         ;(print "checking for current_key in context")
     (setf ([] %context "current_key") key)
-                                        ;(format t "Checking fig... ~% FIG: ~a~%" fig)
+                                        ;(logg 3 "Checking fig... ~% FIG: ~a~%" fig)
     (if fig
 	(progn
 	  (setf ([] %context "figure") (list fig))
@@ -75,7 +74,7 @@
 	      (setf ([] %context "figure") (append ([] %context "figure") (cons arg ([] kwargs arg)))))))
 	(progn
                                         ;(print "In progn sequence where fig is NIL")
-                                        ;(format t "KEY: ~a ~%" key)
+                                        ;(logg 3 "KEY: ~a ~%" key)
 	  (if (not key)
               (progn
                                         ;(print "in progn where key is NIL")
@@ -155,10 +154,6 @@
 ;;;Remove mark and options from kwargs
   (remf kwargs :mark)
   (remf kwargs :options)
-  (format t "Inside axes.~%")
-  (format t "kwargs is ~s~%" kwargs)
-  (format t "mark is ~s~%" mark)
-  (format t "options is ~s~%" options)
   (unless mark
     (let ((new_mark ([] %context "last_mark")))
       (if new_mark
@@ -166,10 +161,10 @@
           (return-from axes nil))))
   (let* ((fig (getf kwargs :figure (current-figure)))
          (scales (scales-mark mark))
-         (_ (format t "About to enter loop scales is ~s~%" scales))
-         (_ (format t "About to fig-axes  (axes-figure fig) -> ~s~%" (axes-figure fig)))
+         (_ (logg 3 "About to enter loop scales is ~s~%" scales))
+         (_ (logg 3 "About to fig-axes  (axes-figure fig) -> ~s~%" (axes-figure fig)))
          (fig-axes (loop for axes-instance across (axes-figure fig) collect axes-instance))
-         (_ (format t "fig-axes -> ~s~%" fig-axes))
+         (_ (logg 3 "fig-axes -> ~s~%" fig-axes))
          (axes nil)
          (scale-metadata nil)
          (dimension nil)
@@ -183,7 +178,7 @@
              ;; (if name not in mark.class_trait_names(scaled=True):)
              ;;mark.class_trait_names(scaled=True) returns a list of all slots
              ;; that have metadata with an rtype field.
-             ;;(format t "Inside the loop. ~% Name is ~a Scales-metadata mark is ~a~% scales is ~a~%" name (scales-metadata mark) scales)
+             ;;(logg 3 "Inside the loop. ~% Name is ~a Scales-metadata mark is ~a~% scales is ~a~%" name (scales-metadata mark) scales)
              (setf scale-metadata ([] (scales-metadata mark) name)
                    dimension (if ([] scale-metadata "dimension")
                                  ([] scale-metadata "dimension")
@@ -194,11 +189,11 @@
                                    (list scale-metadata)) ;;;Plus options.get(name)
                                  scale-metadata)
                    axis (%fetch-axis fig dimension ([] scales name)))
-             (format t "After first setf in loop: ~% scale-metadata is ~s~% dimension is ~s~% axis-args is ~s~%" scale-metadata dimension axis-args)
-             (format t "At if axis. Axis is ~s~%" axis)
+             (logg 3 "After first setf in loop: ~% scale-metadata is ~s~% dimension is ~s~% axis-args is ~s~%" scale-metadata dimension axis-args)
+             (logg 3 "At if axis. Axis is ~s~%" axis)
              (if axis
                  (progn
-                   ;;(format t "Inside the part where axis is t~%")
+                   ;;(logg 3 "Inside the part where axis is t~%")
                    ;;(%apply-properties axis (getf options name nil)) THIS NEEDS TO WORK
                    (if (assoc name axes :test #'string=)
                        (push (cons name axis) axes)
@@ -212,7 +207,7 @@
                            fig-axes (concatenate 'vector fig-axes (vector axis)))
                      (%update-fig-axis-registry fig dimension ([] scales name) axis)))))
     (setf (axes-figure fig) fig-axes)
-    (format t "end of axes axes -> ~s~%" axes)
+    (logg 3 "end of axes axes -> ~s~%" axes)
     axes))
 
 
@@ -342,8 +337,8 @@ because that method uses a mutex."
 
 
 (defun %draw-mark (mark-type kwargs)
-                                        ;(format t "Mark-type: ~a~%" mark-type)
-                                        ;(format t "kwargs: ~a~%" kwargs)
+                                        ;(logg 3 "Mark-type: ~a~%" mark-type)
+                                        ;(logg 3 "kwargs: ~a~%" kwargs)
   (let ((mark-class (if (symbolp mark-type)
                         (find-class mark-type)
                         mark-type))
@@ -404,19 +399,19 @@ because that method uses a mutex."
                         (when update-context
                           (setf ([] ([] %context "scales" ) dimension) ([] scales name))))
                        (t
-                                        ;(format t "NOTHING IS TRUE!!! Dimension is ~a~%" dimension)
+                                        ;(logg 3 "NOTHING IS TRUE!!! Dimension is ~a~%" dimension)
                         (setf ([] scales name) ([] ([] %context "scales") dimension)))))))
-                                        ;(format t "We made it out of the loop!!!! ~% Scales is ~a and mark is ~a~%" scales mark)
+                                        ;(logg 3 "We made it out of the loop!!!! ~% Scales is ~a and mark is ~a~%" scales mark)
     (setf temp-kwargs (append kwargs (list :scales-mark scales)))
-                                        ;(format t "Updated kwargs. It is now ~a~%" kwargs)
+                                        ;(logg 3 "Updated kwargs. It is now ~a~%" kwargs)
     (setf mark (apply #'make-instance mark-class temp-kwargs))
-                                        ;(format t "After updating kwargs and mark.~% kwargs is now ~a and mark is ~a~%" kwargs mark)
+                                        ;(logg 3 "After updating kwargs and mark.~% kwargs is now ~a and mark is ~a~%" kwargs mark)
     (setf ([] %context "last_mark") mark)
-                                        ;(format t "After if assoc last_mark %context~% %context is now ~a~%" %context)
-                                        ;(format t "Marks fig is ~a~% and mark is ~a~%" (marks fig) mark)
+                                        ;(logg 3 "After if assoc last_mark %context~% %context is now ~a~%" %context)
+                                        ;(logg 3 "Marks fig is ~a~% and mark is ~a~%" (marks fig) mark)
     ;; This next statement should cause the marks for the figure to be updated
     (setf (marks fig) (concatenate 'vector (marks fig) (list mark)))
-                                        ;(format t "Calling axes with :mark ~a :options ~a~%" mark axes-options)
+                                        ;(logg 3 "Calling axes with :mark ~a :options ~a~%" mark axes-options)
     (when (getf kwargs :axes t)
       (axes :mark mark :options axes-options))
     ;;(print "Done with %draw-mark")
@@ -723,16 +718,15 @@ because that method uses a mutex."
 
 (defun %fetch-axis (fig dimension scale)
   ;;(return-from %fetch-axis nil)
-  (print "In %fetch-axis")
-  (format t "inside %fetch-axis~% fig is ~s~% dimension is ~s~% scale is ~s~%" fig dimension scale)
+  (logg 3 "inside %fetch-axis~% fig is ~s~% dimension is ~s~% scale is ~s~%" fig dimension scale)
   (let ((axis-registry (axis-registry fig)))
-    (format t "axis-registry is ~s~%" axis-registry)
+    (logg 3 "axis-registry is ~s~%" axis-registry)
     (let* ((dimension-data ([] axis-registry dimension nil))
-           (_ (format t "dimension-data -> ~s~%" dimension-data))
+           (_ (logg 3 "dimension-data -> ~s~%" dimension-data))
            (dimension-scales (loop for (dim . value) across dimension-data
-                                   do (format t "dim -> ~s  value -> ~s~%" dim value)
+                                   do (logg 3 "dim -> ~s  value -> ~s~%" dim value)
                                    collect ([] dim "scale")))
-           (_ (format t "dimension-scales -> ~s~%" dimension-scales))
+           (_ (logg 3 "dimension-scales -> ~s~%" dimension-scales))
            (dimension-axes (loop for (dim . value) in dimension-data
                                  collect ([] dim "axis")))
            (dimension-scales-index (position scale dimension-scales :test #'string=)))
@@ -741,9 +735,8 @@ because that method uses a mutex."
           nil))))
 
 (defun %update-fig-axis-registry (fig dimension scale axis)
-  (print "In %update-fig-axis-registry")
-  (format t "In %update-fig-axis-registry.~% fig is ~a~% dimension is ~a~% scale is ~a~% axis is ~a~%" fig dimension scale axis)
-  (format t "axis-registry is ~s~%" (axis-registry fig))
+  (logg 3 "In %update-fig-axis-registry.~% fig is ~a~% dimension is ~a~% scale is ~a~% axis is ~a~%" fig dimension scale axis)
+  (logg 3 "axis-registry is ~s~%" (axis-registry fig))
   (let* ((axis-registry (axis-registry fig))
          (dimension-scales ([] axis-registry dimension nil)))
     (setf dimension-scales (concatenate 'vector
@@ -752,7 +745,7 @@ because that method uses a mutex."
                                                       (cons "axis" axis)))))
     (setf ([] axis-registry dimension) dimension-scales)
     (setf (axis-registry fig) axis-registry)
-    (format t "final axis-registry is ~s~%" axis-registry)
+    (logg 3 "final axis-registry is ~s~%" axis-registry)
     ))
   
 ;(defun %get-attribute-dimension (trait-name &key (mark-type nil) &allow-other-keys)
