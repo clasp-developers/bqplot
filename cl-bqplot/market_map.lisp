@@ -82,7 +82,7 @@
 	  :initform  #() ; (list (cons "type" "float") (cons "values" #()))
 	  :metadata #.`(:sync t
 			:json-name "color"
-			,@array-serialization* ;,@cljw:*widget-serialization*
+			,@*array-serialization* ;,@cljw:*widget-serialization*
 			))
    ;;;;checked if cons "top" 50 is the same as top = 50 
    (map-margin :initarg :map-margin :accessor map-margin

@@ -14,15 +14,6 @@
   (if arr
       (cond
         ((typep (array-element-type arr) '(or t number))
-         (format t "aet -> number~%")
-         (list (cons "type" "float")
-               (cons "values" (let ((farray (make-array (length arr)
-                                                        :element-type 'single-float)))
-                                (loop for idx below (length arr)
-                                      do (setf (aref farray idx) (float (aref arr idx) 1s0)))
-                                farray))))
-        ((typep (array-element-type arr) 't)
-         (format t "aet -> t~%")
          (list (cons "type" "float")
                (cons "values" (let ((farray (make-array (length arr)
                                                         :element-type 'single-float)))
@@ -30,7 +21,8 @@
                                       do (setf (aref farray idx) (float (aref arr idx) 1s0)))
                                 farray))))
         (t (error "Handle array of type ~a" (array-element-type arr))))
-      (error "Handle none")))
+      (list (cons "type" nil)
+            (cons "values" arr))))
 
 (defparameter *array-serialization*
   (list :from-json 'array-from-json
