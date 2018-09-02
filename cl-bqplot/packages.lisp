@@ -1,9 +1,7 @@
 (defpackage "BQPLOT"
   (:shadow #:close #:map #:max #:min #:clear)
-  (:use :common-lisp
-        :cl-jupyter
-        :cl-ipywidgets)
-  (:import-from :fredokun-utilities #:[] #:[]-contains)
+  (:use :common-lisp)
+  (:import-from :fredokun-utilities #:[] #:[]-contains #:logg)
   (:export
    #:Keep
    ;; scale types
