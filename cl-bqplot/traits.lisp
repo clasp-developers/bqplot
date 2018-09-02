@@ -1,6 +1,6 @@
 (in-package :bqplot)
 
-(defun array-from-json (value &key obj)
+(defun array-from-json (value obj)
   (when value
     (when ([] value "values")
       (let ((type ([] value "type")))
@@ -10,12 +10,25 @@
                (error "Handle date"))
               (t (error "Handle type ~s" type)))))))
 
-(defun array-to-json (arr &key obj)
+(defun array-to-json (arr obj)
   (if arr
       (cond
-        ((typep (array-element-type arr) 'number)
+        ((typep (array-element-type arr) '(or t number))
+         (format t "aet -> number~%")
          (list (cons "type" "float")
-               (cons "values" arr)))
+               (cons "values" (let ((farray (make-array (length arr)
+                                                        :element-type 'single-float)))
+                                (loop for idx below (length arr)
+                                      do (setf (aref farray idx) (float (aref arr idx) 1s0)))
+                                farray))))
+        ((typep (array-element-type arr) 't)
+         (format t "aet -> t~%")
+         (list (cons "type" "float")
+               (cons "values" (let ((farray (make-array (length arr)
+                                                        :element-type 'single-float)))
+                                (loop for idx below (length arr)
+                                      do (setf (aref farray idx) (float (aref arr idx) 1s0)))
+                                farray))))
         (t (error "Handle array of type ~a" (array-element-type arr))))
       (error "Handle none")))
 

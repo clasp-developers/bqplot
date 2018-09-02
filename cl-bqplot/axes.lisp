@@ -51,7 +51,7 @@
 			       :json-name "num_ticks"))
    (tick-values :accessor tick-values
 		:type list
-		:initform (list (cons "type" :null)(cons "values" :null))
+		:initform #() ; (list (cons "type" :null)(cons "values" :null))
 		:metadata #.`(:sync t
 			      :json-name "tick_values"
 			      ,@*array-serialization*

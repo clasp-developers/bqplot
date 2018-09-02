@@ -3,19 +3,19 @@
 (defclass market-map (cljw:domwidget)
   ((names :initarg :name :accessor names
 	  :type list
-	  :initform (list (cons "type" "float") (cons "values" #()))
+	  :initform #() ; (list (cons "type" "float") (cons "values" #()))
 	  :metadata #.`(:sync t
 			:json-name "names"
 			,@*array-serialization*))
    (groups :initarg :groups :accessor groups
 	   :type list
-	   :initform (list (cons "type" "float") (cons "values" #()))
+	   :initform #() ; (list (cons "type" "float") (cons "values" #()))
 	   :metadata #.`(:sync t
 			 :json-name "groups"
 			 ,@*array-serialization*))
    (display-text :initarg :display-text :accessor display-text
 		 :type list
-		 :initform (list (cons "type" :null) (cons "values" :null))
+		 :initform #() ; (list (cons "type" :null) (cons "values" :null))
 		 :metadata #.`(:sync t
 			       :json-name "display_text"
 			       ,@*array-serialization*))
@@ -79,11 +79,11 @@
 			  ;,@cljw:*widget-serialization*))
    (color :initarg :color :accessor color
 	  :type list
-	  :initform  (list (cons "type" "float") (cons "values" #()))
-	  :metadata (:sync t
-			   :json-name "color"
-					;,@cljw:*widget-serialization*
-			   ))
+	  :initform  #() ; (list (cons "type" "float") (cons "values" #()))
+	  :metadata #.`(:sync t
+			:json-name "color"
+			,@array-serialization* ;,@cljw:*widget-serialization*
+			))
    ;;;;checked if cons "top" 50 is the same as top = 50 
    (map-margin :initarg :map-margin :accessor map-margin
 	       :type list

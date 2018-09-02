@@ -188,7 +188,7 @@
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :accessor color
       :type list
-      :initform (list (cons "type" :null) (cons "values" :null))
+      :initform #() ; (list (cons "type" :null) (cons "values" :null))
       :metadata #.`(:sync t
 		    :json-name "color"
 		    :scaled t
@@ -384,7 +384,7 @@
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
    (color :initarg :color :accessor color
 	  :type list
-	  :initform  (list (cons "type" :null) (cons "values" :null))
+	  :initform  #() ; (list (cons "type" :null) (cons "values" :null))
 	  :metadata #.`(:sync t
 			:json-name "color"
 			:scaled t
@@ -395,7 +395,7 @@
 					;TODO: .valid(array_squeeze)
     (opacity :initarg :opacity :accessor opacity
 	     :type list
-	     :initform  (list (cons "type" :null) (cons "values" :null))
+	     :initform  #()
 	     :metadata #.`(:sync t
 			   :json-name "opacity"
 			   :scaled t
@@ -405,7 +405,7 @@
 			   ))
    (size :initarg :size :accessor size
 	 :type list
-	 :initform  (list (cons "type" :null) (cons "values" :null))
+	 :initform  #() ; (list (cons "type" :null) (cons "values" :null))
 	 :metadata #.`(:sync t
 		       :json-name "size"
 		       :scaled t
@@ -414,7 +414,7 @@
 		       ))
    (rotation :initarg :rotation :accessor rotation
 	     :type list
-	     :initform (list (cons "type" :null) (cons "values" :null))
+	     :initform #() ; (list (cons "type" :null) (cons "values" :null))
 	     :metadata #.`(:sync t
 			   :json-name "rotation"
 			   :scaled t
@@ -494,7 +494,7 @@
          :initform (cljw:unicode "Scatter"))
    (skew :accessor skew
 	 :type list
-	 :initform  (list (cons "type" :null) (cons "values" :null))
+	 :initform  #() ; (list (cons "type" :null) (cons "values" :null))
 	 :metadata #.`(:sync t
 		       :json-name "skew"
 		       :scaled t
@@ -555,7 +555,7 @@
 		      :display-name "Display names"))
    (names :accessor names
 	  :type list
-	  :initform  (list (cons "type" :null) (cons "values" :null))
+	  :initform  #() ; (list (cons "type" :null) (cons "values" :null))
 	  :metadata #.`(:sync t
 			:json-name "names"
                         ,@*array-serialization*
