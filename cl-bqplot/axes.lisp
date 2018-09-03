@@ -133,7 +133,7 @@
      :model-name (cljw:unicode "ColorAxisModel"))
   (:metaclass traitlets:traitlet-class))
      
-(defmethod widget-slot-value ((w widget) slot-name)
+(defmethod widget-slot-value ((w cljw:widget) slot-name)
   (slot-value w slot-name))
 
 
