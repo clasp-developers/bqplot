@@ -125,9 +125,9 @@
 
 (defmethod on-hover ((self mark) callback &key (remove nil))
   (register-callback (%hover-handlers self) callback :remove remove))
-(defmethod on-click ((self mark) call &key (remove nil))
+(defmethod on-click ((self mark) callback &key (remove nil))
   (register-callback (%click-handlers self) callback :remove remove))
-(defmethod on-legend-click ((self mark) calllback &key (remove nil))
+(defmethod on-legend-click ((self mark) callback &key (remove nil))
   (register-callback (%legend-click-handlers self) callback :remove remove))
 (defmethod on-legend-hover ((self mark) callback &key (remove nil))
   (register-callback (%legend-hover-handlers self) callback :remove remove))
@@ -898,16 +898,20 @@
     :model-name (cljw:unicode "BarsModel"))
   (:metaclass traitlets:traitlet-class))
 
-(defmethod %validate-orientation (object val)
-  (if (equal val (cljw:unicode "vertical"))
-      (setf x-orient "horizontal"
-            y-orient "vertical")
-      (setf x-orient "vertical"
-	    y-orient "horizontal"))
-  (setf scales-metadata (list (cons "x" (list (cons "orientation" x-orient )
-				              (cons "dimension" "x")))
-			      (cons "y" (list (cons "orientation" y-orient)
-				              (cons "dimension" "y"))))))
+
+;;;validat3e('orientation')
+(defun %validate-orientation (object val)
+  (if (slot-boundp object 'orientation)
+      (let ((x-orient ""))
+        (if (string= value "vertical")
+            (setf x-orient "horizontal")
+            (setf x-orient "vertical"))
+        (setf (scales-metadata object) (list (cons "x" (list (cons "orientation" x-orient)
+                                                             (cons "dimension" "x")))
+                                             (cons "y" (list (cons "orientation" value)
+                                                             (cons "dimension" "y"))))))
+      val))
+                                                   
 
 (defclass bins(bars)
   ((name :initarg  :name :accessor name
