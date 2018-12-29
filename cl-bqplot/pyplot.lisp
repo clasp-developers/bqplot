@@ -98,19 +98,19 @@
     ([] %context "figure")))
         
 (defun close (key)
-  (let ((figure-registry ([] %context "figure_registry")))
-    (fig nil))
-  (unless (member key figure-registry :test #'equal)
-    (return-from close))
-  (when (eq ([] %context "figure") ([]-contains figure-registry key)) (make-instance 'figure))
-  (setf fig ([] figure-registry key))
-  ;;if hasattr(fig, 'pyplot')
-  ;;fig.pyplot.close()
-  (warn "del figure_registry[key] where key = ~s" key)
-  ;;del figure_registry[key]
-  (warn "del _context['scale_registry'][key] where key = ~s" key)
-  ;;del _context['scale_registry'][key]
-  (values))
+  (let ((figure-registry ([] %context "figure_registry"))
+        (fig nil))
+    (unless (member key figure-registry :test #'equal)
+      (return-from close))
+    (when (eq ([] %context "figure") ([]-contains figure-registry key)) (make-instance 'figure))
+    (setf fig ([] figure-registry key))
+    ;;if hasattr(fig, 'pyplot')
+    ;;fig.pyplot.close()
+    (warn "del figure_registry[key] where key = ~s" key)
+    ;;del figure_registry[key]
+    (warn "del _context['scale_registry'][key] where key = ~s" key)
+    ;;del _context['scale_registry'][key]
+    (values)))
 
 ;;;(defun %process-data (&rest kwarg-names &key &allow-other-keys)
   ;;;(warn "TODO: Make %process data"))
@@ -226,8 +226,9 @@
 	  (axis (%fetch-axis fig dimension ([] scales dim))))
       (unless dimension  
 	(setf dimension ([] scales dim)))
-      (when axis
-	(%apply-properties axis (cons "label" label)))))
+      ;(when axis
+                                        ;(%apply-properties axis (cons "label" label)))))
+      ))
   (values))
 
 (defun xlabel (&rest kwargs &key (label nil) (mark nil) &allow-other-keys)
@@ -349,7 +350,8 @@ because that method uses a mutex."
         (cmap (getf kwargs :cmap))
         (options (getf kwargs :options))
         (axes-options (getf kwargs :axes-options))
-        (mark nil))
+        (mark nil)
+        (temp-kwargs nil))
     (remf kwargs :fig)
     (remf kwargs :scales)
     (remf kwargs :cmap)
@@ -404,6 +406,7 @@ because that method uses a mutex."
                                         ;(logg 3 "We made it out of the loop!!!! ~% Scales is ~a and mark is ~a~%" scales mark)
     (setf temp-kwargs (append kwargs (list :scales-mark scales)))
                                         ;(logg 3 "Updated kwargs. It is now ~a~%" kwargs)
+    (print "Hello There")
     (setf mark (apply #'make-instance mark-class temp-kwargs))
                                         ;(logg 3 "After updating kwargs and mark.~% kwargs is now ~a and mark is ~a~%" kwargs mark)
     (setf ([] %context "last_mark") mark)
@@ -500,8 +503,8 @@ because that method uses a mutex."
 ;;;In python, they give an 'index_data' as a key, and if x is not supplied, then this index_data key becomes x. That should not be relevant to us. 
 (defun plot (x y &rest kwargs &key &allow-other-keys)
   (let ((marker-str (getf kwargs :marker-str)))
-    (unless x
-      (setf x (%infer-x-for-line y)))
+    ;(unless x
+    ; (setf x (%infer-x-for-line y)))
     ;(setf kwargs (append kwargs (list :x x :y y)))
     (if  marker-str
          (progn
@@ -579,7 +582,7 @@ because that method uses a mutex."
        (progn (setf dimension (%get-attribute-dimension xy (find-class 'bars)))
 	      (if (member dimension ([] %context "scales"))
 		  (setf ([] scales xy) (nth dimension ([] %context "scales")))
-		  (progn (setf ([] scales xy) (linear-scale (getf options xy)))
+		  (progn (setf ([] scales xy) (make-instance 'linear-scale (getf options xy)))
 			 (setf (nth dimension ([] %context "scales")) ([] scales xy)))))))
    (setf kwargs (append kwargs (list :scales scales)))
    (%draw-mark 'bins :options options kwargs)))
@@ -655,13 +658,13 @@ because that method uses a mutex."
 ;;checked 
 (defun %get-context-scale (dimension)
   (nth dimension ([] %context "scales")))
-
+#||
 (defun %create-selector (int-type func trait &rest kwargs &key &allow-other-keys)
   (let ((interaction (%add-interaction int-type kwargs)))
     ;(when func
       ;(on-trait-change interaction func trait))
     interaction))
-
+|#
 (defun brush-int-selector (&rest kwargs &key (func nil) (trait "selected") &allow-other-key)
   (remf kwargs :func)
   (remf kwargs :trait)
@@ -766,6 +769,8 @@ because that method uses a mutex."
   (let ((scale-metadata (class-scales-metadata mark-class)))
     ([] ([] scale-metadata trait-name) "dimension")))
 
+
+
 (defun %get-line-styles (marker-str)
   (flet ((%extract-marker-value (marker-str code-dict) ;flet lets a fcn in a fcn 
 	   (let ((val nil))
@@ -778,7 +783,7 @@ because that method uses a mutex."
 	     val)))
     (loop for code-dict in (list line-style-codes color-codes marker-codes)
        collect (%extract-marker-value marker-str code-dict))))
-
+#| TO-DO: Figure out better %get-line-styles
 (defun %get-line-styles (marker-str)
   (defun %extract-marker-value (marker-str code-dict)
     (let (val)
@@ -791,7 +796,7 @@ because that method uses a mutex."
        (%extract-marker-value marker-str code-dict)
        ))
 
-  
+  |#
 
 #|
 (defmethod %ipython-display ((widget nglwidget) &rest key &key &allow-other-keys)
