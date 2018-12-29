@@ -85,7 +85,20 @@
 		     :type cljw:unicode
 		     :initform (cljw:unicode "mouse")
 		     :metadata (:sync t
-				      :json-name "tooltip_location")))
+				      :json-name "tooltip_location"))
+   (%hover-handlers :initarg :hover-handlers :accessor %hover-handlers
+                    :initform (make-instance 'cljw::callback-dispatcher))
+   (%click-handlers :initarg :click-handlers :accessor %click-handlers
+                    :initform (make-instance 'cljw::callback-dispatcher))
+   (%legend-click-handlers :initarg :legend-click-handlers :accessor %legend-click-handlers
+                           :initform (make-instance 'cljw::callback-dispatcher))
+   (%legend-hover-handlers :initarg :legend-hover-handlers :accessor %legend-hover-handlers
+                           :initform (make-instance 'cljw::callback-dispatcher))
+   (%element-click-handlers :initarg :element-click-handlers :accessor %element-click-handlers
+                            :initform (make-instance 'cljw::callback-dispatcher))
+   (%bg-click-handlers :initarg :bg-click-handlers :accessor %bg-click-handlers
+                       :initform (make-instance 'cljw::callback-dispatcher))
+   )
   (:default-initargs
    :model-name (cljw:unicode "MarkModel")
     :model-module (cljw:unicode "bqplot")
@@ -124,32 +137,32 @@
              
 
 (defmethod on-hover ((self mark) callback &key (remove nil))
-  (register-callback (%hover-handlers self) callback :remove remove))
-(defmethod on-click ((self mark) call &key (remove nil))
-  (register-callback (%click-handlers self) callback :remove remove))
-(defmethod on-legend-click ((self mark) calllback &key (remove nil))
-  (register-callback (%legend-click-handlers self) callback :remove remove))
+  (cljw::register-callback (%hover-handlers self) callback :remove remove))
+(defmethod on-click ((self mark) callback &key (remove nil))
+  (cljw::register-callback (%click-handlers self) callback :remove remove))
+(defmethod on-legend-click ((self mark) callback &key (remove nil))
+  (cljw::register-callback (%legend-click-handlers self) callback :remove remove))
 (defmethod on-legend-hover ((self mark) callback &key (remove nil))
-  (register-callback (%legend-hover-handlers self) callback :remove remove))
+  (cljw::register-callback (%legend-hover-handlers self) callback :remove remove))
 (defmethod on-element-click ((self mark) callback &key (remove nil))
-  (register-callback (%element-click-handlers self) callback :remove remove))
+  (cljw::register-callback (%element-click-handlers self) callback :remove remove))
 (defmethod on-background-click ((self mark) callback &key (remove nil))
-  (register-callback (%bg-ckick-handlers self) callback :remove remove))
+  (cljw::register-callback (%bg-click-handlers self) callback :remove remove))
 
 (defmethod %handle-custom-msgs ((self mark) _  content &key (buffer nil))
   (declare (ignore _))
   (cond ((string= (getf content "event") "hover")
-         (%hover-handlers self self content))
+         (%hover-handlers self content))
         ((string= (getf content "event") "click")
-         (%click-handlers self self content))
+         (%click-handlers self content))
         ((string= (getf content "event") "legend-click")
-         (%legend-click-handlers self self content))
+         (%legend-click-handlers self content))
         ((string= (getf content "event") "legend-hover")
-         (%legend-hover-handlers self self content))
+         (%legend-hover-handlers self content))
         ((string= (getf content "event") "element-click")
-         (%element-click-handlers self self content))
+         (%element-click-handlers self content))
         ((string= (getf content "event") "background-click")
-         (%bg-click-handlers self self content))
+         (%bg-click-handlers self content))
         (t (values))))
       
 
@@ -899,15 +912,16 @@
   (:metaclass traitlets:traitlet-class))
 
 (defmethod %validate-orientation (object val)
-  (if (equal val (cljw:unicode "vertical"))
-      (setf x-orient "horizontal"
-            y-orient "vertical")
-      (setf x-orient "vertical"
-	    y-orient "horizontal"))
-  (setf scales-metadata (list (cons "x" (list (cons "orientation" x-orient )
-				              (cons "dimension" "x")))
-			      (cons "y" (list (cons "orientation" y-orient)
-				              (cons "dimension" "y"))))))
+  (if (and (slot-boundp object 'orientation) (slot-boundp object 'scales-metadata))
+      (let ((x-orient (if (string= val (cljw:unicode "vertical"))
+                          (cljw:unicode "vertical")
+                          (cljw:unicode "horizontal"))))
+        (setf (scales-metadata object) (list (cons "x" (list (cons "orientation" x-orient)
+                                                             (cons "dimension" "x")))
+                                             (cons "y" (list (cons "orientation" val)
+                                                             (cons "dimension" "y")))))
+        val)
+      val))
 
 (defclass bins(bars)
   ((name :initarg  :name :accessor name

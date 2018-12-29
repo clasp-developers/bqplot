@@ -406,13 +406,13 @@ because that method uses a mutex."
                                         ;(logg 3 "We made it out of the loop!!!! ~% Scales is ~a and mark is ~a~%" scales mark)
     (setf temp-kwargs (append kwargs (list :scales-mark scales)))
                                         ;(logg 3 "Updated kwargs. It is now ~a~%" kwargs)
-    (print "Hello There")
     (setf mark (apply #'make-instance mark-class temp-kwargs))
                                         ;(logg 3 "After updating kwargs and mark.~% kwargs is now ~a and mark is ~a~%" kwargs mark)
     (setf ([] %context "last_mark") mark)
                                         ;(logg 3 "After if assoc last_mark %context~% %context is now ~a~%" %context)
                                         ;(logg 3 "Marks fig is ~a~% and mark is ~a~%" (marks fig) mark)
     ;; This next statement should cause the marks for the figure to be updated
+    (format t "Fig is ~a" fig)
     (setf (marks fig) (concatenate 'vector (marks fig) (list mark)))
                                         ;(logg 3 "Calling axes with :mark ~a :options ~a~%" mark axes-options)
     (when (getf kwargs :axes t)
@@ -665,6 +665,8 @@ because that method uses a mutex."
       ;(on-trait-change interaction func trait))
     interaction))
 |#
+
+#||
 (defun brush-int-selector (&rest kwargs &key (func nil) (trait "selected") &allow-other-key)
   (remf kwargs :func)
   (remf kwargs :trait)
@@ -694,7 +696,7 @@ because that method uses a mutex."
   (remf kwargs :func)
   (remf kwargs :trait)
   (%create-selector (find-class 'lasso-selector) func trait kwargs))
-
+|#
 (defun clear-figure ()
   (let ((fig ([] %context "figure")))
     (when fig 
