@@ -412,7 +412,6 @@ because that method uses a mutex."
                                         ;(logg 3 "After if assoc last_mark %context~% %context is now ~a~%" %context)
                                         ;(logg 3 "Marks fig is ~a~% and mark is ~a~%" (marks fig) mark)
     ;; This next statement should cause the marks for the figure to be updated
-    (format t "Fig is ~a" fig)
     (setf (marks fig) (concatenate 'vector (marks fig) (list mark)))
                                         ;(logg 3 "Calling axes with :mark ~a :options ~a~%" mark axes-options)
     (when (getf kwargs :axes t)
@@ -709,12 +708,18 @@ because that method uses a mutex."
 	(when key
 	  (setf  ([] ([] %context "scale_registry") key) nil ))))))
 
-;;needs to be checked 
+;;needs to be checked
+#|| TODO: DOESNT WORK
 (defun current-figure ()
   (unless ([]-contains %context "figure")
     (figure)) 
   ([] %context "figure"))
+|#
 
+(defun current-figure ()
+  (unless (cdr (assoc "figure" %context :test #'string=))
+    (figure)) 
+  (cdr (assoc "figure" %context :test #'string=)))
 
 ;(defun get-context ())
 
