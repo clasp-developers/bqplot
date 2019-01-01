@@ -742,7 +742,8 @@ because that method uses a mutex."
                                    ;collect ([] dim "scale")));CURRENT CODE DIES HERE
            (_ (logg 3 "dimension-scales -> ~s~%" dimension-scales))
            (dimension-axes (loop for (dim . value) across dimension-data
-                                 collect ([] dim "axis")))
+                              when (string= (car dim) "axis")
+                                collect (cdr dim)))
            (dimension-scales-index (position scale dimension-scales :test #'string=)))
       (if dimension-scales-index
           (elt dimension-axes dimension-scales-index)
