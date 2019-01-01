@@ -744,9 +744,9 @@ because that method uses a mutex."
            (dimension-axes (loop for (dim . value) across dimension-data
                               when (string= (car dim) "axis")
                                 collect (cdr dim)))
-           (dimension-scales-index (position scale dimension-scales :test #'string=)))
+           (dimension-scales-index (position (cons "scale" scale) dimension-scales :test #'equal)))
       (if dimension-scales-index
-          (elt dimension-axes dimension-scales-index)
+          (cdr (elt dimension-axes dimension-scales-index))
           nil))))
 
 (defun %update-fig-axis-registry (fig dimension scale axis)
