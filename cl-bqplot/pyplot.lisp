@@ -172,6 +172,7 @@
          (axis nil)
          (key nil)
          (axis-type nil))
+    (format t "scales is ~a" scales)
     (loop for (name . instance) in scales
           do
              ;;missing the function that checks to see if the scale is even needed
@@ -188,7 +189,7 @@
                                         ;(warn "How to handle **(options.get(name, {})")
                                    (list scale-metadata)) ;;;Plus options.get(name)
                                  scale-metadata)
-                   axis (%fetch-axis fig dimension ([] scales name)))
+                   axis (%fetch-axis fig dimension ([] scales name)));;;CURRENT CODE DIES HERE
              (logg 3 "After first setf in loop: ~% scale-metadata is ~s~% dimension is ~s~% axis-args is ~s~%" scale-metadata dimension axis-args)
              (logg 3 "At if axis. Axis is ~s~%" axis)
              (if axis
@@ -734,10 +735,13 @@ because that method uses a mutex."
     (let* ((dimension-data ([] axis-registry dimension nil))
            (_ (logg 3 "dimension-data -> ~s~%" dimension-data))
            (dimension-scales (loop for (dim . value) across dimension-data
-                                   do (logg 3 "dim -> ~s  value -> ~s~%" dim value)
-                                   collect ([] dim "scale")))
+                                when (string= (car dim) "scale")
+                                  collect (cdr dim)))
+                                ;do (logg 3 "dim -> ~s  value -> ~s~%" dim value)
+                                  ;;;TRYING SOMETHING NEW. In the above code, I'm assuming that dim will always be a cons cell instead of an alist like we had previously thought.  
+                                   ;collect ([] dim "scale")));CURRENT CODE DIES HERE
            (_ (logg 3 "dimension-scales -> ~s~%" dimension-scales))
-           (dimension-axes (loop for (dim . value) in dimension-data
+           (dimension-axes (loop for (dim . value) across dimension-data
                                  collect ([] dim "axis")))
            (dimension-scales-index (position scale dimension-scales :test #'string=)))
       (if dimension-scales-index
@@ -749,6 +753,7 @@ because that method uses a mutex."
   (logg 3 "axis-registry is ~s~%" (axis-registry fig))
   (let* ((axis-registry (axis-registry fig))
          (dimension-scales ([] axis-registry dimension nil)))
+    (format t "axis-registry is ~a~% and dimension-scales is ~a" axis-registry dimension-scales)
     (setf dimension-scales (concatenate 'vector
                                         dimension-scales
                                         (vector (list (cons "scale" scale)
