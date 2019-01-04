@@ -198,7 +198,7 @@
                    ;;(%apply-properties axis (getf options name nil)) THIS NEEDS TO WORK
                    (if (assoc name axes :test #'string=)
                        (push (cons name axis) axes)
-                       (setf ([] axes name) (axes))))   
+                       (setf ([] axes name) axes)))   
                  (progn
                    (setf key (traitlets:traitlet-metadata (class-of mark)
                                                           (intern (string-upcase name) "BQPLOT") :atype))
@@ -250,13 +250,13 @@
 (defun grids (&key (fig nil) (value "solid"))
   (unless fig
     (setf fig (current-figure)))
-  (loop for a in (axes fig)
+  (loop for a in (axes-figure fig)
      do
        (setf (grid-lines a) value)))
 
 (defun title (label &key (style nil) &allow-other-keys) ;no need for kwargs but apparently we're not allowed to say &rest &key
   (let ((fig (current-figure)))
-    (setf (title fig) label)
+    (setf (title-figure fig) label)
     (when style
       (setf (title-style fig) style))))
 
@@ -701,7 +701,7 @@ because that method uses a mutex."
   (let ((fig ([] %context "figure")))
     (when fig 
       (setf (marks fig) nil
-	    (axes fig) nil
+	    (axes-figure fig) nil
             (axis-registry fig) nil
             ;;("axis-registry" fig) nil) ;; did i handle setattr right?
 	    ([] %context "scales") nil)
