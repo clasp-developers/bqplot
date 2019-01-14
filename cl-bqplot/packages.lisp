@@ -19,6 +19,7 @@
    #:color-scale
    #:date-color-scale
    #:ordinal-color-scale
+   #:scatter
    )
   (:documentation "Implements the bqplot package"))
 

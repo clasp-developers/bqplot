@@ -49,12 +49,12 @@
 ;; -widget-register 
 (defclass pan-zoom (interaction)
   ((allow-pan :accessor allow-pan
-	      :type bool
+	      :type cljw:bool
 	      :initform :true
 	      :metadata (:sync t
 			       :json-name "allow_pan"))
    (allow-zoom :accessor allow-zoom
-	       :type bool
+	       :type cljw:bool
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "allow_zoom"))
@@ -127,7 +127,7 @@
 			   :json-name "selected"
 			   ,@*array-serialization*))
    (color :accessor color
-	  :type unicode
+	  :type cljw:unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
 			   :json-name "color"))
@@ -155,7 +155,7 @@
 	       :metadata (:sync t
 				:json-name "line_width"))
    (color :accessor color
-	  :type unicode
+	  :type cljw:unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
 			   :json-name "color")))
@@ -167,7 +167,7 @@
 
 (defclass brush-interval-selector (one-d-selector)
   ((brushing :accessor brushing
-	     :type bool
+	     :type cljw:bool
 	     :initform :false
 	     :metadata (:sync t
 			      :json-name "brushing"))
@@ -178,12 +178,12 @@
 			   :json-name "selected"
 			   ,@*array-serialization*))
    (orientation :accessor orientation
-		:type unicode
+		:type cljw:unicode
 		:initform (cljw:unicode "horizontal")
 		:metadata (:sync t
 				 :json-name "orientation"))
    (color :accessor color
-	  :type unicode
+	  :type cljw:unicode
 	  :initform nil
 	  :metadata (:sync t
 			   :json-name "color")))
@@ -195,12 +195,12 @@
 
 (defclass brush-selector (two-d-selector)
   ((clear-brush :initarg :clear :accessor clear-brush
-	 :type bool
+	 :type cljw:bool
 	 :initform :false
 	 :metadata (:sync t
 			  :json-name "clear"))
   (brushing :initarg :brushing :accessor brushing
-	    :type bool
+	    :type cljw:bool
 	    :initform :false
 	    :metadata (:sync t
 			     :json-name "brushing"))
@@ -210,7 +210,7 @@
 	    :metadata (:sync t
 			     :json-name "selected"))
   (color :initarg :color :accessor color
-	 :type unicode
+	 :type cljw:unicode
 	 :initform (cljw:unicode "")
 	 :metadata (:sync t
 			  :json-name "color")))
@@ -238,13 +238,13 @@
 	     :metadata (:sync t
 			      :json-name "_selected"))
    (show-names :initarg :show-names :accessor show-names
-	       :type bool
+	       :type cljw:bool
 	       :initform :true
 	       :metadata (:sync t
 				:json-name "show_names")))
    (:default-initargs
     :view-name (cljw:unicode "MultiSelector")
-    :model-name (unicode "MultiSelectorModel"))
+    :model-name (cljw:unicode "MultiSelectorModel"))
     
   (:metaclass traitlets:traitlet-class))
 
@@ -252,7 +252,7 @@
 
 (defclass lasso-selector (two-d-selector)
   ((color :accessor color
-	  :type unicode
+	  :type cljw:unicode
 	  :initform (cljw:unicode "")
 	  :metadata (:sync t
 			   :json-name "color")))
