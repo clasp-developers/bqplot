@@ -815,7 +815,7 @@
   (:metaclass traitlets:traitlet-class))
 
 (defclass bars (mark)
-  ((x :accessor x
+  ((x :initarg :x :accessor x
       :type vector
       :initform #()
       :metadata #.`(:sync t
@@ -826,7 +826,7 @@
 		    ,@*array-serialization*
 		    ))
    ;;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
-   (y :accessor y
+   (y :initarg :y :accessor y
       :type vector
       :initform #()
       :metadata #.`(:sync t
@@ -837,7 +837,7 @@
 		    ,@*array-serialization*
 		    ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
-   (color :accessor color
+   (color :initarg :color :accessor color
       :type list
       :initform nil
       :metadata #.`(:sync t
@@ -848,12 +848,13 @@
 		    ,@*array-serialization*
 		    ))
    	;TODO: .valid(array_squeeze, array_dimension_bounds(1, 2))
-  (scales-metadata :accessor scales-metadata
+  (scales-metadata :initarg :scales-metadata :accessor scales-metadata
       :type list
       :initform (list (cons "x" (list (cons "orientation" "horizontal")
 				      (cons "dimension" "x")))
 		      (cons "y" (list (cons "orientation" "vertical")
-				      (cons "dimension" "y"))))
+				      (cons "dimension" "y")))
+                      (cons "color" (list (cons "dimension" "color"))))
       ;:validator 
       :metadata (:sync t
 		       :json-name "scales_metadata"))
@@ -870,7 +871,7 @@
 			  :display-name "Type"))
    (colors :accessor colors
 	 :type list
-	 :initform (list (cons 'trait (cljw:unicode ""))(cons 'default-value "steelblue"))
+	 :initform (list "steelblue")
 	 :metadata (:sync t
 			  :json-name "colors"
 			  :display-name "Colors"))
@@ -880,18 +881,17 @@
 	 :metadata (:sync t
 			  :json-name "padding"))
    (stroke :accessor stroke
-	 :type cljw:unicode
-	 :initform (cljw:unicode "")
+	 :initform (make-instance 'cljw:color-picker)
 	 :metadata (:sync t
 			  :json-name "stroke"))
    (base :accessor base
 	 :type float
-	 :initform nil
+	 :initform 0.0
 	 :metadata (:sync t
 			  :json-name "base"))
    (opacities :accessor opacities
 	 :type list
-	 :initform (list (cons "trait" "1.0"))
+	 :initform (list 1.0)
 	 :metadata (:sync t
 			  :json-name "opacities"
 			  :display-name "Opacities"))
