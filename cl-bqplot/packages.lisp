@@ -19,7 +19,22 @@
    #:color-scale
    #:date-color-scale
    #:ordinal-color-scale
+   ;;Mark types (call these methods to plot)
+   ;;;NOTE: The functions that are commented out are TODO. Once implemented, they will be uncommented
    #:scatter
+   ;;;#:pie
+   ;;;#:label
+   ;;:#:geo
+   ;;;#:boxplot
+   ;;;#:bar
+   ;;;#:bin
+   ;;;#:hist
+   ;;;#:heat-map
+   ;;;#:grid-heat-map
+   ;;Export figure and functions
+   #:figure
+   #:current-figure
+   #:clear-figure
    )
   (:documentation "Implements the bqplot package"))
 
