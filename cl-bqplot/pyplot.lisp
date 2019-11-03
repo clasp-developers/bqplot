@@ -96,8 +96,7 @@
                   (setf (gethash key ([] %context "figure_registry")) (apply #'make-instance 'figure kwargs)))
                 (setf ([] %context "figure") (gethash key ([] %context "figure_registry")))
                                         ;(warn "How to Add a slot for each argument in kwargs")
-;;;(scales key :scales scales-arg)
-                (format t "About to reinitialize-instance ~a with args: ~a~%" ([] %context "figure") kwargs)
+                (scales :key key :scales scales-arg)
                 (loop with instance = ([] %context "figure")
                       with class = (class-of instance)
                       for (key value) on kwargs by #'cddr
@@ -224,7 +223,6 @@
          (axis nil)
          (key nil)
          (axis-type nil))
-    (format t "scales is ~a~%" scales)
     (loop for (name . instance) in scales
           do
              ;;missing the function that checks to see if the scale is even needed
@@ -605,10 +603,9 @@ because that method uses a mutex."
 ;;;OHCL needs to be completely recoded to take into account kwargs
 
 (defun scatter (x y &rest kwargs &key &allow-other-keys)
-  (setf kwargs (append kwargs (list :x x))
-	kwargs (append kwargs (list :y y)))
-  (%draw-mark 'scatter kwargs)
-  )
+  (let ((new-kwargs (list* :x x :y y kwargs)))
+    (%draw-mark 'scatter new-kwargs)
+    ))
 
 (defun hist (sample &rest kwargs &key (options nil)  &allow-other-key)
  (remf kwargs :option)
@@ -806,8 +803,6 @@ because that method uses a mutex."
   (logg 3 "axis-registry is ~s~%" (axis-registry fig))
   (let* ((axis-registry (axis-registry fig))
          (dimension-scales ([] axis-registry dimension nil)))
-    (format t "axis-registry is ~a~%" axis-registry)
-    (format t "dimension-scales is ~a~%" dimension-scales)
     (setf dimension-scales (concatenate 'vector
                                         dimension-scales
                                         (vector (list (cons "scale" scale)
