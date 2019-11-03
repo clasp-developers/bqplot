@@ -340,6 +340,10 @@
      :model-name (cljw:unicode "LinearScaleModel"))
   (:metaclass traitlets:traitlet-class))
 
+(defmethod print-object ((scale linear-scale) stream)
+  (print-unreadable-object (scale stream)
+    (format stream "~a :min-range ~a :mid-range ~a" (class-name (class-of scale)) (min-range scale) (mid-range scale))))
+
 ;;;;Validator for min-range making sure its between [0,1]
 (defun validate-min-range (object val)
   (if (slot-boundp object 'min-range)

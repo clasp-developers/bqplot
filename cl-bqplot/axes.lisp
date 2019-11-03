@@ -106,6 +106,10 @@
 
    (:metaclass traitlets:traitlet-class))
 
+(defmethod print-object ((axis axis) stream)
+  (print-unreadable-object (axis stream)
+    (format stream "~a :scale ~a" (class-name (class-of axis)) (scale axis))))
+
 (defclass color-axis (axis)
   ((orientation :accessor orientation
 		:type cljw:unicode

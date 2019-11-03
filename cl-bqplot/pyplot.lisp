@@ -1,11 +1,11 @@
 (in-package :bqplot)
 
 (defparameter %context (list (cons "figure" nil)
-			     (cons "figure_registry" nil)
-			     (cons "scales" nil)
-			     (cons "scale_registry" nil)
-			     (cons "last_mark" nil)
-			     (cons "current_key" nil)))
+                             (cons "figure_registry" (make-hash-table :test 'equalp))
+                             (cons "scales" nil)
+                             (cons "scale_registry"  (make-hash-table :test 'equalp))
+                             (cons "last_mark" nil)
+                             (cons "current_key" nil)))
 
 (defparameter line-style-codes (list (cons ":" "dotted")
 				     (cons "-." "dash_dotted")
@@ -29,21 +29,29 @@
 
 (defvar Keep (list "Keep" "bqplot.pyplot" "Used in bqplot.pyplot to specify that the same scale should be used for a certain dimension."))
 
-;(defun hashtable (data v)
-					;(warn "How to try data[v]"))
+;;;(defun hashtable (data v)
+;;;(warn "How to try data[v]"))
 
 (defun reset-context ()
     (setf %context (list (cons "figure" nil)
-			     (cons "figure_registry" nil)
-			     (cons "scales" nil)
-			     (cons "scale_registry" nil)
-			     (cons "last_mark" nil)
-			     (cons "current_key" nil)))) 
+                             (cons "figure_registry" (make-hash-table :test 'equalp))
+                             (cons "scales" nil)
+                             (cons "scale_registry" (make-hash-table :test 'equalp))
+                             (cons "last_mark" nil)
+                             (cons "current_key" nil))))
+
+(defun reset-context-scales ()
+  (setf %context (list (cons "figure" ([] %context "figure"))
+                       (cons "figure_registry" ([] %context "figure_registry"))
+                       (cons "scales" nil)
+                       (cons "scale_registry" ([] %context "scale_registry"))
+                       (cons "last_mark" ([] %context "last_mark"))
+                       (cons "current_key" ([] %context "current_key")))))
 
 (defun show (&key (key nil) (display-toolbar t))
   (let ((figure nil))
     (if key
-	(setf figure ([] ([] %context "figure_registry") key))
+	(setf figure (gethash key ([] %context "figure_registry")))
 	(setf figure ([] (current-figure) "1")))
 	;(setf figure (make-instance 'figure :title "Example")))
     (if display-toolbar
@@ -68,7 +76,7 @@
 	(progn
 	  (setf ([] %context "figure") (list fig))
 	  (when key
-	    (setf (nth key ([] %context "figure_registry")) fig))
+	    (setf (gethash key ([] %context "figure_registry")) fig))
 	  (loop for arg in kwargs do
 	    (unless ([]-contains ([] %context "figure") arg)
 	      (setf ([] %context "figure") (append ([] %context "figure") (cons arg ([] kwargs arg)))))))
@@ -81,17 +89,23 @@
                 (setf ([] %context "figure") (make-instance 'figure)))
 	      (progn
                                         ;(print "In progn where key is not nil")
-                (unless (assoc key (assoc "figure_registry" %context :test #'string=))
+                (when (null (gethash key ([] %context "figure_registry")))
                   (unless (getf kwargs :title)
-                    (push (concatenate 'string "Figure" " " key) kwargs)
+                    (push (format nil "Figure ~a" key) kwargs)
                     (push :title kwargs))
-                  (setf ([] ([] %context "figure_registry") key) (list (cons key (make-instance 'figure)))))
-                (setf ([] %context "figure") (assoc key ([] %context "figure_registry")))
+                  (setf (gethash key ([] %context "figure_registry")) (apply #'make-instance 'figure kwargs)))
+                (setf ([] %context "figure") (gethash key ([] %context "figure_registry")))
                                         ;(warn "How to Add a slot for each argument in kwargs")
 ;;;(scales key :scales scales-arg)
-		(loop for arg in kwargs do
-		  (unless ([]-contains ([] %context "figure") arg)
-		    (setf ([] %context "figure") (append ([] %context "figure") (cons arg ([] kwargs arg))))))))))
+                (format t "About to reinitialize-instance ~a with args: ~a~%" ([] %context "figure") kwargs)
+                (loop with instance = ([] %context "figure")
+                      with class = (class-of instance)
+                      for (key value) on kwargs by #'cddr
+                      for class-slots = (clos:class-slots class)
+                      for effective-slot-definition = (find-if (lambda (slot) (member :title (clos:slot-definition-initargs slot))) class-slots)
+                      for slot-index = (clos:slot-definition-location effective-slot-definition)
+                      do (setf (clos:standard-instance-access instance slot-index) value))
+                ))))
     ;;(print "After fig IF statement, about to return ([] %context \"figure\"")
     (when (eq (axis-registry ([] %context "figure")) nil)
       (setf (axis-registry ([] %context "figure")) nil))
@@ -100,15 +114,15 @@
 (defun close (key)
   (let ((figure-registry ([] %context "figure_registry"))
         (fig nil))
-    (unless (member key figure-registry :test #'equal)
+    (unless (gethash key figure-registry)
       (return-from close))
-    (when (eq ([] %context "figure") ([]-contains figure-registry key)) (make-instance 'figure))
-    (setf fig ([] figure-registry key))
+    (when (eq ([] %context "figure") (gethash key figure-registry)) (make-instance 'figure))
+    (setf fig (gethash key figure-registry))
     ;;if hasattr(fig, 'pyplot')
     ;;fig.pyplot.close()
-    (warn "del figure_registry[key] where key = ~s" key)
+    (remhash key ([] %context "figure_registry"))
     ;;del figure_registry[key]
-    (warn "del _context['scale_registry'][key] where key = ~s" key)
+    (remhash key ([] %context "scale_registry"))
     ;;del _context['scale_registry'][key]
     (values)))
 
@@ -118,9 +132,46 @@
 ;TODO
 
 (defun scales (&key (key nil) (scales nil))
-  (error "Implement scales properly")
-  (let ((old-ctxt (assoc "scales" %context :test #'string=)))
-    (if (or (not key) (eq key :none))
+  "Creates and switches between context scales.
+
+    If no key is provided, a new blank context is created.
+
+    If a key is provided for which a context already exists, the existing
+    context is set as the current context.
+
+    If a key is provided and no corresponding context exists, a new context is
+    created for that key and set as the current context.
+
+    Parameters
+    ----------
+    key: hashable, optional
+        Any variable that can be used as a key for a dictionary
+    scales: dictionary
+        Dictionary of scales to be used in the new context
+
+    Example
+    -------
+
+        >>> scales(scales={
+        >>>    'x': Keep,
+        >>>    'color': ColorScale(min=0, max=1)
+        >>> })
+
+    This creates a new scales context, where the 'x' scale is kept from the
+    previous context, the 'color' scale is an instance of ColorScale
+    provided by the user. Other scales, potentially needed such as the 'y'
+    scale in the case of a line chart will be created on the fly when
+    needed.
+
+    Notes
+    -----
+    Every call to the function figure triggers a call to scales.
+
+    The `scales` parameter is ignored if the `key` argument is not Keep and
+    context scales already exist for that key.
+    "
+  (let ((old-ctxt ([] %context "scales")))
+    (if (null key)
         ;;No key is provided
         (setf ([] %context "scales")
               (loop for (k . scales-k) in scales
@@ -128,13 +179,14 @@
                                 (cons (%get-attribute-dimension k) scales-k)
                                 ([] old-ctxt (%get-attribute-dimension k)))))
         ;;A key is provided
-        (unless (assoc "scale_registry" %context :test #'string=)
-          (setf ([] ([] %context "scale_registry") key)
-                (loop for (k . scales-k) in scales
-                      collect (if (not (eq ([] scales k) keep))
-                                  (cons (%get-attribute-dimension k) scales-k)
-                                  ([] old-ctxt (%get-attribute-dimension k)))))))
-    (setf ([] %context "scales") (nth key ([] %context "figure_registry")))))
+        (progn
+          (unless (gethash key ([] %context "scale_registry"))
+            (setf (gethash key ([] %context "scale_registry"))
+                  (loop for (k . scales-k) in scales
+                        collect (if (not (eq ([] scales k) keep))
+                                    (cons (%get-attribute-dimension k) scales-k)
+                                    ([] old-ctxt (%get-attribute-dimension k))))))
+          (setf ([] %context "scales") (gethash key ([] %context "scale_registry")))))))
 
 ;TODO
 
@@ -172,7 +224,7 @@
          (axis nil)
          (key nil)
          (axis-type nil))
-    (format t "scales is ~a" scales)
+    (format t "scales is ~a~%" scales)
     (loop for (name . instance) in scales
           do
              ;;missing the function that checks to see if the scale is even needed
@@ -707,7 +759,7 @@ because that method uses a mutex."
 	    ([] %context "scales") nil)
       (let ((key ([] %context "current_key")))
 	(when key
-	  (setf  ([] ([] %context "scale_registry") key) nil ))))))
+          (remhash key ([] %context "scale_registry")) nil )))))
 
 ;;needs to be checked
 #|| TODO: DOESNT WORK
@@ -719,8 +771,8 @@ because that method uses a mutex."
 
 (defun current-figure ()
   (unless (cdr (assoc "figure" %context :test #'string=))
-    (figure)) 
-  (cdr (assoc "figure" %context :test #'string=)))
+    (figure))
+  ([] %context "figure"))
 
 ;(defun get-context ())
 
@@ -754,7 +806,8 @@ because that method uses a mutex."
   (logg 3 "axis-registry is ~s~%" (axis-registry fig))
   (let* ((axis-registry (axis-registry fig))
          (dimension-scales ([] axis-registry dimension nil)))
-    (format t "axis-registry is ~a~% and dimension-scales is ~a" axis-registry dimension-scales)
+    (format t "axis-registry is ~a~%" axis-registry)
+    (format t "dimension-scales is ~a~%" dimension-scales)
     (setf dimension-scales (concatenate 'vector
                                         dimension-scales
                                         (vector (list (cons "scale" scale)
